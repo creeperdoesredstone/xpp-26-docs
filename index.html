@@ -10,32 +10,117 @@
     
     <style>
         body {
-            margin: 0; padding: 0;
-            background-color: #1e1e1e; color: #d4d4d4;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
             font-family: 'JetBrains Mono', monospace;
-            display: flex; height: 100vh; overflow: hidden; box-sizing: border-box;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
         }
+
         aside {
-            width: 300px; background-color: #252526;
-            border-right: 2px solid #333; display: flex; flex-direction: column; flex-shrink: 0;
+            width: 320px;
+            background-color: #252526;
+            border-right: 2px solid #333;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
         }
-        .sidebar-header { padding: 20px; border-bottom: 1px solid #3c3c3c; }
-        .sidebar-header h1 { margin: 0; font-size: 1.1rem; color: #569cd6; text-transform: uppercase; letter-spacing: 0.5px; }
-        .doc-list { list-style: none; padding: 10px 0; margin: 0; overflow-y: auto; flex: 1; }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #3c3c3c;
+        }
+
+        .sidebar-header h1 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #569cd6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .doc-list {
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
         .doc-item {
-            padding: 10px 20px; cursor: pointer; font-size: 13px;
-            transition: background-color 0.2s, color 0.2s; border-left: 3px solid transparent;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background-color 0.2s, color 0.2s;
+            border-left: 3px solid transparent;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .doc-item:hover { background-color: #2a2a2b; color: #fff; }
-        .doc-item.active { background-color: #37373d; color: #4ec9b0; border-left-color: #007acc; font-weight: bold; }
-        main { flex: 1; display: flex; flex-direction: column; min-width: 0; background-color: #1a1a1a; }
-        .view-header { padding: 15px 30px; background-color: #1e1e1e; border-bottom: 1px solid #333; }
-        .view-title { margin: 0; font-size: 1.1rem; color: #4ec9b0; text-transform: uppercase; letter-spacing: 1px; }
-        .output-container { flex: 1; padding: 30px; overflow-y: auto; font-size: 14px; white-space: pre-wrap; word-break: break-all; line-height: 1.5; }
-        .output-container a { color: #4fc1ff; text-decoration: underline; }
-        .output-container a:hover { color: #569cd6; }
-        hr { border: none; border-top: 2px dashed #3c3c3c; margin: 20px 0; }
+
+        .doc-item:hover {
+            background-color: #2a2a2b;
+            color: #fff;
+        }
+
+        .doc-item.active {
+            background-color: #37373d;
+            color: #4ec9b0;
+            border-left-color: #007acc;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            background-color: #1a1a1a;
+        }
+
+        .view-header {
+            padding: 15px 30px;
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+        }
+
+        .view-title {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #4ec9b0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .output-container {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        .output-container a {
+            color: #4fc1ff;
+            text-decoration: underline;
+        }
+
+        .output-container a:hover {
+            color: #569cd6;
+        }
+        
+        hr {
+            border: none;
+            border-top: 2px dashed #3c3c3c;
+            margin: 20px 0;
+        }
+
         .ansi-purple { color: #d16dff; }
         .ansi-cyan { color: #4fc1ff; }
         .ansi-darkcyan { color: #208080; }
@@ -45,7 +130,12 @@
         .ansi-red { color: #f44747; }
         .ansi-bold { font-weight: bold; }
         .ansi-underline { text-decoration: underline; }
-        .ansi-reset { color: #d4d4d4; font-weight: normal; text-decoration: none; }
+        
+        .ansi-reset {
+            color: #d4d4d4;
+            font-weight: normal;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -54,7 +144,8 @@
     <div class="sidebar-header">
         <h1>X++26 Docs</h1>
     </div>
-    <ul id="docList" class="doc-list"></ul>
+    <ul id="docList" class="doc-list">
+        </ul>
 </aside>
 
 <main>
@@ -66,6 +157,7 @@
 
 <script>
     let chaptersRegistry = [];
+
     const docList = document.getElementById('docList');
     const viewTitle = document.getElementById('viewTitle');
     const output = document.getElementById('output');
@@ -84,7 +176,7 @@
     ];
 
     function parseAnsi(text) {
-        const targetRegex = /\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
+        const targetRegex = /\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g; // terminal-style hyperlinks
         let pool = text.replace(targetRegex, function(match, url, linkText) {
             return `__LINK_START__URL="${url}"__LINK_TEXT__${linkText}__LINK_END__`;
         });
@@ -105,21 +197,38 @@
         return pool;
     }
 
+
     function processPreloadedDocumentation(rawText) {
-        const sections = rawText.split(/={10,}/);
-        let validIndex = 0;
+        chaptersRegistry = [];
+        
+        const rawChunks = rawText.split(/={10,}/);
+        let chapterIndex = 0;
 
-        sections.forEach((chunk) => {
-            const lines = chunk.trim().split('\n');
-            if (lines.length === 0 || lines[0].trim() === "") return;
+        rawChunks.forEach((chunk) => {
+            const trimmedChunk = chunk.trim();
+            if (!trimmedChunk) return;
 
-            const title = "X++26 Documentation"
-            let cleanContent = chunk.trim();
+            const lines = trimmedChunk.split(/\r?\n/);
             
-            const uniqueId = `doc-local-${validIndex++}`;
+            let rawTitle = lines[0].replace(/[\{\}#\*=\-_]|ANSI\.[A-Z]+/gi, '').trim();
+            
+            if (!rawTitle) {
+                rawTitle = `Section ${chapterIndex + 1}`;
+            }
+
+            if (rawTitle.toUpperCase() === "END OF DOCUMENTATION") return;
+
+            let contentLines = [...lines];
+            if (contentLines[1] && /^[-=~#\s]+$/.test(contentLines[1])) {
+                contentLines.splice(1, 1);
+            }
+            
+            const cleanContent = contentLines.join('\n').trim();
+            const uniqueId = `ch-${chapterIndex++}`;
+
             chaptersRegistry.push({
                 id: uniqueId,
-                title: title,
+                title: rawTitle,
                 content: cleanContent
             });
         });
@@ -129,43 +238,51 @@
 
     function renderSidebarNavigation() {
         docList.innerHTML = '';
+        
         if (chaptersRegistry.length === 0) {
-            docList.innerHTML = '<li class="doc-item" style="cursor:default;color:#888;">No items parsed</li>';
+            docList.innerHTML = '<li class="doc-item" style="cursor:default;color:#888;">No items parsed. Check your document formatting rules.</li>';
             return;
         }
+
         chaptersRegistry.forEach((chapter) => {
             const li = document.createElement('li');
             li.id = `item-${chapter.id}`;
             li.className = 'doc-item';
             li.textContent = chapter.title;
+            li.title = chapter.title;
             li.addEventListener('click', () => displayChapter(chapter.id));
             docList.appendChild(li);
         });
-        if (chaptersRegistry.length > 0) displayChapter(chaptersRegistry[0].id);
+
+        if (chaptersRegistry.length > 0) {
+            displayChapter(chaptersRegistry[0].id);
+        }
     }
 
     function displayChapter(id) {
         const targetNode = chaptersRegistry.find(c => c.id === id);
         if (!targetNode) return;
+
         document.querySelectorAll('.doc-item').forEach(el => el.classList.remove('active'));
         const activeItem = document.getElementById(`item-${id}`);
         if (activeItem) activeItem.classList.add('active');
+
         viewTitle.textContent = targetNode.title;
         output.innerHTML = parseAnsi(targetNode.content);
-        output.scrollTop = 0; 
+        output.scrollTop = 0;
     }
 
     fetch('docs.txt')
         .then(response => {
-            if (!response.ok) throw new Error("File not found");
+            if (!response.ok) throw new Error("Could not load docs.txt");
             return response.text();
         })
         .then(text => {
             processPreloadedDocumentation(text);
         })
         .catch(err => {
-            viewTitle.textContent = "Error loading file";
-            output.innerHTML = "Error fetching docs.txt";
+            viewTitle.textContent = "Error loading system";
+            output.innerText = "Unable to fetch docs.txt";
             console.error(err);
         });
 </script>
