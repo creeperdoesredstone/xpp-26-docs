@@ -327,7 +327,7 @@ Xenon-131 VM
 
 ==================================================
 Instruction Set
-===============
+========
 
 {ANSI.BOLD}Basic Instructions{ANSI.END}
 * {ANSI.CYAN}PUSH x{ANSI.END}:  Pushes a 32-bit integer {ANSI.RED}x{ANSI.END} to the stack.
