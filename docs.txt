@@ -1,4 +1,6 @@
-{ANSI.BOLD}{ANSI.CYAN}X++26 Documentation Overview{ANSI.END}
+==================================================
+Overview
+========
 
 X++26 is a statically-typed compiled programming language that targets the Xenon-131 Virtual Machine (XVM).
 It will be used for the development of {ANSI.CYAN}]8;;https://scratch.mit.edu/users/XenonOS26/\XenonOS]8;;\{ANSI.END} in {ANSI.CYAN}]8;;https://scratch.mit.edu/users/OSWars-26/\OS Wars 26]8;;\{ANSI.END}.
@@ -8,11 +10,9 @@ It will be used for the development of {ANSI.CYAN}]8;;https://scratch.mit.edu/u
 {ANSI.BOLD}{ANSI.YELLOW}Compilation Pipeline:{ANSI.END}
 Source Code -> Lexer -> Tokens -> Parser -> AST -> Semantic Analyzer -> Assembly Generator -> Assembly -> Xenon-131 VM.
 
----
-
----
-
-{ANSI.BOLD}{ANSI.PURPLE}Data Types & Literals{ANSI.END}
+==================================================
+Data Types & Literals
+========
 
 * {ANSI.GREEN}int{ANSI.END}: 32-bit signed integer {ANSI.DARKCYAN}(e.g., 0, 42, -15){ANSI.END}.
 * {ANSI.GREEN}float{ANSI.END}: IEEE-754 single-precision floating-point number {ANSI.DARKCYAN}(e.g., 3.14, 0.5){ANSI.END}.
@@ -31,9 +31,11 @@ Examples:
     ({ANSI.PURPLE}bool{ANSI.END})  {ANSI.CYAN}0{ANSI.END}         {ANSI.GREEN}# false{ANSI.END}
     ({ANSI.PURPLE}bool{ANSI.END})  {ANSI.CYAN}12345{ANSI.END}     {ANSI.GREEN}# true (any non-zero value returns true){ANSI.END}
 
----
+==================================================
+Operators & Precedence
+========
 
-{ANSI.BOLD}{ANSI.BLUE}Operators & Precedence (Highest to Lowest){ANSI.END}
+{ANSI.BOLD}Precedence (Highest to Lowest){ANSI.END}
 
 1. {ANSI.CYAN}Unary{ANSI.END}: {ANSI.RED}+{ANSI.END}a, {ANSI.RED}-{ANSI.END}a, {ANSI.RED}!{ANSI.END}a, {ANSI.RED}~{ANSI.END}a
 2. {ANSI.CYAN}Exponentiation{ANSI.END}: {ANSI.RED}**{ANSI.END}
@@ -45,13 +47,13 @@ Examples:
 8. {ANSI.CYAN}Relational{ANSI.END}: {ANSI.RED}<{ANSI.END}, {ANSI.RED}<={ANSI.END}, {ANSI.RED}>{ANSI.END}, {ANSI.RED}>={ANSI.END}
 9. {ANSI.CYAN}Equality{ANSI.END}: {ANSI.RED}=={ANSI.END}, {ANSI.RED}!={ANSI.END}
 10. {ANSI.CYAN}Logical AND{ANSI.END}: {ANSI.RED}&&{ANSI.END}
-11. {ANSI.CYAN}Logical XOR{ANSI.END}: {ANSI.RED}^^{ANSI.END}
+11. {ANSI.CYAN}Logical XOR{ANSI.END}: {ANSI.RED}^^^^{ANSI.END}
 12. {ANSI.CYAN}Logical OR{ANSI.END}: {ANSI.RED}||{ANSI.END}
 13. {ANSI.CYAN}Assignment{ANSI.END}: {ANSI.RED}+={ANSI.END}, {ANSI.RED}-={ANSI.END}, {ANSI.RED}*={ANSI.END}, {ANSI.RED}/={ANSI.END}, {ANSI.RED}%={ANSI.END}, {ANSI.RED}={ANSI.END} 
 
----
-
-{ANSI.BOLD}{ANSI.GREEN}Variables{ANSI.END}
+==================================================
+Variables
+========
 
 * {ANSI.BOLD}Declaration{ANSI.END}: `{ANSI.BOLD}{ANSI.RED}var {ANSI.END}x: {ANSI.PURPLE}int{ANSI.END}` 
 * {ANSI.BOLD}Assignment{ANSI.END}:  `x = {ANSI.CYAN}5{ANSI.END}`
@@ -74,9 +76,10 @@ Each variable corresponds to a memory address in the Xenon-131 VM.
 
     {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0{ANSI.END} {ANSI.GREEN}; x{ANSI.END}
 
----
+==================================================
+Pointers
+========
 
-{ANSI.BOLD}{ANSI.PURPLE}Pointers{ANSI.END}
 A pointer is a special variable that holds the address of a value.
 Arrays and strings are examples of pointers in X++26.
 
@@ -123,9 +126,10 @@ Here is an example program using pointers:
     {ANSI.RED}*{ANSI.END}ptr = {ANSI.CYAN}19{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}out{ANSI.END} {ANSI.PURPLE}<<{ANSI.END} x {ANSI.PURPLE}<<{ANSI.END} {ANSI.YELLOW}'{ANSI.CYAN}\n{ANSI.YELLOW}'{ANSI.END}     {ANSI.GREEN}# 19{ANSI.END}
 
----
+==================================================
+Arrays
+========
 
-{ANSI.BOLD}{ANSI.YELLOW}Arrays{ANSI.END}
 Arrays are pointers to the first element of a contiguous block of memory.
 
 * {ANSI.BOLD}Declaration:{ANSI.END}    `{ANSI.BOLD}{ANSI.RED}array {ANSI.END}arr: {ANSI.PURPLE}int{ANSI.END}[{ANSI.CYAN}3{ANSI.END}]`
@@ -160,9 +164,9 @@ Arrays are pointers to the first element of a contiguous block of memory.
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}4{ANSI.END} {ANSI.GREEN}; arr[2] is at 0x0004{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}LOADIND{ANSI.END}
 
----
-
-{ANSI.BOLD}{ANSI.RED}I/O{ANSI.END}
+==================================================
+I/O
+========
 
 {ANSI.BOLD}Output{ANSI.END}
 Use the {ANSI.BOLD}{ANSI.RED}out{ANSI.END} statement to output values to the terminal as a string (syntactically similar to C++'s {ANSI.PURPLE}std::ostream{ANSI.END}):
@@ -195,9 +199,9 @@ You have entered: Lorem ipsum
 The implementations of these statements in assembly are not discussed here.
 You can check out the {ANSI.CYAN}compiler documentation{ANSI.END} for more information.
 
----
-
-{ANSI.BOLD}{ANSI.RED}Type Conversion Rules{ANSI.END}
+==================================================
+Type Conversion Rules
+========
 
 X++26 performs implicit widening conversions but never implicit narrowing conversions.
 
@@ -234,9 +238,9 @@ This requires an explicit conversion:
 
     x = ({ANSI.PURPLE}int{ANSI.END}) {ANSI.CYAN}3.14{ANSI.END}
 
----
-
-{ANSI.BOLD}{ANSI.DARKCYAN}Iteration{ANSI.END}{ANSI.END}
+==================================================
+Iteration
+========
 
 {ANSI.BOLD}For Loop{ANSI.END}
 Syntax:
@@ -309,11 +313,9 @@ This makes the {ANSI.RED}repeat{ANSI.END} loop a {ANSI.UNDERLINE}post-condition{
 
     {ANSI.GREEN}; rest of the program...{ANSI.END}
 
----
-
----
-
-{ANSI.BOLD}{ANSI.DARKCYAN}Xenon-131 VM{ANSI.END}
+==================================================
+Xenon-131 VM
+========
 
 * {ANSI.GREEN}Stack-based{ANSI.END} (200000 items -> {ANSI.YELLOW}781.25 KiB{ANSI.END})
 * {ANSI.GREEN}Untyped{ANSI.END}
@@ -323,22 +325,21 @@ This makes the {ANSI.RED}repeat{ANSI.END} loop a {ANSI.UNDERLINE}post-condition{
 * {ANSI.CYAN}65536 PROM addresses{ANSI.END} {ANSI.YELLOW}(288 KiB){ANSI.END}
 -> Total capacity: {ANSI.PURPLE}1325.25 KiB{ANSI.END} = {ANSI.RED}1.294 MiB{ANSI.END}
 
----
-
-{ANSI.BOLD}{ANSI.PURPLE}Xenon-131 Instruction Set{ANSI.END}
-
+==================================================
+Instruction Set
+===============
 
 {ANSI.BOLD}Basic Instructions{ANSI.END}
 * {ANSI.CYAN}PUSH x{ANSI.END}:  Pushes a 32-bit integer {ANSI.RED}x{ANSI.END} to the stack.
-* {ANSI.CYAN}POP{ANSI.END}:     Pops the last value from the stack.
+* {ANSI.CYAN}POP{ANSI.END}:      Pops the last value from the stack.
 
 * {ANSI.CYAN}LOAD x{ANSI.END}:  Loads the 32-bit integer at address {ANSI.RED}x{ANSI.END} and pushes it to the stack.
 * {ANSI.CYAN}STORE x{ANSI.END}: Stores the top of the stack to address {ANSI.RED}x{ANSI.END} and pops the stack.
 * {ANSI.CYAN}LOADIND{ANSI.END}: Pops {ANSI.RED}a{ANSI.END} from the stack and loads from address {ANSI.RED}a{ANSI.END}.
 * {ANSI.CYAN}STREIND{ANSI.END}: Pops {ANSI.RED}a{ANSI.END} and {ANSI.RED}b{ANSI.END} from the stack and stores {ANSI.RED}b{ANSI.END} to address {ANSI.RED}a{ANSI.END} (assuming {ANSI.RED}a{ANSI.END} is pushed before {ANSI.RED}b{ANSI.END}).
 
-* {ANSI.CYAN}I2F{ANSI.END}:     Converts the top of the stack into a float.
-* {ANSI.CYAN}F2I{ANSI.END}:     Converts the IEEE-754 representation of a float on top of the stack into an integer.
+* {ANSI.CYAN}I2F{ANSI.END}:      Converts the top of the stack into a float.
+* {ANSI.CYAN}F2I{ANSI.END}:      Converts the IEEE-754 representation of a float on top of the stack into an integer.
 
 {ANSI.BOLD}Binary Operations{ANSI.END}
 {ANSI.YELLOW}These operations pop 2 values from the stack, {ANSI.RED}a{ANSI.YELLOW} and {ANSI.RED}b{ANSI.YELLOW}, and push the result to the stack.
@@ -358,7 +359,7 @@ This assumes {ANSI.RED}a{ANSI.YELLOW} is pushed before {ANSI.RED}b{ANSI.YELLOW}.
 * {ANSI.CYAN}POWF{ANSI.END}: Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}**{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are floats.
 
 * {ANSI.CYAN}AND{ANSI.END}:  Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}&{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
-* {ANSI.CYAN}OR{ANSI.END}:   Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}|{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
+* {ANSI.CYAN}OR{ANSI.END}:    Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}|{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
 * {ANSI.CYAN}XOR{ANSI.END}:  Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}^{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
 
 * {ANSI.CYAN}IEQ{ANSI.END}:  Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}=={ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
@@ -379,7 +380,7 @@ This assumes {ANSI.RED}a{ANSI.YELLOW} is pushed before {ANSI.RED}b{ANSI.YELLOW}.
 {ANSI.YELLOW}These operations pop a value {ANSI.RED}a{ANSI.YELLOW} from the stack and push the result to the stack.{ANSI.END}
 * {ANSI.CYAN}NEGI{ANSI.END}: Performs {ANSI.CYAN}-{ANSI.RED}a{ANSI.END}, assuming {ANSI.RED}a{ANSI.END} is an integer.
 * {ANSI.CYAN}NEGF{ANSI.END}: Performs {ANSI.CYAN}-{ANSI.RED}a{ANSI.END}, assuming {ANSI.RED}a{ANSI.END} is a float.
-* {ANSI.CYAN}NOT{ANSI.END}:  Performs {ANSI.CYAN}~{ANSI.RED}a{ANSI.END}, assuming {ANSI.RED}a{ANSI.END} is an integer.
+* {ANSI.CYAN}NOT{ANSI.END}:   Performs {ANSI.CYAN}~{ANSI.RED}a{ANSI.END}, assuming {ANSI.RED}a{ANSI.END} is an integer.
 
 {ANSI.BOLD}Jumping and Branching{ANSI.END}
 * {ANSI.CYAN}JUMP x{ANSI.END}: Loads {ANSI.RED}x{ANSI.END} to {ANSI.PURPLE}IP{ANSI.END}.
@@ -394,9 +395,9 @@ This assumes {ANSI.RED}a{ANSI.YELLOW} is pushed before {ANSI.RED}b{ANSI.YELLOW}.
 * {ANSI.CYAN}RETZ{ANSI.END}: Pops the call stack into {ANSI.PURPLE}IP{ANSI.END} if the value on top of the stack is {ANSI.GREEN}0{ANSI.END}.
 * {ANSI.CYAN}RETN{ANSI.END}: Pops the call stack into {ANSI.PURPLE}IP{ANSI.END} if the value on top of the stack is not {ANSI.GREEN}0{ANSI.END}.
 
----
-
-{ANSI.BOLD}{ANSI.CYAN}Data Structure Representations{ANSI.END}{ANSI.END}
+==================================================
+Data Structure Representations
+========
 
 {ANSI.BOLD}Integer{ANSI.END}
 * Each integer is stored as a 32-bit signed value and occupies 1 memory address.
@@ -435,10 +436,9 @@ This allows logical and bitwise {ANSI.RED}AND{ANSI.END}, {ANSI.RED}OR{ANSI.END},
 
 {ANSI.BOLD}Objects{ANSI.END} - not implemented
 
----
-
-{ANSI.BOLD}{ANSI.RED}Planned Features{ANSI.END}
-
+==================================================
+Planned Features
+========
 {ANSI.UNDERLINE}0.2.0{ANSI.END}
 * Pointers
 * Strings
@@ -456,8 +456,3 @@ This allows logical and bitwise {ANSI.RED}AND{ANSI.END}, {ANSI.RED}OR{ANSI.END},
 {ANSI.UNDERLINE}1.0.0{ANSI.END}
 * Full XenonOS Support
 * Graphics API
-
----
-
-{ANSI.PURPLE}End of Documentation{ANSI.END}
-
