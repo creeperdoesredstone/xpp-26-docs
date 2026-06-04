@@ -777,29 +777,34 @@ Syscalls
 {ANSI.CYAN}1 - OUTPUT_STR{ANSI.END}
 Outputs the string at the string pointer on top of the stack.
 
-```xpp26
-out << str
+```asm
+LOAD &str.descriptionVec[0]
+LOADIND
+SYS 1
 ```
 
 {ANSI.CYAN}2 - READ_STR{ANSI.END}
 Pauses execution in the current process and waits for user input.
 
-```xpp26
-in >> str
+```asm
+LOAD &str.descriptionVec[0]
+SYS 2
 ```
 
 {ANSI.CYAN}3 - STRTOINT{ANSI.END}
 Converts the string at the pointer on top of the stack to an integer.
 
-```xpp26
-var num: int = (int) str
+```asm
+LOAD &str.descriptionVec[0]
+SYS 3
 ```
 
 {ANSI.CYAN}4 - STRTOFLOAT{ANSI.END}
 Converts the string at the pointer on top of the stack to a float.
 
-```xpp26
-var num: float = (float) str
+```asm
+LOAD &str.descriptionVec[0]
+SYS 4
 ```
 
 {ANSI.CYAN}5 - INTTOSTR{ANSI.END}
@@ -814,7 +819,7 @@ SYS 5
 Converts the float at the top of the stack to a string at address 0x0F00.
 
 ```asm
-PUSH 3.14
+PUSH 0x4048f5c3  ; 0x4048f5c3 -> 3.14
 SYS 6
 ```
 
@@ -822,7 +827,7 @@ SYS 6
 Converts the boolean at the top of the stack to a string at address 0x0F00.
 
 ```asm
-PUSH -1  ; true
+PUSH 0xfffffff  ; true
 SYS 7
 ```
 
@@ -831,7 +836,7 @@ Converts the integer at the top of the stack to a hexadecimal string at address 
 
 ```asm
 PUSH 255
-SYS 8  ; converts to "FF"
+SYS 8  ; converts to "0x00FF"
 ```
 
 {ANSI.CYAN}9 - PUT_CHAR{ANSI.END}
