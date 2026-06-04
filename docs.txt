@@ -47,7 +47,7 @@ Operators & Precedence
 8. {ANSI.CYAN}Relational{ANSI.END}: {ANSI.RED}<{ANSI.END}, {ANSI.RED}<={ANSI.END}, {ANSI.RED}>{ANSI.END}, {ANSI.RED}>={ANSI.END}
 9. {ANSI.CYAN}Equality{ANSI.END}: {ANSI.RED}=={ANSI.END}, {ANSI.RED}!={ANSI.END}
 10. {ANSI.CYAN}Logical AND{ANSI.END}: {ANSI.RED}&&{ANSI.END}
-11. {ANSI.CYAN}Logical XOR{ANSI.END}: {ANSI.RED}^^^^{ANSI.END}
+11. {ANSI.CYAN}Logical XOR{ANSI.END}: {ANSI.RED}^^{ANSI.END}
 12. {ANSI.CYAN}Logical OR{ANSI.END}: {ANSI.RED}||{ANSI.END}
 13. {ANSI.CYAN}Assignment{ANSI.END}: {ANSI.RED}+={ANSI.END}, {ANSI.RED}-={ANSI.END}, {ANSI.RED}*={ANSI.END}, {ANSI.RED}/={ANSI.END}, {ANSI.RED}%={ANSI.END}, {ANSI.RED}={ANSI.END} 
 
@@ -536,6 +536,20 @@ This allows logical and bitwise {ANSI.RED}AND{ANSI.END}, {ANSI.RED}OR{ANSI.END},
 {ANSI.BOLD}Subroutine{ANSI.END} - not implemented
 
 {ANSI.BOLD}Objects{ANSI.END} - not implemented
+
+==================================================
+Syscalls
+========
+{ANSI.YELLOW}Here are the syscalls in the Xenon-131 VM:{ANSI.END}
+
+   {ANSI.CYAN}1{ANSI.END} {ANSI.RED}OUTPUT_STR{ANSI.END}: Outputs the string at the string pointer on top of the stack.
+   {ANSI.CYAN}2{ANSI.END} {ANSI.RED}READ_STR{ANSI.END}  : Pauses execution in the current process and waits for user input.
+   {ANSI.CYAN}3{ANSI.END} {ANSI.RED}STRTOINT{ANSI.END}  : Converts the string at the pointer on top of the stack to an integer.
+   {ANSI.CYAN}4{ANSI.END} {ANSI.RED}STRTOFLOAT{ANSI.END}: Converts the string at the pointer on top of the stack to a float.
+   {ANSI.CYAN}5{ANSI.END} {ANSI.RED}INTTOSTR{ANSI.END}  : Converts the integer at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+   {ANSI.CYAN}6{ANSI.END} {ANSI.RED}FLOATTOSTR{ANSI.END}: Converts the float at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+   {ANSI.CYAN}7{ANSI.END} {ANSI.RED}BOOLTOSTR{ANSI.END} : Converts the boolean at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+   {ANSI.CYAN}8{ANSI.END} {ANSI.RED}INTTOHEX{ANSI.END}  : Converts the integer at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
 
 ==================================================
 Planned Features
