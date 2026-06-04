@@ -640,6 +640,15 @@ Syscalls
     {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.PURPLE}int{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}30{ANSI.END}
 
+{ANSI.BOLD}Graphics Syscalls{ANSI.END}
+
+{ANSI.BOLD}Other Syscalls{ANSI.END}
+  {ANSI.CYAN}60{ANSI.END} {ANSI.GREEN}REQUEST{ANSI.END}: Pops the request backend id and destination from the stack and sends a request to that backend using cloud variables. The result of that request would be stored at address {ANSI.CYAN}addr{ANSI.END}.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.PURPLE}int{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}addr{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}60{ANSI.END}
+
 ==================================================
 Planned Features
 ========
