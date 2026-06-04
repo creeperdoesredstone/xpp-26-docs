@@ -529,6 +529,11 @@
         return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
+    // Helper utility to safely unescape symbols specifically for raw code handling
+    function unescapeHtml(text) {
+        return text.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+    }
+
     function parseAnsi(text) {
         const targetRegex = /\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
         let pool = text.replace(targetRegex, function(match, url, linkText) {
@@ -548,11 +553,11 @@
         pool = pool.replace(/```([\w]*)\n([\s\S]*?)```/g, function(match, lang, code) {
             let language = lang ? lang.toLowerCase().trim() : 'plaintext';
             
-            // Normalize variants to match registered sub-languages
             if (language === 'xpp') language = 'xpp26';
             if (language === 'assembly') language = 'asm';
 
-            const cleanCode = code.trim();
+            // Crucial Fix: Unescape structural markup safely so code syntax targets receive clean code string raw inputs
+            const cleanCode = unescapeHtml(code.trim());
             const codeId = 'code-' + Math.random().toString(36).substr(2, 9);
             
             let highlighted;
@@ -671,6 +676,7 @@
         const activeItem = document.getElementById(`item-${id}`);
         if (activeItem) activeItem.classList.add('active');
 
+        // Render titles accurately
         viewTitle.textContent = targetNode.title;
         output.innerHTML = parseAnsi(targetNode.content);
         
