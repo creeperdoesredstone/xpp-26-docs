@@ -285,9 +285,15 @@ I/O Assembly
 ========
 
 {ANSI.BOLD}Output{ANSI.END}
-If the value to output is a string or array of characters with a null terminator (such as {ANSI.YELLOW}str{ANSI.END} from earlier):
+If the value to output is a string:
 
-    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END} {ANSI.GREEN}; &str[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str.descriptionVec[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOADIND{ANSI.END}     {ANSI.GREEN}; &str[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
+
+If the value to output is an array of characters:
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&char_array[0]{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
 
 If the value to output is a character:
