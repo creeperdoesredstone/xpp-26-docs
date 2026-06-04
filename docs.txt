@@ -14,9 +14,16 @@ Source Code -> Lexer -> Tokens -> Parser -> AST -> Semantic Analyzer -> Assembly
 Data Types & Literals
 ========
 
-* {ANSI.GREEN}int{ANSI.END}: 32-bit signed integer {ANSI.DARKCYAN}(e.g., 0, 42, -15){ANSI.END}.
-* {ANSI.GREEN}float{ANSI.END}: IEEE-754 single-precision floating-point number {ANSI.DARKCYAN}(e.g., 3.14, 0.5){ANSI.END}.
-* {ANSI.GREEN}bool{ANSI.END}: Boolean value {ANSI.DARKCYAN}(true / false){ANSI.END}.
+{ANSI.BOLD}Base types{ANSI.END}
+* {ANSI.GREEN}int{ANSI.END}: 32-bit signed integer {ANSI.DARKCYAN}(e.g., 0, 42, -15){ANSI.END}
+* {ANSI.GREEN}float{ANSI.END}: IEEE-754 single-precision floating-point number {ANSI.DARKCYAN}(e.g., 3.14, 0.5){ANSI.END}
+* {ANSI.GREEN}ptr{ANSI.END}: Holds an address of a value
+
+{ANSI.BOLD}Derived types{ANSI.END}
+* {ANSI.PURPLE}bool{ANSI.END}: Boolean value {ANSI.DARKCYAN}(true / false){ANSI.END}
+* {ANSI.PURPLE}array{ANSI.END}: Pointer to the first element of the array
+* {ANSI.PURPLE}string{ANSI.END}: Pointer leading to null-terminated sequence of characters surrounded by double quotes {ANSI.DARKCYAN}("Hello!", "abc"){ANSI.END}
+* {ANSI.PURPLE}char{ANSI.END}: Integer under the hood, surrounded by single quotes {ANSI.DARKCYAN}('a', '@', '1'){ANSI.END}
 
 {ANSI.BOLD}Type Casting{ANSI.END}
 Syntax:
@@ -117,7 +124,7 @@ Here is an example program using pointers:
     x = {ANSI.CYAN}5{ANSI.END}
     ptr = {ANSI.RED}&{ANSI.END}x
 
-    {ANSI.BOLD}{ANSI.RED}out{ANSI.END} {ANSI.PURPLE}<<{ANSI.END} ptr {ANSI.PURPLE}<<{ANSI.END} {ANSI.YELLOW}'{ANSI.CYAN}\n{ANSI.YELLOW}'{ANSI.END}   {ANSI.GREEN}# 0x0000{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}out{ANSI.END} {ANSI.PURPLE}<<{ANSI.END} ptr {ANSI.PURPLE}<<{ANSI.END} {ANSI.YELLOW}'{ANSI.CYAN}\n{ANSI.YELLOW}'{ANSI.END}   {ANSI.GREEN}# 0x1000{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}out{ANSI.END} {ANSI.PURPLE}<<{ANSI.END} {ANSI.RED}*{ANSI.END}ptr {ANSI.PURPLE}<<{ANSI.END} {ANSI.YELLOW}'{ANSI.CYAN}\n{ANSI.YELLOW}'{ANSI.END}  {ANSI.GREEN}# 5{ANSI.END}
 
     x = {ANSI.CYAN}7{ANSI.END}
@@ -283,7 +290,7 @@ If the value to output is a pointer:
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x0F00{ANSI.END} {ANSI.GREEN}; dedicated result string buffer{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
 
-The semantic anaylzer will handle these cases automatically.
+The semantic analyzer will handle these cases automatically.
 
 ---
 
@@ -410,7 +417,7 @@ This makes the {ANSI.RED}repeat{ANSI.END} loop a {ANSI.UNDERLINE}post-condition{
 Xenon-131 VM
 ========
 
-* {ANSI.GREEN}Stack-based{ANSI.END} (200000 items -> {ANSI.YELLOW}781.25 KiB{ANSI.END})
+{ANSI.END}* {ANSI.GREEN}Stack-based{ANSI.END} (200000 items -> {ANSI.YELLOW}781.25 KiB{ANSI.END})
 * {ANSI.GREEN}Untyped{ANSI.END}
 * {ANSI.GREEN}32-bit data{ANSI.END}
 * {ANSI.GREEN}36-bit instructions{ANSI.END} ({ANSI.YELLOW}4b{ANSI.END} opcode, {ANSI.YELLOW}32b{ANSI.END} data)
@@ -453,7 +460,7 @@ This assumes {ANSI.RED}a{ANSI.YELLOW} is pushed before {ANSI.RED}b{ANSI.YELLOW}.
 * {ANSI.CYAN}POWF{ANSI.END}: Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}**{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are floats.
 
 * {ANSI.CYAN}AND{ANSI.END}:  Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}&{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
-* {ANSI.CYAN}OR{ANSI.END}:    Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}|{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
+* {ANSI.CYAN}OR{ANSI.END}:   Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}|{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
 * {ANSI.CYAN}XOR{ANSI.END}:  Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}^{ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
 
 * {ANSI.CYAN}IEQ{ANSI.END}:  Performs {ANSI.RED}a{ANSI.END} {ANSI.CYAN}=={ANSI.END} {ANSI.RED}b{ANSI.END}, assuming the operands are integers.
@@ -540,16 +547,77 @@ This allows logical and bitwise {ANSI.RED}AND{ANSI.END}, {ANSI.RED}OR{ANSI.END},
 ==================================================
 Syscalls
 ========
-{ANSI.YELLOW}Here are the syscalls in the Xenon-131 VM:{ANSI.END}
 
-   {ANSI.CYAN}1{ANSI.END} {ANSI.RED}OUTPUT_STR{ANSI.END}: Outputs the string at the string pointer on top of the stack.
-   {ANSI.CYAN}2{ANSI.END} {ANSI.RED}READ_STR{ANSI.END}  : Pauses execution in the current process and waits for user input.
-   {ANSI.CYAN}3{ANSI.END} {ANSI.RED}STRTOINT{ANSI.END}  : Converts the string at the pointer on top of the stack to an integer.
-   {ANSI.CYAN}4{ANSI.END} {ANSI.RED}STRTOFLOAT{ANSI.END}: Converts the string at the pointer on top of the stack to a float.
-   {ANSI.CYAN}5{ANSI.END} {ANSI.RED}INTTOSTR{ANSI.END}  : Converts the integer at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
-   {ANSI.CYAN}6{ANSI.END} {ANSI.RED}FLOATTOSTR{ANSI.END}: Converts the float at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
-   {ANSI.CYAN}7{ANSI.END} {ANSI.RED}BOOLTOSTR{ANSI.END} : Converts the boolean at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
-   {ANSI.CYAN}8{ANSI.END} {ANSI.RED}INTTOHEX{ANSI.END}  : Converts the integer at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+{ANSI.BOLD}I/O Syscalls{ANSI.END}
+   {ANSI.CYAN}1{ANSI.END} {ANSI.GREEN}OUTPUT_STR{ANSI.END}: Outputs the string at the string pointer on top of the stack.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}
+
+   {ANSI.CYAN}2{ANSI.END} {ANSI.GREEN}READ_STR{ANSI.END}  : Pauses execution in the current process and waits for user input.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}2{ANSI.END}
+
+   {ANSI.CYAN}3{ANSI.END} {ANSI.GREEN}STRTOINT{ANSI.END}  : Converts the string at the pointer on top of the stack to an integer.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}3{ANSI.END}
+
+   {ANSI.CYAN}4{ANSI.END} {ANSI.GREEN}STRTOFLOAT{ANSI.END}: Converts the string at the pointer on top of the stack to a float.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}4{ANSI.END}
+
+   {ANSI.CYAN}5{ANSI.END} {ANSI.GREEN}INTTOSTR{ANSI.END}  : Converts the integer at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.PURPLE}int{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}5{ANSI.END}
+
+   {ANSI.CYAN}6{ANSI.END} {ANSI.GREEN}FLOATTOSTR{ANSI.END}: Converts the float at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.PURPLE}float{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}6{ANSI.END}
+
+   {ANSI.CYAN}7{ANSI.END} {ANSI.GREEN}BOOLTOSTR{ANSI.END} : Converts the boolean at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.PURPLE}bool{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}7{ANSI.END}
+
+   {ANSI.CYAN}8{ANSI.END} {ANSI.GREEN}INTTOHEX{ANSI.END}  : Converts the integer at the top of the stack to a string at address {ANSI.CYAN}0x0F00{ANSI.END}.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.PURPLE}int{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}8{ANSI.END}
+
+
+{ANSI.BOLD}String Syscalls{ANSI.END}
+  {ANSI.CYAN}10{ANSI.END} {ANSI.GREEN}STR_CONCAT{ANSI.END}: Concatenates {ANSI.CYAN}str1{ANSI.END} and {ANSI.CYAN}str2{ANSI.END}, storing the result in {ANSI.CYAN}str3{ANSI.END}.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str1{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str2{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str3{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}10{ANSI.END}
+
+  {ANSI.CYAN}11{ANSI.END} {ANSI.GREEN}STR_COMPARE{ANSI.END}: Compares {ANSI.CYAN}str1{ANSI.END} and {ANSI.CYAN}str2{ANSI.END}, pushing the boolean result to the stack.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str1{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str2{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}11{ANSI.END}
+
+  {ANSI.CYAN}12{ANSI.END} {ANSI.GREEN}STR_COPY{ANSI.END}: Copies {ANSI.CYAN}str1{ANSI.END} to {ANSI.CYAN}str2{ANSI.END}.
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str1{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.YELLOW}&str2{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}12{ANSI.END}
+
+{ANSI.BOLD}System Syscalls{ANSI.END}
+  {ANSI.CYAN}20{ANSI.END} {ANSI.GREEN}SYS_GETTIME{ANSI.END}: Pushes the current execution time (in ms).
+
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}20{ANSI.END} {ANSI.GREEN}; -> int{ANSI.END}
+
+  {ANSI.CYAN}30{ANSI.END} {ANSI.GREEN}SYS_EXIT{ANSI.END}: Pops the exit code from the stack and commands the VM to terminate the current process based on it.
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.PURPLE}int{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}30{ANSI.END}
 
 ==================================================
 Planned Features
