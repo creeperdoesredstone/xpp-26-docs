@@ -141,8 +141,8 @@ Arrays are pointers to the first element of a contiguous block of memory.
 {ANSI.BOLD}Declaration:{ANSI.END}
 
     {ANSI.GREEN}; Nothing! This is for the semantic analyzer to handle.
-    ; The array pointer `arr` would be assigned to the next free address (0x0002 in this case).
-    ; The next free address would be 0x0005, as the elements of arr[] occupy 3 memory addresses.
+    ; The array pointer `arr` would be assigned to the next free address (0x1002 in this case).
+    ; The next free address would be 0x1006, as arr[] occupies 3+1=4 memory addresses.
 {ANSI.END}
 {ANSI.BOLD}Initialization:{ANSI.END}
 
@@ -189,24 +189,33 @@ Like {ANSI.PURPLE}integers {ANSI.END}and {ANSI.PURPLE}booleans{ANSI.END}, each c
 
     {ANSI.GREEN}; Nothing! This is for the semantic analyzer to handle.
     ; The string pointer `str` would be assigned to the next free address (0x1006 in this case).
-    ; The next free address would be 0x1009, as the characters of str occupy 3 memory addresses.
+    ; The next free address would be 0x100A, as the description vector for a string occupies 3 addresses and the string pointer occupies 1 address.
 {ANSI.END}
 {ANSI.BOLD}Assignment:{ANSI.END}
 
-    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x1007{ANSI.END}  {ANSI.GREEN}; & str[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x1007{ANSI.END}  {ANSI.GREEN}; & str.descriptionVec[0]{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END}{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END} {ANSI.GREEN}; str{ANSI.END}
 
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}72{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1003{ANSI.END} {ANSI.GREEN}; str[0] -> 'H'{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x8000{ANSI.END} {ANSI.GREEN}; str[0] -> 'H'{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}105{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1004{ANSI.END} {ANSI.GREEN}; str[1] -> 'i'{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x8001{ANSI.END} {ANSI.GREEN}; str[1] -> 'i'{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1005{ANSI.END} {ANSI.GREEN}; str[2] -> '\0'{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x8002{ANSI.END} {ANSI.GREEN}; str[2] -> '\0'{ANSI.END}
+
+    {ANSI.GREEN}; initialize str.descriptionVec{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x8000{ANSI.END}  {ANSI.GREEN}; str[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1007{ANSI.END} {ANSI.GREEN}; str.descriptionVec[0] = &str[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}3{ANSI.END}       {ANSI.GREEN}; length including '\0'{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1008{ANSI.END} {ANSI.GREEN}; str.descriptionVec[1] = str.length
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END}{ANSI.END} {ANSI.CYAN}16{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1009{ANSI.END} {ANSI.GREEN}; str.descriptionVec[2] = str.capacity (16 * ceil(str.length / 16)){ANSI.END}
 
 {ANSI.BOLD}Access Character:{ANSI.END}
 
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}1{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END} {ANSI.GREEN}; &str.descriptionVec[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOADIND{ANSI.END}     {ANSI.GREEN}; &str[0]{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}ADDI{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}LOADIND{ANSI.END}
 
@@ -250,7 +259,7 @@ I/O Assembly
 {ANSI.BOLD}Output{ANSI.END}
 If the value to output is a string or array of characters with a null terminator (such as {ANSI.YELLOW}str{ANSI.END} from earlier):
 
-    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END} {ANSI.GREEN}; address of str[0] is stored in 0x1006{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END} {ANSI.GREEN}; &str[0]{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
 
 If the value to output is an integer or float:
@@ -280,8 +289,8 @@ The semantic anaylzer will handle these cases automatically.
 
 {ANSI.BOLD}Input{ANSI.END}
 
-    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1010{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}2{ANSI.END} {ANSI.GREEN}; input syscall{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x100A{ANSI.END} {ANSI.GREEN}; &message{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}2{ANSI.END}       {ANSI.GREEN}; input syscall{ANSI.END}
 
 ==================================================
 Implicit Type Conversions
