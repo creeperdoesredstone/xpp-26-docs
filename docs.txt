@@ -65,16 +65,16 @@ Each variable corresponds to a memory address in the Xenon-131 VM.
 {ANSI.BOLD}Declaration{ANSI.END}
 
     {ANSI.GREEN}; Nothing! This is for the semantic analyzer to handle.
-    ; The variable `x` would be assigned to the next free address (0x0000 in this case).{ANSI.END}
+    ; The variable `x` would be assigned to the next free address (0x1000 in this case).{ANSI.END}
 
 {ANSI.BOLD}Assignment{ANSI.END}
 
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}5{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0{ANSI.END} {ANSI.GREEN}; x{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1000{ANSI.END} {ANSI.GREEN}; x{ANSI.END}
 
 {ANSI.BOLD}Access{ANSI.END}
 
-    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0{ANSI.END} {ANSI.GREEN}; x{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1000{ANSI.END} {ANSI.GREEN}; x{ANSI.END}
 
 ==================================================
 Pointers
@@ -92,21 +92,21 @@ Arrays and strings are examples of pointers in X++26.
 {ANSI.BOLD}Declaration:{ANSI.END}
 
     {ANSI.GREEN}; Nothing! This is for the semantic analyzer to handle.
-    ; The variable `ptr` would be assigned to the next free address (0x0001 in this case).{ANSI.END}
+    ; The variable `ptr` would be assigned to the next free address (0x1001 in this case).{ANSI.END}
 
 {ANSI.BOLD}Assignment:{ANSI.END}
 
     {ANSI.GREEN}; ptr = &x{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0{ANSI.END}  {ANSI.GREEN}; &x{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}1{ANSI.END} {ANSI.GREEN}; ptr{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x1000{ANSI.END}  {ANSI.GREEN}; &x{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1001{ANSI.END} {ANSI.GREEN}; ptr{ANSI.END}
 
     {ANSI.GREEN}; *ptr = expr{ANSI.END}
     {ANSI.GREEN}; expr{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}1{ANSI.END} {ANSI.GREEN}; ptr{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1001{ANSI.END} {ANSI.GREEN}; ptr{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}STREIND{ANSI.END}
 
 {ANSI.BOLD}Access Value:{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}1{ANSI.END} {ANSI.GREEN}; ptr{ANSI.GREEN}{ANSI.END}{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1001{ANSI.END} {ANSI.GREEN}; ptr{ANSI.GREEN}{ANSI.END}{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}LOADIND{ANSI.END}
 
 Here is an example program using pointers:
@@ -141,27 +141,73 @@ Arrays are pointers to the first element of a contiguous block of memory.
 {ANSI.BOLD}Declaration:{ANSI.END}
 
     {ANSI.GREEN}; Nothing! This is for the semantic analyzer to handle.
-    ; The array `arr` would be assigned to the next free address (0x0002 in this case).
-    ; The next free address would be 0x0005, as the elements of arr[] occupies 3 memory addresses.
+    ; The array pointer `arr` would be assigned to the next free address (0x0002 in this case).
+    ; The next free address would be 0x0005, as the elements of arr[] occupy 3 memory addresses.
 {ANSI.END}
 {ANSI.BOLD}Initialization:{ANSI.END}
 
+    {ANSI.GREEN}; store pointer{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x1003{ANSI.END}  {ANSI.GREEN}; &arr[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1002{ANSI.END} {ANSI.GREEN}; arr{ANSI.END}
+
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}1{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}2{ANSI.END} {ANSI.GREEN}; arr[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1003{ANSI.END} {ANSI.GREEN}; arr[0]{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}2{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}3{ANSI.END} {ANSI.GREEN}; arr[1]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1004{ANSI.END} {ANSI.GREEN}; arr[1]{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}3{ANSI.END}
-    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}4{ANSI.END} {ANSI.GREEN}; arr[2]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1005{ANSI.END} {ANSI.GREEN}; arr[2]{ANSI.END}
 
 {ANSI.BOLD}Set Element:{ANSI.END}
 
-    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}4{ANSI.END} {ANSI.GREEN}; arr[2] is at 0x0004{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}2{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1002{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}ADDI{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}4{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}STOREIND{ANSI.END}    
 
 {ANSI.BOLD}Access Element:{ANSI.END}
 
-    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}4{ANSI.END} {ANSI.GREEN}; arr[2] is at 0x0004{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}2{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1002{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}ADDI{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOADIND{ANSI.END}
+
+
+==================================================
+Strings
+=======
+
+Strings in X++26 are {ANSI.BOLD}pointers {ANSI.END}to the first element of a contiguous block of memory containing sequence-ordered characters, terminated by a null character ({ANSI.CYAN}0x00000000{ANSI.END}).
+Like {ANSI.PURPLE}integers {ANSI.END}and {ANSI.PURPLE}booleans{ANSI.END}, each character in the string occupies 1 full 32-bit memory address in the XVM.
+
+* {ANSI.BOLD}Declaration:{ANSI.END}      `{ANSI.BOLD}{ANSI.RED}var{ANSI.END} str: {ANSI.PURPLE}string{ANSI.END}`
+* {ANSI.BOLD}Assignment:{ANSI.END}       `str = {ANSI.YELLOW}"Hi"{ANSI.END}`
+* {ANSI.BOLD}Access Character:{ANSI.END} `str[{ANSI.CYAN}1{ANSI.END}]  {ANSI.GREEN}# 'i'{ANSI.END}`
+
+{ANSI.YELLOW}Here are some assembly instructions emitted from the above examples:{ANSI.END}
+{ANSI.BOLD}Declaration:{ANSI.END}
+
+    {ANSI.GREEN}; Nothing! This is for the semantic analyzer to handle.
+    ; The string pointer `str` would be assigned to the next free address (0x1006 in this case).
+    ; The next free address would be 0x1009, as the characters of str occupy 3 memory addresses.
+{ANSI.END}
+{ANSI.BOLD}Assignment:{ANSI.END}
+
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x1007{ANSI.END}  {ANSI.GREEN}; & str[0]{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END}{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END} {ANSI.GREEN}; str{ANSI.END}
+
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}72{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1003{ANSI.END} {ANSI.GREEN}; str[0] -> 'H'{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}105{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1004{ANSI.END} {ANSI.GREEN}; str[1] -> 'i'{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}STORE{ANSI.END} {ANSI.CYAN}0x1005{ANSI.END} {ANSI.GREEN}; str[2] -> '\0'{ANSI.END}
+
+{ANSI.BOLD}Access Character:{ANSI.END}
+
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}1{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}ADDI{ANSI.END}
     {ANSI.BOLD}{ANSI.RED}LOADIND{ANSI.END}
 
 ==================================================
@@ -196,8 +242,46 @@ Lorem ipsum
 {ANSI.BOLD}{ANSI.YELLOW}OUTPUT{ANSI.END}
 You have entered: Lorem ipsum
 
-The implementations of these statements in assembly are not discussed here.
-You can check out the {ANSI.CYAN}compiler documentation{ANSI.END} for more information.
+
+==================================================
+I/O Assembly
+========
+
+{ANSI.BOLD}Output{ANSI.END}
+If the value to output is a string or array of characters with a null terminator (such as {ANSI.YELLOW}str{ANSI.END} from earlier):
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1006{ANSI.END} {ANSI.GREEN}; address of str[0] is stored in 0x1006{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
+
+If the value to output is an integer or float:
+
+    {ANSI.GREEN}; assume value is already on top of stack{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}5{ANSI.END}       {ANSI.GREEN}; inttostr syscall, can replace with `SYS 6` for floattostr{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x0F00{ANSI.END} {ANSI.GREEN}; dedicated result string buffer{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
+
+If the value to output is a boolean:
+
+    {ANSI.GREEN}; assume value is already on top of stack{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}7{ANSI.END}       {ANSI.GREEN}; booltostr syscall{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x0F00{ANSI.END} {ANSI.GREEN}; dedicated result string buffer{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
+
+If the value to output is a pointer:
+
+    {ANSI.GREEN}; assume value is already on top of stack{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}8{ANSI.END}       {ANSI.GREEN}; inttohex syscall{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}PUSH{ANSI.END} {ANSI.CYAN}0x0F00{ANSI.END} {ANSI.GREEN}; dedicated result string buffer{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}1{ANSI.END}       {ANSI.GREEN}; output syscall{ANSI.END}
+
+The semantic anaylzer will handle these cases automatically.
+
+---
+
+{ANSI.BOLD}Input{ANSI.END}
+
+    {ANSI.BOLD}{ANSI.RED}LOAD{ANSI.END} {ANSI.CYAN}0x1010{ANSI.END}
+    {ANSI.BOLD}{ANSI.RED}SYS{ANSI.END} {ANSI.CYAN}2{ANSI.END} {ANSI.GREEN}; input syscall{ANSI.END}
 
 ==================================================
 Implicit Type Conversions
