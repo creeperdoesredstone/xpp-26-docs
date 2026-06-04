@@ -364,7 +364,7 @@ Hello, World!
 Use the {ANSI.BOLD}in{ANSI.END} statement to request user input from the terminal as a string (syntactically similar to C++'s std::istream):
 
 ```xpp26
-in >> var
+in >> var_name
 ```
 
 {ANSI.YELLOW}Example:{ANSI.END}
