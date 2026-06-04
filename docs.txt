@@ -23,7 +23,7 @@ Data Types & Literals
 * {ANSI.PURPLE}bool{ANSI.END}: Boolean value {ANSI.DARKCYAN}(true / false){ANSI.END}
 * {ANSI.PURPLE}array{ANSI.END}: Pointer to the first element of the array
 * {ANSI.PURPLE}string{ANSI.END}: Pointer leading to null-terminated sequence of characters surrounded by double quotes {ANSI.DARKCYAN}("Hello!", "abc"){ANSI.END}
-* {ANSI.PURPLE}char{ANSI.END}: Integer under the hood, surrounded by single quotes {{ANSI.DARKCYAN}('a', '@', '1'){ANSI.END}
+* {ANSI.PURPLE}char{ANSI.END}: Integer under the hood, surrounded by single quotes {ANSI.DARKCYAN}('a', '@', '1'){ANSI.END}
 
 {ANSI.BOLD}Type Casting{ANSI.END}
 Syntax:
@@ -265,7 +265,7 @@ Strings
 =======
 
 Strings in X++26 are {ANSI.BOLD}pointers{ANSI.END} leading to the first element of a contiguous block of memory containing sequence-ordered characters, terminated by a null character.
-Like {ANSI.PURPLE}integers{ANSI.END} and {{ANSI.PURPLE}booleans{ANSI.END}, each character in the string occupies 1 full 32-bit memory address in the XVM.
+Like {ANSI.PURPLE}integers{ANSI.END} and {ANSI.PURPLE}booleans{ANSI.END}, each character in the string occupies 1 full 32-bit memory address in the XVM.
 
 * {ANSI.BOLD}Declaration:{ANSI.END}      `var str: string`
 * {ANSI.BOLD}Assignment:{ANSI.END}       `str = "Hi"`
@@ -415,8 +415,8 @@ out << 'A'
 ```
 
 ```asm
-; assume character is already on top of stack
-SYS 9  ; dedicated put_char syscall
+PUSH 65 ; 'A'
+SYS 9   ; dedicated put_char syscall
 ```
 
 {ANSI.BOLD}Output Integer{ANSI.END}
@@ -426,7 +426,7 @@ out << 42
 ```
 
 ```asm
-; assume value is already on top of stack
+PUSH 42
 SYS 5          ; inttostr syscall
 PUSH 0x0F00    ; dedicated result string buffer
 SYS 1          ; output syscall
@@ -439,10 +439,10 @@ out << 3.14
 ```
 
 ```asm
-; assume value is already on top of stack
-SYS 6          ; floattostr syscall
-PUSH 0x0F00    ; dedicated result string buffer
-SYS 1          ; output syscall
+PUSH 0x4048F5C3 ; 0x4048F5C3 -> 3.14
+SYS 6           ; floattostr syscall
+PUSH 0x0F00     ; dedicated result string buffer
+SYS 1           ; output syscall
 ```
 
 {ANSI.BOLD}Output Boolean{ANSI.END}
@@ -452,10 +452,10 @@ out << true
 ```
 
 ```asm
-; assume value is already on top of stack
-SYS 7          ; booltostr syscall
-PUSH 0x0F00    ; dedicated result string buffer
-SYS 1          ; output syscall
+PUSH 0xffffffff ; true
+SYS 7           ; booltostr syscall
+PUSH 0x0F00     ; dedicated result string buffer
+SYS 1           ; output syscall
 ```
 
 {ANSI.BOLD}Output Pointer{ANSI.END}
@@ -465,7 +465,7 @@ out << ptr
 ```
 
 ```asm
-; assume value is already on top of stack
+LOAD &ptr
 SYS 8          ; inttohex syscall
 PUSH 0x0F00    ; dedicated result string buffer
 SYS 1          ; output syscall
@@ -482,8 +482,8 @@ in >> message
 ```
 
 ```asm
-LOAD 0x100A  ; &message
-SYS 2        ; input syscall
+LOAD 0x100A ; &message
+SYS 2       ; input syscall
 ```
 
 ==================================================
@@ -507,13 +507,13 @@ X++26 performs implicit widening conversions but never implicit narrowing conver
 ```asm
 PUSH 5
 I2F
-PUSH 1078523331  ; 0x4048F5C3 -> 3.14
+PUSH 0x4048F5C3 ; 0x4048F5C3 -> 3.14
 ADDF
 ```
 
-{{ANSI.YELLOW}Result type: float{ANSI.END}
+{ANSI.YELLOW}Result type: float{ANSI.END}
 
-{{ANSI.YELLOW}Disallowed: float -> int (requires explicit cast){ANSI.END}
+{ANSI.YELLOW}Disallowed: float -> int (requires explicit cast){ANSI.END}
 
 {ANSI.BOLD}Example 2:{ANSI.END}
 
@@ -572,8 +572,8 @@ while (condition) {
 }
 ```
 
-In a while loop, condition is executed {{ANSI.BOLD}before{{ANSI.END} the loop body every iteration, exiting when false.
-This makes the while loop a {{ANSI.UNDERLINE}pre-condition{{ANSI.END} loop.
+In a while loop, condition is executed {ANSI.BOLD}before{ANSI.END} the loop body every iteration, exiting when false.
+This makes the while loop a {ANSI.UNDERLINE}pre-condition{ANSI.END} loop.
 
 {ANSI.YELLOW}Compiler output:{ANSI.END}
 
@@ -599,8 +599,8 @@ repeat {
 } until (condition)
 ```
 
-In a repeat loop, condition is executed {{ANSI.BOLD}after{{ANSI.END} the loop body every iteration, exiting when true.
-This makes the repeat loop a {{ANSI.UNDERLINE}post-condition{{ANSI.END} loop, as the loop body will always execute at least once.
+In a repeat loop, condition is executed {ANSI.BOLD}after{ANSI.END} the loop body every iteration, exiting when true.
+This makes the repeat loop a {ANSI.UNDERLINE}post-condition{ANSI.END} loop, as the loop body will always execute at least once.
 
 {ANSI.YELLOW}Compiler output:{ANSI.END}
 
@@ -619,13 +619,13 @@ BRZ :beginrepeat
 Xenon-131 VM
 ========
 
-* {{ANSI.GREEN}Stack-based{{ANSI.END} (200000 items -> {{ANSI.YELLOW}781.25 KiB{{ANSI.END})
-* {{ANSI.GREEN}Untyped{{ANSI.END}
-* {{ANSI.GREEN}32-bit data{{ANSI.END}
-* {{ANSI.GREEN}36-bit instructions{{ANSI.END} ({{ANSI.YELLOW}4b{{ANSI.END} opcode, {{ANSI.YELLOW}32b{{ANSI.END} data)
-* {{ANSI.CYAN}65536 RAM addresses{{ANSI.END}  {{ANSI.YELLOW}(256 KiB){{ANSI.END}
-* {{ANSI.CYAN}65536 PROM addresses{{ANSI.END} {{ANSI.YELLOW}(288 KiB){{ANSI.END}
--> Total capacity: {{ANSI.PURPLE}1325.25 KiB{{ANSI.END} = {{ANSI.RED}1.294 MiB{{ANSI.END}
+* {ANSI.GREEN}Stack-based{ANSI.END} (200000 items -> {ANSI.YELLOW}781.25 KiB{ANSI.END})
+* {ANSI.GREEN}Untyped{ANSI.END}
+* {ANSI.GREEN}32-bit data{ANSI.END}
+* {ANSI.GREEN}36-bit instructions{ANSI.END} ({ANSI.YELLOW}4b{ANSI.END} opcode, {ANSI.YELLOW}32b{ANSI.END} data)
+* {ANSI.CYAN}65536 RAM addresses{ANSI.END}  {ANSI.YELLOW}(256 KiB){ANSI.END}
+* {ANSI.CYAN}65536 PROM addresses{ANSI.END} {ANSI.YELLOW}(288 KiB){ANSI.END}
+-> Total capacity: {ANSI.PURPLE}1325.25 KiB{ANSI.END} = {ANSI.RED}1.294 MiB{ANSI.END}
 
 ==================================================
 Instruction Set
@@ -649,7 +649,7 @@ BOOL        - Converts the top of the stack into a boolean (-1 or 0)
 
 {ANSI.BOLD}Binary Operations{ANSI.END}
 {ANSI.YELLOW}These operations pop 2 values from the stack, a and b, and push the result to the stack.
-This assumes a is pushed before b.{{ANSI.END}
+This assumes a is pushed before b.{ANSI.END}
 
 ```
 Integer Arithmetic:
@@ -691,7 +691,7 @@ FGE   - Performs a >= b, assuming the operands are floats.
 ```
 
 {ANSI.BOLD}Unary Operations:{ANSI.END}
-{{ANSI.YELLOW}These operations pop a value a from the stack and push the result to the stack.{{ANSI.END}
+{ANSI.YELLOW}These operations pop a value a from the stack and push the result to the stack.{ANSI.END}
 
 ```
 NEGI  - Performs -a, assuming a is an integer.
@@ -720,8 +720,12 @@ RETN     - Pops the call stack into IP if the top of stack is not 0.
 ```
 HALT     - Shuts down the entire VM.
 WAIT     - Pauses execution until interrupts are raised.
+
 INT x    - Raises an interrupt to the VM.
 IRT      - Resolves the current interrupt.
+IRTZ     - Resolves the current interrupt if the value on top of stack is 0.
+IRTN     - Resolves the current interrupt if the value on top of stack is not 0.
+
 SYS x    - Raises a syscall to be handled by the kernel.
 ```
 
@@ -729,11 +733,11 @@ SYS x    - Raises a syscall to be handled by the kernel.
 Data Structure Representations
 ========
 
-{ANSI.BOLD}Integer{{ANSI.END}
+{ANSI.BOLD}Integer{ANSI.END}
 * Each integer is stored as a 32-bit signed value and occupies 1 memory address.
 * Range: -2147483648 to 2147483647 inclusive.
 
-{ANSI.BOLD}Float{{ANSI.END}
+{ANSI.BOLD}Float{ANSI.END}
 * Each float is stored as a 32-bit value (single-precision) and occupies 1 address in memory.
 * It adheres to IEEE-754 specifications:
 
@@ -751,54 +755,54 @@ Value = (-1)^S * 2^(E + 127) * (1 + M)
 * Range: -3.4e38 to 3.4e38 inclusive.
 * Maximum safe integer: 2^24 (16777216).
 
-{ANSI.BOLD}Boolean{{ANSI.END}
+{ANSI.BOLD}Boolean{ANSI.END}
 * Booleans are represented using 2 values:
   - false = 0x00000000 (0)
   - true  = 0xFFFFFFFF (-1)
 * This allows logical and bitwise AND, OR, NOT, and XOR to share the same opcodes.
 
-{ANSI.BOLD}Pointer{{ANSI.END} - not implemented
-{ANSI.BOLD}Array{{ANSI.END} - not implemented
-{ANSI.BOLD}String{{ANSI.END} - not implemented
-{ANSI.BOLD}Character{{ANSI.END} - not implemented
-{ANSI.BOLD}Subroutine{{ANSI.END} - not implemented
-{ANSI.BOLD}Objects{{ANSI.END} - not implemented
+{ANSI.BOLD}Pointer{ANSI.END} - not implemented
+{ANSI.BOLD}Array{ANSI.END} - not implemented
+{ANSI.BOLD}String{ANSI.END} - not implemented
+{ANSI.BOLD}Character{ANSI.END} - not implemented
+{ANSI.BOLD}Subroutine{ANSI.END} - not implemented
+{ANSI.BOLD}Objects{ANSI.END} - not implemented
 
 ==================================================
 Syscalls
 ========
 
-{ANSI.BOLD}I/O Syscalls{{ANSI.END}
+{ANSI.BOLD}I/O Syscalls{ANSI.END}
 
-{{ANSI.CYAN}1 - OUTPUT_STR{{ANSI.END}
+{ANSI.CYAN}1 - OUTPUT_STR{ANSI.END}
 Outputs the string at the string pointer on top of the stack.
 
 ```xpp26
 out << str
 ```
 
-{{ANSI.CYAN}2 - READ_STR{{ANSI.END}
+{ANSI.CYAN}2 - READ_STR{ANSI.END}
 Pauses execution in the current process and waits for user input.
 
 ```xpp26
 in >> str
 ```
 
-{{ANSI.CYAN}3 - STRTOINT{{ANSI.END}
+{ANSI.CYAN}3 - STRTOINT{ANSI.END}
 Converts the string at the pointer on top of the stack to an integer.
 
 ```xpp26
 var num: int = (int) str
 ```
 
-{{ANSI.CYAN}4 - STRTOFLOAT{{ANSI.END}
+{ANSI.CYAN}4 - STRTOFLOAT{ANSI.END}
 Converts the string at the pointer on top of the stack to a float.
 
 ```xpp26
 var num: float = (float) str
 ```
 
-{{ANSI.CYAN}5 - INTTOSTR{{ANSI.END}
+{ANSI.CYAN}5 - INTTOSTR{ANSI.END}
 Converts the integer at the top of the stack to a string at address 0x0F00.
 
 ```asm
@@ -806,7 +810,7 @@ PUSH 42
 SYS 5
 ```
 
-{{ANSI.CYAN}6 - FLOATTOSTR{{ANSI.END}
+{ANSI.CYAN}6 - FLOATTOSTR{ANSI.END}
 Converts the float at the top of the stack to a string at address 0x0F00.
 
 ```asm
@@ -814,7 +818,7 @@ PUSH 3.14
 SYS 6
 ```
 
-{{ANSI.CYAN}7 - BOOLTOSTR{{ANSI.END}
+{ANSI.CYAN}7 - BOOLTOSTR{ANSI.END}
 Converts the boolean at the top of the stack to a string at address 0x0F00.
 
 ```asm
@@ -822,7 +826,7 @@ PUSH -1  ; true
 SYS 7
 ```
 
-{{ANSI.CYAN}8 - INTTOHEX{{ANSI.END}
+{ANSI.CYAN}8 - INTTOHEX{ANSI.END}
 Converts the integer at the top of the stack to a hexadecimal string at address 0x0F00.
 
 ```asm
@@ -830,7 +834,7 @@ PUSH 255
 SYS 8  ; converts to "FF"
 ```
 
-{{ANSI.CYAN}9 - PUT_CHAR{{ANSI.END}
+{ANSI.CYAN}9 - PUT_CHAR{ANSI.END}
 Outputs the character on top of the stack.
 
 ```asm
@@ -838,9 +842,9 @@ PUSH 65  ; ASCII 'A'
 SYS 9
 ```
 
-{ANSI.BOLD}String Syscalls{{ANSI.END}
+{ANSI.BOLD}String Syscalls{ANSI.END}
 
-{{ANSI.CYAN}10 - STR_CONCAT{{ANSI.END}
+{ANSI.CYAN}10 - STR_CONCAT{ANSI.END}
 Concatenates str1 and str2, storing the result in str3.
 
 ```asm
@@ -850,7 +854,7 @@ LOAD &str3
 SYS 10
 ```
 
-{{ANSI.CYAN}11 - STR_COMPARE{{ANSI.END}
+{ANSI.CYAN}11 - STR_COMPARE{ANSI.END}
 Compares str1 and str2, pushing the boolean result to the stack.
 
 ```asm
@@ -859,7 +863,7 @@ LOAD &str2
 SYS 11  ; pushes -1 (true) if equal, 0 (false) otherwise
 ```
 
-{{ANSI.CYAN}12 - STR_COPY{{ANSI.END}
+{ANSI.CYAN}12 - STR_COPY{ANSI.END}
 Copies str1 to str2.
 
 ```asm
@@ -868,16 +872,16 @@ LOAD &str2
 SYS 12
 ```
 
-{ANSI.BOLD}System Syscalls{{ANSI.END}
+{ANSI.BOLD}System Syscalls{ANSI.END}
 
-{{ANSI.CYAN}20 - SYS_GETTIME{{ANSI.END}
+{ANSI.CYAN}20 - SYS_GETTIME{ANSI.END}
 Pushes the current execution time (in milliseconds) to the stack.
 
 ```asm
 SYS 20  ; -> int (time in ms)
 ```
 
-{{ANSI.CYAN}30 - SYS_EXIT{{ANSI.END}
+{ANSI.CYAN}30 - SYS_EXIT{ANSI.END}
 Pops the exit code from the stack and commands the VM to terminate the current process.
 
 ```asm
@@ -885,12 +889,12 @@ PUSH 0
 SYS 30  ; exit with code 0
 ```
 
-{ANSI.BOLD}Graphics Syscalls{{ANSI.END}
+{ANSI.BOLD}Graphics Syscalls{ANSI.END}
 (Reserved for future use)
 
-{ANSI.BOLD}Other Syscalls{{ANSI.END}
+{ANSI.BOLD}Other Syscalls{ANSI.END}
 
-{{ANSI.CYAN}60 - REQUEST{{ANSI.END}
+{ANSI.CYAN}60 - REQUEST{ANSI.END}
 Sends a request to a cloud backend using cloud variables and waits for the result.
 
 ```asm
@@ -903,20 +907,20 @@ SYS 60  ; sends request and stores result
 Planned Features
 ========
 
-{ANSI.UNDERLINE}0.2.0{{ANSI.END}
+{ANSI.UNDERLINE}0.2.0{ANSI.END}
 * Pointers
 * Strings
 * Arrays
 * Functions
 
-{ANSI.UNDERLINE}0.3.0{{ANSI.END}
+{ANSI.UNDERLINE}0.3.0{ANSI.END}
 * Structs
 * Dynamic Memory
 
-{ANSI.UNDERLINE}0.5.0{{ANSI.END}
+{ANSI.UNDERLINE}0.5.0{ANSI.END}
 * Modules
 * Standard Library
 
-{ANSI.UNDERLINE}1.0.0{{ANSI.END}
+{ANSI.UNDERLINE}1.0.0{ANSI.END}
 * Full XenonOS Support
 * Graphics API
