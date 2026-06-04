@@ -126,7 +126,7 @@
         .ansi-darkcyan { color: #208080; }
         .ansi-blue { color: #569cd6; }
         .ansi-green { color: #608b4e; }
-        .ansi-yellow { color: #dcdcaa; }
+        .ansi-yellow { color: #ffff73; }
         .ansi-red { color: #f44747; }
         .ansi-bold { font-weight: bold; }
         .ansi-underline { text-decoration: underline; }
@@ -176,7 +176,7 @@
     ];
 
     function parseAnsi(text) {
-        const targetRegex = /\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g; // terminal-style hyperlinks
+        const targetRegex = /\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
         let pool = text.replace(targetRegex, function(match, url, linkText) {
             return `__LINK_START__URL="${url}"__LINK_TEXT__${linkText}__LINK_END__`;
         });
@@ -197,7 +197,6 @@
         return pool;
     }
 
-
     function processPreloadedDocumentation(rawText) {
         chaptersRegistry = [];
         
@@ -209,9 +208,8 @@
             if (!trimmedChunk) return;
 
             const lines = trimmedChunk.split(/\r?\n/);
-            
+
             let rawTitle = lines[0].replace(/[\{\}#\*=\-_]|ANSI\.[A-Z]+/gi, '').trim();
-            
             if (!rawTitle) {
                 rawTitle = `Section ${chapterIndex + 1}`;
             }
@@ -263,6 +261,7 @@
         const targetNode = chaptersRegistry.find(c => c.id === id);
         if (!targetNode) return;
 
+
         document.querySelectorAll('.doc-item').forEach(el => el.classList.remove('active'));
         const activeItem = document.getElementById(`item-${id}`);
         if (activeItem) activeItem.classList.add('active');
@@ -282,7 +281,7 @@
         })
         .catch(err => {
             viewTitle.textContent = "Error loading system";
-            output.innerText = "Unable to fetch docs.txt";
+            output.innerHTML = "Error loading <strong>docs.txt</strong>.";
             console.error(err);
         });
 </script>
