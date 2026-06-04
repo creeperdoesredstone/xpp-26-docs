@@ -299,7 +299,7 @@
             color: var(--text-primary);
         }
 
-        /* X++26 syntax highlighting */
+        /* X++26 syntax highlighting CSS targets */
         .hljs-xpp26-keyword { color: #d16dff; font-weight: bold; }
         .hljs-xpp26-type { color: #569cd6; }
         .hljs-xpp26-string { color: #ce9178; }
@@ -307,7 +307,7 @@
         .hljs-xpp26-comment { color: #6a9955; }
         .hljs-xpp26-operator { color: #d4d4d4; }
 
-        /* Assembly syntax highlighting */
+        /* Assembly syntax highlighting CSS targets */
         .hljs-asm-instruction { color: #f44747; font-weight: bold; }
         .hljs-asm-register { color: #9cdcfe; }
         .hljs-asm-number { color: #b5cea8; }
@@ -404,43 +404,36 @@
     const backToTop = document.getElementById('backToTop');
     const breadcrumb = document.getElementById('breadcrumb');
 
-    // Custom language definitions
+    // Custom language definitions mapped strictly to your CSS style targets
     hljs.registerLanguage('xpp26', function() {
         return {
             name: 'X++26',
-            aliases: ['xpp26'],
-            keywords: {
-                keyword: 'var array out in for while repeat until if else true false',
-                type: 'int float bool string char ptr'
-            },
+            aliases: ['xpp26', 'xpp'],
             contains: [
                 {
-                    className: 'hljs-xpp26-string',
-                    begin: '"',
-                    end: '"',
-                    escapeBegin: '\\\\',
-                    escapeEnd: '\\\\'
+                    className: 'xpp26-string',
+                    begin: '"', end: '"',
+                    illegal: '\\n',
+                    contains: [hljs.BACKSLASH_ESCAPE]
                 },
                 {
-                    className: 'hljs-xpp26-string',
-                    begin: "'",
-                    end: "'"
+                    className: 'xpp26-string',
+                    begin: "'", end: "'"
                 },
                 {
-                    className: 'hljs-xpp26-comment',
-                    begin: '#',
-                    end: '$'
+                    className: 'xpp26-comment',
+                    begin: '#', end: '$'
                 },
                 {
-                    className: 'hljs-xpp26-number',
+                    className: 'xpp26-number',
                     begin: '\\b\\d+(\\.\\d+)?\\b'
                 },
                 {
-                    className: 'hljs-xpp26-type',
+                    className: 'xpp26-type',
                     begin: '\\b(int|float|bool|string|char|ptr)\\b'
                 },
                 {
-                    className: 'hljs-xpp26-keyword',
+                    className: 'xpp26-keyword',
                     begin: '\\b(var|array|out|in|for|while|repeat|until|if|else|true|false)\\b'
                 }
             ]
@@ -453,20 +446,19 @@
             aliases: ['asm', 'assembly'],
             contains: [
                 {
-                    className: 'hljs-asm-comment',
-                    begin: ';',
-                    end: '$'
+                    className: 'asm-comment',
+                    begin: ';', end: '$'
                 },
                 {
-                    className: 'hljs-asm-label',
-                    begin: '^\\s*:[a-zA-Z_][a-zA-Z0-9_]*'
+                    className: 'asm-label',
+                    begin: '^[\\s]*:[a-zA-Z_][a-zA-Z0-9_]*'
                 },
                 {
-                    className: 'hljs-asm-instruction',
+                    className: 'asm-instruction',
                     begin: '\\b(PUSH|POP|LOAD|STORE|LOADIND|STREIND|I2F|F2I|BOOL|ADDI|SUBI|MULI|DIVI|MODI|POWI|ADDF|SUBF|MULF|DIVF|MODF|POWF|AND|OR|XOR|IEQ|INE|ILT|ILE|IGT|IGE|FEQ|FNE|FLT|FLE|FGT|FGE|NEGI|NEGF|NOT|JUMP|BRZ|BRNZ|CALL|CALZ|CALN|RET|RETZ|RETN|HALT|WAIT|INT|IRT|SYS)\\b'
                 },
                 {
-                    className: 'hljs-asm-number',
+                    className: 'asm-number',
                     begin: '0x[0-9a-fA-F]+|\\b\\d+\\b'
                 }
             ]
@@ -552,9 +544,14 @@
 
         pool = pool.replace(/^(?:\r?\n)?---(?:\r?\n)?$/gm, '<hr>');
 
-        // Code block detection and syntax highlighting
+        // Enhanced markdown code block match highlighting logic
         pool = pool.replace(/```([\w]*)\n([\s\S]*?)```/g, function(match, lang, code) {
-            const language = lang || 'plaintext';
+            let language = lang ? lang.toLowerCase().trim() : 'plaintext';
+            
+            // Normalize variants to match registered sub-languages
+            if (language === 'xpp') language = 'xpp26';
+            if (language === 'assembly') language = 'asm';
+
             const cleanCode = code.trim();
             const codeId = 'code-' + Math.random().toString(36).substr(2, 9);
             
