@@ -18,7 +18,7 @@ Welcome to {ANSI.BOLD}X++26{ANSI.END}, a statically-typed compiled programming l
 
 {ANSI.BOLD}{ANSI.YELLOW}What is X++26?{ANSI.END}
 
-X++26 is a modern systems programming language that combines {ANSI.BOLD}low-level control{ANSI.END} with {ANSI.BOLD}high-level abstractions{ANSI.END}. It emphasizes:
+X++26 is a programming language developed for {ANSI.CYAN}]8;;https://scratch.mit.edu/users/XenonOS26/\XenonOS]8;;\{ANSI.END} that combines {ANSI.BOLD}low-level control{ANSI.END} with {ANSI.BOLD}high-level abstractions{ANSI.END}. Its features are:
 
 * {ANSI.GREEN}Static Typing{ANSI.END} - Catch errors at compile time, not runtime
 * {ANSI.GREEN}Direct Memory Access{ANSI.END} - Full control over pointers and memory addresses
@@ -27,7 +27,8 @@ X++26 is a modern systems programming language that combines {ANSI.BOLD}low-leve
 
 {ANSI.BOLD}{ANSI.YELLOW}Downloading the CLI{ANSI.END}
 
-{ANSI.BLUE}The CLI is currently unavailable for download until OS Wars 26 starts.{ANSI.END}
+The CLI will be used to run X++ and XAssembly programs.
+{ANSI.BOLD}Note: {ANSI.END}{ANSI.BLUE}The CLI is currently unavailable for download until OS Wars 26 starts.{ANSI.END}
 
 {ANSI.BOLD}{ANSI.YELLOW}Hello World{ANSI.END}
 
@@ -41,6 +42,29 @@ out << "Hello, World!\n"
 Don't worry if you don't understand the code above - we will discuss it in detail in later chapters.
 
 Congratulations! You have now written and executed your first X++ program.
+
+==================================================
+Syntax
+=======
+
+{ANSI.BOLD}{ANSI.YELLOW}X++26 Language Layout{ANSI.END}
+X++26 scripts use clear structural symbols for program stream input and output evaluation, comments, and string definitions.
+```xpp26
+# This is a code comment line
+out << "This handles basic stream output\n"
+```
+
+---
+
+{ANSI.BOLD}{ANSI.YELLOW}Xenon-131 Assembly Format{ANSI.END}
+The underlying target Xenon-131 Virtual Machine execution syntax leverages basic positional parameters, instruction mnemonics, program tags (labels), and inline instruction comments.
+```asm
+; This is a raw assembly comment
+:label_name         ; A structural branch tag marker
+PUSH 42             ; Immediate literal instruction operation
+SYS 1               ; System syscall dispatcher interaction
+JUMP :label_name    ; Control flow transition utilizing labels
+```
 
 ==================================================
 Data Types & Literals
@@ -234,7 +258,7 @@ array arr: int[3]
 ```asm
 ; Nothing! This is for the semantic analyzer to handle.
 ; The array pointer `arr` would be assigned to the next free address (0x1002 in this case).
-; The next free address would be 0x1006, as arr[] occupies 3+1=4 memory addresses.
+; The next free address would be 0x1007, as arr[] occupies 3+1+1 = 5 memory addresses.
 ```
 
 {ANSI.BOLD}Initialization{ANSI.END}
@@ -254,6 +278,9 @@ PUSH 2
 STORE 0x1004 ; arr[1]
 PUSH 3
 STORE 0x1005 ; arr[2]
+
+PUSH 0
+STORE 0x1006 ; terminator, useful when printing arrays
 ```
 
 {ANSI.BOLD}Set Element{ANSI.END}
@@ -290,6 +317,7 @@ LOADIND
 0x1003 [ int -> 1      ] (arr[0])
 0x1004 [ int -> 2      ] (arr[1])
 0x1005 [ int -> 4      ] (arr[2])
+0x1006 [ int -> 0      ] (terminator)
 ```
 
 ==================================================
@@ -312,9 +340,19 @@ var str: string
 ```
 
 ```asm
-; Nothing! This is for the semantic analyzer to handle.
-; The string pointer `str` would be assigned to the next free address (0x1006 in this case).
-; The next free address would be 0x100A, as the description vector for a string occupies 3 addresses.
+; initialize str.descriptionVec
+PUSH 0x8000  ; str[0]
+STORE 0x1008 ; str.descriptionVec[0] = &str[0]
+PUSH 1       ; length including '\0'
+STORE 0x1009 ; str.descriptionVec[1] = str.length
+PUSH 16
+STORE 0x100A ; str.descriptionVec[2] = str.capacity
+
+PUSH 0x1008  ; &str.descriptionVec[0]
+STORE 0x1007 ; str
+
+; The string pointer `str` would be assigned to the next free address (0x1007 in this case).
+; The next free address would be 0x100B, as the description vector for a string occupies 3 addresses.
 ```
 
 {ANSI.BOLD}Assignment{ANSI.END}
@@ -324,9 +362,6 @@ str = "Hi"
 ```
 
 ```asm
-PUSH 0x1007  ; & str.descriptionVec[0]
-STORE 0x1006 ; str
-
 PUSH 72      ; 'H'
 STORE 0x8000 ; str[0] -> 'H'
 PUSH 105     ; 'i'
@@ -334,13 +369,11 @@ STORE 0x8001 ; str[1] -> 'i'
 PUSH 0
 STORE 0x8002 ; str[2] -> '\0'
 
-; initialize str.descriptionVec
+; re-initialize str.descriptionVec
 PUSH 0x8000  ; str[0]
-STORE 0x1007 ; str.descriptionVec[0] = &str[0]
+STORE 0x1008 ; str.descriptionVec[0] = &str[0]
 PUSH 3       ; length including '\0'
-STORE 0x1008 ; str.descriptionVec[1] = str.length
-PUSH 16
-STORE 0x1009 ; str.descriptionVec[2] = str.capacity
+STORE 0x1009 ; str.descriptionVec[1] = str.length
 ```
 
 {ANSI.BOLD}Access Character{ANSI.END}
@@ -351,7 +384,7 @@ str[1]
 
 ```asm
 PUSH 1
-LOAD 0x1006  ; &str.descriptionVec[0]
+LOAD 0x1007  ; &str.descriptionVec[0]
 LOADIND      ; &str[0]
 ADDI
 LOADIND
@@ -373,14 +406,14 @@ LOADIND
 ```
 
 ==================================================
-I/O Handling
+Inputs and Outputs
 ========
 
 {ANSI.BOLD}Output{ANSI.END}
 Use the {ANSI.BOLD}out{ANSI.END} statement to output values to the terminal as a string (syntactically similar to C++'s std::ostream):
 
 ```xpp26
-out << val1 << val2
+out << val1 << val2 << ...
 ```
 
 {ANSI.YELLOW}Example:{ANSI.END}
@@ -414,7 +447,7 @@ Lorem ipsum
 You have entered: Lorem ipsum
 
 ==================================================
-I/O Assembly
+I/O Assembly Implementation
 ========
 
 {ANSI.BOLD}Output String{ANSI.END}
@@ -424,7 +457,7 @@ out << str
 ```
 
 ```asm
-LOAD &str.descriptionVec[0]
+LOAD &str    ; &str.descriptionVec[0]
 LOADIND      ; &str[0]
 SYS 1        ; output syscall
 ```
@@ -437,7 +470,7 @@ out << char_array
 
 ```asm
 LOAD &char_array[0]
-SYS 1  ; output syscall
+SYS 1                  ; output syscall
 ```
 
 {ANSI.BOLD}Output Character{ANSI.END}
@@ -448,7 +481,7 @@ out << 'A'
 
 ```asm
 PUSH 65 ; 'A'
-SYS 9   ; dedicated put_char syscall
+SYS 9   ; put_chars syscall
 ```
 
 {ANSI.BOLD}Output Integer{ANSI.END}
@@ -458,9 +491,12 @@ out << 42
 ```
 
 ```asm
+PUSH &buffer
 PUSH 42
 SYS 5          ; inttostr syscall
-PUSH 0x0F00    ; dedicated result string buffer
+
+LOAD &buffer   ; buffer.descriptionVec[0]
+LOADIND
 SYS 1          ; output syscall
 ```
 
@@ -471,9 +507,12 @@ out << 3.14
 ```
 
 ```asm
+PUSH &buffer
 PUSH 0x4048F5C3 ; 0x4048F5C3 -> 3.14
 SYS 6           ; floattostr syscall
-PUSH 0x0F00     ; dedicated result string buffer
+
+LOAD &buffer   ; buffer.descriptionVec[0]
+LOADIND
 SYS 1           ; output syscall
 ```
 
@@ -484,9 +523,12 @@ out << true
 ```
 
 ```asm
-PUSH 0xffffffff ; true
+PUSH &buffer
+PUSH 0xFFFFFFFF ; true
 SYS 7           ; booltostr syscall
-PUSH 0x0F00     ; dedicated result string buffer
+
+LOAD &buffer    ; buffer.descriptionVec[0]
+LOADIND
 SYS 1           ; output syscall
 ```
 
@@ -497,9 +539,12 @@ out << ptr
 ```
 
 ```asm
+PUSH &buffer
 LOAD &ptr
 SYS 8          ; inttohex syscall
-PUSH 0x0F00    ; dedicated result string buffer
+
+LOAD &buffer   ; buffer.descriptionVec[0]
+LOADIND
 SYS 1          ; output syscall
 ```
 
@@ -514,7 +559,7 @@ in >> message
 ```
 
 ```asm
-LOAD 0x100A ; &message
+LOAD 0x100B ; &message
 SYS 2       ; input syscall
 ```
 
@@ -584,9 +629,7 @@ for (start_expr; end_expr; step_expr) {
 ; start_expr
 :beginfor
 ; end_expr
-PUSH 0
-IEQ
-BRNZ :endfor
+BRZ :endfor
 ; body
 ; step_expr
 JUMP :beginfor
@@ -612,9 +655,7 @@ This makes the while loop a {ANSI.UNDERLINE}pre-condition{ANSI.END} loop.
 ```asm
 :beginwhile
 ; condition
-PUSH 0
-IEQ
-BRNZ :endwhile
+BRZ :endwhile
 ; body
 JUMP :beginwhile
 :endwhile
@@ -640,9 +681,7 @@ This makes the repeat loop a {ANSI.UNDERLINE}post-condition{ANSI.END} loop, as t
 :beginrepeat
 ; body
 ; condition
-PUSH 0
-IEQ
-BRZ :beginrepeat
+BRNZ :beginrepeat
 
 ; rest of the program...
 ```
@@ -663,7 +702,7 @@ Xenon-131 VM
 Instruction Set
 ========
 
-{ANSI.BOLD}Basic Instructions{ANSI.END}
+{ANSI.BOLD}Stack Instructions{ANSI.END}
 
 ```
 PUSH x      - Pushes a 32-bit integer x to the stack.
@@ -674,6 +713,14 @@ STORE x     - Stores the top of the stack to address x and pops the stack.
 LOADIND     - Pops a from the stack and loads from address a.
 STREIND     - Pops a and b from the stack and stores b to address a.
 
+DUP         - Duplicates the top of the stack.
+SWAP        - Swaps the 2 topmost elements of the stack.
+OVER        - Copies the second item on the stack to the very top.
+```
+
+{ANSI.BOLD}Type Conversion Instructions{ANSI.END}
+
+```
 I2F         - Converts the top of the stack into a float.
 F2I         - Converts the IEEE-754 representation of a float on top of the stack into an integer.
 BOOL        - Converts the top of the stack into a boolean (-1 or 0)
@@ -810,7 +857,7 @@ Syscalls
 Outputs the string at the string pointer on top of the stack.
 
 ```asm
-LOAD &str.descriptionVec[0]
+PUSH &str
 LOADIND
 SYS 1
 ```
@@ -819,7 +866,7 @@ SYS 1
 Pauses execution in the current process and waits for user input.
 
 ```asm
-LOAD &str.descriptionVec[0]
+PUSH &str
 SYS 2
 ```
 
@@ -827,7 +874,7 @@ SYS 2
 Converts the string at the pointer on top of the stack to an integer.
 
 ```asm
-LOAD &str.descriptionVec[0]
+PUSH &str
 SYS 3
 ```
 
@@ -835,38 +882,42 @@ SYS 3
 Converts the string at the pointer on top of the stack to a float.
 
 ```asm
-LOAD &str.descriptionVec[0]
+PUSH &str
 SYS 4
 ```
 
 {ANSI.CYAN}5 - INTTOSTR{ANSI.END}
-Converts the integer at the top of the stack to a string at address 0x0F00.
+Converts the integer at the top of the stack to a string at address &str.
 
 ```asm
+PUSH &str
 PUSH 42
 SYS 5
 ```
 
 {ANSI.CYAN}6 - FLOATTOSTR{ANSI.END}
-Converts the float at the top of the stack to a string at address 0x0F00.
+Converts the float at the top of the stack to a string at address &str.
 
 ```asm
-PUSH 0x4048f5c3  ; 0x4048f5c3 -> 3.14
+PUSH &str
+PUSH 0x4048F5C3  ; 0x4048F5C3 -> 3.14
 SYS 6
 ```
 
 {ANSI.CYAN}7 - BOOLTOSTR{ANSI.END}
-Converts the boolean at the top of the stack to a string at address 0x0F00.
+Converts the boolean at the top of the stack to a string at address &str.
 
 ```asm
-PUSH 0xfffffff  ; true
+PUSH &str
+PUSH 0xFFFFFFFF  ; true
 SYS 7
 ```
 
 {ANSI.CYAN}8 - INTTOHEX{ANSI.END}
-Converts the integer at the top of the stack to a hexadecimal string at address 0x0F00.
+Converts the integer at the top of the stack to a hexadecimal string at address &str.
 
 ```asm
+PUSH &str
 PUSH 255
 SYS 8  ; converts to "0x00FF"
 ```
@@ -885,9 +936,9 @@ SYS 9
 Concatenates str1 and str2, storing the result in str3.
 
 ```asm
-LOAD &str1
-LOAD &str2
-LOAD &str3
+PUSH &str1
+PUSH &str2
+PUSH &str3
 SYS 10
 ```
 
@@ -895,8 +946,8 @@ SYS 10
 Compares str1 and str2, pushing the boolean result to the stack.
 
 ```asm
-LOAD &str1
-LOAD &str2
+PUSH &str1
+PUSH &str2
 SYS 11  ; pushes -1 (true) if equal, 0 (false) otherwise
 ```
 
@@ -904,8 +955,8 @@ SYS 11  ; pushes -1 (true) if equal, 0 (false) otherwise
 Copies str1 to str2.
 
 ```asm
-LOAD &str1
-LOAD &str2
+PUSH &str1
+PUSH &str2
 SYS 12
 ```
 
