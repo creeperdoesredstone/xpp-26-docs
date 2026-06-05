@@ -13,6 +13,7 @@
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+            id="hljs-theme"
 		/>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
@@ -304,7 +305,7 @@
 				color: #608b4e;
 			}
 			.ansi-yellow {
-				color: #ffff73;
+				color: #b3b300;
 			}
 			.ansi-red {
 				color: #f44747;
@@ -551,6 +552,10 @@
 			themeToggle.addEventListener("click", () => {
 				document.body.classList.toggle("light-mode");
 				const isLight = document.body.classList.contains("light-mode");
+                const themeLink = document.getElementById('hljs-theme');
+                themeLink.href = isLight 
+                    ? "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"
+                    : "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css";
 				localStorage.setItem("xpp26-theme", isLight ? "light" : "dark");
 				themeToggle.textContent = isLight ? "🌙" : "☀️";
 			});
