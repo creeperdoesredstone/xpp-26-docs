@@ -1,844 +1,894 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>X++26 Documentation Hub</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>X++26 Documentation Hub</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
             id="hljs-theme"
-		/>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+        />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
-		<style>
-			* {
-				box-sizing: border-box;
-			}
+        <style>
+            * {
+                box-sizing: border-box;
+            }
 
-			:root {
-				--bg-primary: #1e1e1e;
-				--bg-secondary: #252526;
-				--bg-tertiary: #1a1a1a;
-				--border-color: #333;
-				--border-light: #3c3c3c;
-				--text-primary: #d4d4d4;
-				--text-muted: #888;
-				--accent: #4ec9b0;
-				--accent-blue: #569cd6;
-				--accent-light: #4fc1ff;
-			}
+            :root {
+                --bg-primary: #1e1e1e;
+                --bg-secondary: #252526;
+                --bg-tertiary: #1a1a1a;
+                --border-color: #333;
+                --border-light: #3c3c3c;
+                --text-primary: #d4d4d4;
+                --text-muted: #888;
+                --accent: #4ec9b0;
+                --accent-blue: #569cd6;
+                --accent-light: #4fc1ff;
+            }
 
-			body {
-				margin: 0;
-				padding: 0;
-				background-color: var(--bg-primary);
-				color: var(--text-primary);
-				font-family: "JetBrains Mono", monospace;
-				display: flex;
-				height: 100vh;
-				overflow: hidden;
-				transition:
-					background-color 0.3s,
-					color 0.3s;
-			}
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: var(--bg-primary);
+                color: var(--text-primary);
+                font-family: "JetBrains Mono", monospace;
+                display: flex;
+                height: 100vh;
+                overflow: hidden;
+                transition:
+                    background-color 0.3s,
+                    color 0.3s;
+            }
 
-			body.light-mode {
-				--bg-primary: #fafafa;
-				--bg-secondary: #f5f5f5;
-				--bg-tertiary: #ffffff;
-				--border-color: #ddd;
-				--border-light: #eee;
-				--text-primary: #333;
-				--text-muted: #999;
-				--accent: #2b8a7a;
-				--accent-blue: #0066cc;
-				--accent-light: #0080ff;
-			}
+            body.light-mode {
+                --bg-primary: #fafafa;
+                --bg-secondary: #f5f5f5;
+                --bg-tertiary: #ffffff;
+                --border-color: #ddd;
+                --border-light: #eee;
+                --text-primary: #333;
+                --text-muted: #999;
+                --accent: #2b8a7a;
+                --accent-blue: #0066cc;
+                --accent-light: #0080ff;
+            }
 
-			aside {
-				width: 320px;
-				background-color: var(--bg-secondary);
-				border-right: 2px solid var(--border-color);
-				display: flex;
-				flex-direction: column;
-				flex-shrink: 0;
-			}
+            aside {
+                width: 320px;
+                background-color: var(--bg-secondary);
+                border-right: 2px solid var(--border-color);
+                display: flex;
+                flex-direction: column;
+                flex-shrink: 0;
+            }
 
-			.sidebar-header {
-				padding: 15px 20px;
-				border-bottom: 1px solid var(--border-light);
-			}
+            .sidebar-header {
+                padding: 15px 20px;
+                border-bottom: 1px solid var(--border-light);
+            }
 
-			.sidebar-header h1 {
-				margin: 0 0 10px 0;
-				font-size: 1.1rem;
-				color: var(--accent-blue);
-				text-transform: uppercase;
-				letter-spacing: 0.5px;
-			}
+            .sidebar-header h1 {
+                margin: 0 0 10px 0;
+                font-size: 1.1rem;
+                color: var(--accent-blue);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
 
-			.sidebar-controls {
-				display: flex;
-				gap: 8px;
-				margin-bottom: 10px;
-			}
+            .doc-selector-wrapper {
+                margin-bottom: 12px;
+            }
 
-			.search-box {
-				flex: 1;
-				padding: 8px 12px;
-				background-color: var(--bg-primary);
-				border: 1px solid var(--border-light);
-				color: var(--text-primary);
-				font-family: "JetBrains Mono", monospace;
-				font-size: 12px;
-				border-radius: 4px;
-				transition: border-color 0.2s;
-			}
+            .doc-select {
+                width: 100%;
+                padding: 8px 10px;
+                background-color: var(--bg-primary);
+                border: 1px solid var(--border-light);
+                color: var(--accent);
+                font-family: "JetBrains Mono", monospace;
+                font-size: 12px;
+                font-weight: bold;
+                border-radius: 4px;
+                cursor: pointer;
+                outline: none;
+                transition: border-color 0.2s;
+            }
 
-			.search-box:focus {
-				outline: none;
-				border-color: var(--accent-light);
-			}
+            .doc-select:focus {
+                border-color: var(--accent-light);
+            }
 
-			.theme-toggle {
-				padding: 8px 12px;
-				background-color: var(--bg-primary);
-				border: 1px solid var(--border-light);
-				color: var(--text-primary);
-				cursor: pointer;
-				font-size: 12px;
-				border-radius: 4px;
-				transition:
-					background-color 0.2s,
-					border-color 0.2s;
-				font-family: "JetBrains Mono", monospace;
-			}
+            .sidebar-controls {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
 
-			.theme-toggle:hover {
-				background-color: var(--border-light);
-			}
+            .search-box {
+                flex: 1;
+                padding: 8px 12px;
+                background-color: var(--bg-primary);
+                border: 1px solid var(--border-light);
+                color: var(--text-primary);
+                font-family: "JetBrains Mono", monospace;
+                font-size: 12px;
+                border-radius: 4px;
+                transition: border-color 0.2s;
+            }
 
-			.doc-list {
-				list-style: none;
-				padding: 10px 0;
-				margin: 0;
-				overflow-y: auto;
-				flex: 1;
-			}
+            .search-box:focus {
+                outline: none;
+                border-color: var(--accent-light);
+            }
 
-			.doc-item {
-				padding: 12px 20px;
-				cursor: pointer;
-				font-size: 13px;
-				transition:
-					background-color 0.2s,
-					color 0.2s;
-				border-left: 3px solid transparent;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
+            .theme-toggle {
+                padding: 8px 12px;
+                background-color: var(--bg-primary);
+                border: 1px solid var(--border-light);
+                color: var(--text-primary);
+                cursor: pointer;
+                font-size: 12px;
+                border-radius: 4px;
+                transition:
+                    background-color 0.2s,
+                    border-color 0.2s;
+                font-family: "JetBrains Mono", monospace;
+            }
 
-			.doc-item:hover {
-				background-color: var(--border-light);
-				color: #fff;
-			}
+            .theme-toggle:hover {
+                background-color: var(--border-light);
+            }
 
-			.doc-item.active {
-				background-color: var(--border-light);
-				color: var(--accent);
-				border-left-color: var(--accent-blue);
-				font-weight: bold;
-			}
+            .doc-list {
+                list-style: none;
+                padding: 10px 0;
+                margin: 0;
+                overflow-y: auto;
+                flex: 1;
+            }
 
-			.doc-item.hidden {
-				display: none;
-			}
+            .doc-item {
+                padding: 12px 20px;
+                cursor: pointer;
+                font-size: 13px;
+                transition:
+                    background-color 0.2s,
+                    color 0.2s;
+                border-left: 3px solid transparent;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
-			main {
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				min-width: 0;
-				background-color: var(--bg-tertiary);
-				position: relative;
-			}
+            .doc-item:hover {
+                background-color: var(--border-light);
+                color: #fff;
+            }
 
-			.view-header {
-				padding: 15px 30px;
-				background-color: var(--bg-primary);
-				border-bottom: 1px solid var(--border-color);
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-			}
+            .doc-item.active {
+                background-color: var(--border-light);
+                color: var(--accent);
+                border-left-color: var(--accent-blue);
+                font-weight: bold;
+            }
 
-			.header-content {
-				flex: 1;
-			}
+            .doc-item.hidden {
+                display: none;
+            }
 
-			.view-title {
-				margin: 0;
-				font-size: 1.1rem;
-				color: var(--accent);
-				text-transform: uppercase;
-				letter-spacing: 1px;
-			}
+            main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                background-color: var(--bg-tertiary);
+                position: relative;
+            }
 
-			.breadcrumb {
-				font-size: 11px;
-				color: var(--text-muted);
-				margin-top: 5px;
-			}
+            .view-header {
+                padding: 15px 30px;
+                background-color: var(--bg-primary);
+                border-bottom: 1px solid var(--border-color);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-			.breadcrumb a {
-				color: var(--accent-light);
-				cursor: pointer;
-				text-decoration: none;
-			}
+            .header-content {
+                flex: 1;
+            }
 
-			.breadcrumb a:hover {
-				text-decoration: underline;
-			}
+            .view-title {
+                margin: 0;
+                font-size: 1.1rem;
+                color: var(--accent);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
 
-			.output-container {
-				flex: 1;
-				padding: 30px;
-				overflow-y: auto;
-				font-size: 14px;
-				white-space: pre-wrap;
-				word-break: break-word;
-				line-height: 1.5;
-				position: relative;
-			}
+            .breadcrumb {
+                font-size: 11px;
+                color: var(--text-muted);
+                margin-top: 5px;
+            }
 
-			.output-container a {
-				color: var(--accent-light);
-				text-decoration: underline;
-			}
+            .breadcrumb a {
+                color: var(--accent-light);
+                cursor: pointer;
+                text-decoration: none;
+            }
 
-			.output-container a:hover {
-				color: var(--accent-blue);
-			}
+            .breadcrumb a:hover {
+                text-decoration: underline;
+            }
 
-			.code-block-wrapper {
-				position: relative;
-				margin: 12px 0;
-				border-radius: 4px;
-				overflow: hidden;
-			}
+            .output-container {
+                flex: 1;
+                padding: 30px;
+                overflow-y: auto;
+                font-size: 14px;
+                white-space: pre-wrap;
+                word-break: break-word;
+                line-height: 1.5;
+                position: relative;
+            }
 
-			.code-block-header {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 8px 12px;
-				background-color: var(--border-light);
-				font-size: 11px;
-				color: var(--text-muted);
-				border-bottom: 1px solid var(--border-color);
-			}
+            .output-container a {
+                color: var(--accent-light);
+                text-decoration: underline;
+            }
 
-			.copy-btn {
-				padding: 4px 8px;
-				background-color: transparent;
-				border: 1px solid var(--border-light);
-				color: var(--text-primary);
-				cursor: pointer;
-				font-size: 11px;
-				border-radius: 3px;
-				transition: background-color 0.2s;
-				font-family: "JetBrains Mono", monospace;
-			}
+            .output-container a:hover {
+                color: var(--accent-blue);
+            }
 
-			.copy-btn:hover {
-				background-color: var(--accent);
-				color: #000;
-			}
+            .code-block-wrapper {
+                position: relative;
+                margin: 12px 0;
+                border-radius: 4px;
+                overflow: hidden;
+            }
 
-			.copy-btn.copied {
-				background-color: #4ec9b0;
-				color: #000;
-			}
+            .code-block-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 12px;
+                background-color: var(--border-light);
+                font-size: 11px;
+                color: var(--text-muted);
+                border-bottom: 1px solid var(--border-color);
+            }
 
-			pre {
-				margin: 0;
-				padding: 12px;
-				background-color: var(--bg-secondary);
-				overflow-x: auto;
-				max-height: 400px;
-				overflow-y: auto;
-			}
+            .copy-btn {
+                padding: 4px 8px;
+                background-color: transparent;
+                border: 1px solid var(--border-light);
+                color: var(--text-primary);
+                cursor: pointer;
+                font-size: 11px;
+                border-radius: 3px;
+                transition: background-color 0.2s;
+                font-family: "JetBrains Mono", monospace;
+            }
 
-			code {
-				font-family: "JetBrains Mono", monospace;
-				font-size: 13px;
-				line-height: 1.4;
-			}
+            .copy-btn:hover {
+                background-color: var(--accent);
+                color: #000;
+            }
 
-			hr {
-				border: none;
-				border-top: 2px dashed var(--border-light);
-				margin: 20px 0;
-			}
+            .copy-btn.copied {
+                background-color: #4ec9b0;
+                color: #000;
+            }
 
-			.ansi-purple {
-				color: #d16dff;
-			}
-			.ansi-cyan {
-				color: #4fc1ff;
-			}
-			.ansi-darkcyan {
-				color: #208080;
-			}
-			.ansi-blue {
-				color: #569cd6;
-			}
-			.ansi-green {
-				color: #608b4e;
-			}
-			.ansi-yellow {
-				color: #b3b300;
-			}
-			.ansi-red {
-				color: #f44747;
-			}
-			.ansi-bold {
-				font-weight: bold;
-			}
-			.ansi-underline {
-				text-decoration: underline;
-			}
+            pre {
+                margin: 0;
+                padding: 12px;
+                background-color: var(--bg-secondary);
+                overflow-x: auto;
+                max-height: 400px;
+                overflow-y: auto;
+            }
 
-			.ansi-reset {
-				color: var(--text-primary);
-				font-weight: normal;
-				text-decoration: none;
-			}
+            code {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 13px;
+                line-height: 1.4;
+            }
 
-			/* Highlight.js customization */
-			.hljs {
-				background-color: transparent !important;
-				padding: 0;
-				color: var(--text-primary);
-			}
+            hr {
+                border: none;
+                border-top: 2px dashed var(--border-light);
+                margin: 20px 0;
+            }
 
-			/* X++26 syntax highlighting CSS targets */
-			.hljs-xpp26-keyword {
-				color: #d16dff;
-				font-weight: bold;
-			}
-			.hljs-xpp26-type {
-				color: #569cd6;
-			}
-			.hljs-xpp26-string {
-				color: #ce9178;
-			}
-			.hljs-xpp26-number {
-				color: #b5cea8;
-			}
-			.hljs-xpp26-comment {
-				color: #6a9955;
-			}
-			.hljs-xpp26-operator {
-				color: #d16dff;
-			}
+            .ansi-purple {
+                color: #d16dff;
+            }
+            .ansi-cyan {
+                color: #4fc1ff;
+            }
+            .ansi-darkcyan {
+                color: #208080;
+            }
+            .ansi-blue {
+                color: #569cd6;
+            }
+            .ansi-green {
+                color: #608b4e;
+            }
+            .ansi-yellow {
+                color: #b3b300;
+            }
+            .ansi-red {
+                color: #f44747;
+            }
+            .ansi-bold {
+                font-weight: bold;
+            }
+            .ansi-underline {
+                text-decoration: underline;
+            }
 
-			/* Assembly syntax highlighting CSS targets */
-			.hljs-asm-instruction {
-				color: #f44747;
-				font-weight: bold;
-			}
-			.hljs-asm-register {
-				color: #9cdcfe;
-			}
-			.hljs-asm-number {
-				color: #b5cea8;
-			}
-			.hljs-asm-label {
-				color: #4ec9b0;
-			}
-			.hljs-asm-comment {
-				color: #6a9955;
-			}
+            .ansi-reset {
+                color: var(--text-primary);
+                font-weight: normal;
+                text-decoration: none;
+            }
 
-			/* Scrollbar styling */
-			::-webkit-scrollbar {
-				width: 10px;
-				height: 10px;
-			}
+            /* Highlight.js customization */
+            .hljs {
+                background-color: transparent !important;
+                padding: 0;
+                color: var(--text-primary);
+            }
 
-			::-webkit-scrollbar-track {
-				background: var(--bg-primary);
-			}
+            /* X++26 syntax highlighting CSS targets */
+            .hljs-xpp26-keyword {
+                color: #d16dff;
+                font-weight: bold;
+            }
+            .hljs-xpp26-type {
+                color: #569cd6;
+            }
+            .hljs-xpp26-string {
+                color: #ce9178;
+            }
+            .hljs-xpp26-number {
+                color: #b5cea8;
+            }
+            .hljs-xpp26-comment {
+                color: #6a9955;
+            }
+            .hljs-xpp26-operator {
+                color: #d16dff;
+            }
 
-			::-webkit-scrollbar-thumb {
-				background: var(--border-light);
-				border-radius: 5px;
-			}
+            /* Assembly syntax highlighting CSS targets */
+            .hljs-asm-instruction {
+                color: #f44747;
+                font-weight: bold;
+            }
+            .hljs-asm-register {
+                color: #9cdcfe;
+            }
+            .hljs-asm-number {
+                color: #b5cea8;
+            }
+            .hljs-asm-label {
+                color: #4ec9b0;
+            }
+            .hljs-asm-comment {
+                color: #6a9955;
+            }
 
-			::-webkit-scrollbar-thumb:hover {
-				background: var(--accent);
-			}
+            /* Scrollbar styling */
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
 
-			.back-to-top {
-				position: fixed;
-				bottom: 30px;
-				right: 30px;
-				padding: 10px 15px;
-				background-color: var(--accent-blue);
-				color: #fff;
-				border: none;
-				border-radius: 4px;
-				cursor: pointer;
-				font-size: 12px;
-				opacity: 0;
-				visibility: hidden;
-				transition:
-					opacity 0.3s,
-					visibility 0.3s;
-				font-family: "JetBrains Mono", monospace;
-				z-index: 100;
-			}
+            ::-webkit-scrollbar-track {
+                background: var(--bg-primary);
+            }
 
-			.back-to-top.show {
-				opacity: 1;
-				visibility: visible;
-			}
+            ::-webkit-scrollbar-thumb {
+                background: var(--border-light);
+                border-radius: 5px;
+            }
 
-			.back-to-top:hover {
-				background-color: var(--accent);
-			}
-		</style>
-	</head>
-	<body>
-		<aside>
-			<div class="sidebar-header">
-				<h1>X++26 Docs</h1>
-				<div class="sidebar-controls">
-					<input
-						type="text"
-						id="searchBox"
-						class="search-box"
-						placeholder="Search sections..."
-						autocomplete="off"
-					/>
-					<button
-						id="themeToggle"
-						class="theme-toggle"
-						title="Toggle dark/light mode"
-					>
-						☀️
-					</button>
-				</div>
-			</div>
-			<ul id="docList" class="doc-list"></ul>
-		</aside>
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--accent);
+            }
 
-		<main>
-			<div class="view-header">
-				<div class="header-content">
-					<h2 id="viewTitle" class="view-title">
-						Loading documentation...
-					</h2>
-					<div id="breadcrumb" class="breadcrumb"></div>
-				</div>
-			</div>
-			<div id="output" class="output-container"></div>
-		</main>
+            .back-to-top {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                padding: 10px 15px;
+                background-color: var(--accent-blue);
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                opacity: 0;
+                visibility: hidden;
+                transition:
+                    opacity 0.3s,
+                    visibility 0.3s;
+                font-family: "JetBrains Mono", monospace;
+                z-index: 100;
+            }
 
-		<button id="backToTop" class="back-to-top">↑ Top</button>
+            .back-to-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
 
-		<script>
-			let chaptersRegistry = [];
-			let currentChapterId = null;
+            .back-to-top:hover {
+                background-color: var(--accent);
+            }
+        </style>
+    </head>
+    <body>
+        <aside>
+            <div class="sidebar-header">
+                <h1>XenonOS Documentation Hub</h1>
+                <div class="doc-selector-wrapper">
+                    <select id="docSelect" class="doc-select" title="Select Documentation">
+                        <option value="docs.txt">X++26</option>
+                        <!-- <option value="kernel.txt">⚙️ Kernel Design Architecture</option> -->
+                        <option value="xforth.txt">XForth</option>
+                    </select>
+                </div>
+                <div class="sidebar-controls">
+                    <input
+                        type="text"
+                        id="searchBox"
+                        class="search-box"
+                        placeholder="Search sections..."
+                        autocomplete="off"
+                    />
+                    <button
+                        id="themeToggle"
+                        class="theme-toggle"
+                        title="Toggle dark/light mode"
+                    >
+                        ☀️
+                    </button>
+                </div>
+            </div>
+            <ul id="docList" class="doc-list"></ul>
+        </aside>
 
-			const docList = document.getElementById("docList");
-			const viewTitle = document.getElementById("viewTitle");
-			const output = document.getElementById("output");
-			const searchBox = document.getElementById("searchBox");
-			const themeToggle = document.getElementById("themeToggle");
-			const backToTop = document.getElementById("backToTop");
-			const breadcrumb = document.getElementById("breadcrumb");
+        <main>
+            <div class="view-header">
+                <div class="header-content">
+                    <h2 id="viewTitle" class="view-title">
+                        Loading documentation...
+                    </h2>
+                    <div id="breadcrumb" class="breadcrumb"></div>
+                </div>
+            </div>
+            <div id="output" class="output-container"></div>
+        </main>
 
-			// Custom language definitions mapped strictly to your CSS style targets
-			hljs.registerLanguage("xpp26", function () {
-				return {
-					name: "X++26",
-					aliases: ["xpp26", "xpp"],
-					contains: [
-						{
-							className: "xpp26-string",
-							begin: '"',
-							end: '"',
-							illegal: "\\n",
-							contains: [hljs.BACKSLASH_ESCAPE],
-						},
-						{
-							className: "xpp26-string",
-							begin: "'",
-							end: "'",
-						},
-						{
-							className: "xpp26-comment",
-							begin: "#",
-							end: "$",
-						},
-						{
-							className: "xpp26-number",
-							begin: "\\b\\d+(\\.\\d+)?\\b",
-						},
-						{
-							className: "xpp26-type",
-							begin: "\\b(int|float|bool|string|char)\\b",
-						},
-						{
-							className: "xpp26-keyword",
-							begin: "\\b(var|array|out|in|for|while|repeat|until|if|else|true|false)\\b",
-						},
-						{
-							className: "xpp26-operator",
-							begin: "\\+|-|\\*|\\/|\\%|<|>|=|&|\\||\\^|~|\\!",
-						},
-					],
-				};
-			});
+        <button id="backToTop" class="back-to-top">↑ Top</button>
 
-			hljs.registerLanguage("asm", function () {
-				return {
-					name: "Assembly",
-					aliases: ["asm", "assembly"],
-					contains: [
-						{
-							className: "asm-comment",
-							begin: ";",
-							end: "$",
-						},
-						{
-							className: "asm-label",
-							begin: "[\\s]*:[a-zA-Z_][a-zA-Z0-9_]*",
-						},
-						{
-							className: "asm-instruction",
-							begin: "\\b(PUSH|POP|LOAD|STORE|LOADIND|STREIND|I2F|F2I|BOOL|ADDI|SUBI|MULI|DIVI|MODI|POWI|ADDF|SUBF|MULF|DIVF|MODF|POWF|AND|OR|XOR|IEQ|INE|ILT|ILE|IGT|IGE|FEQ|FNE|FLT|FLE|FGT|FGE|NEGI|NEGF|NOT|JUMP|BRZ|BRNZ|CALL|CALZ|CALN|RET|RETZ|RETN|HALT|WAIT|INT|IRT|SYS)\\b",
-						},
-						{
-							className: "asm-number",
-							begin: "0x[0-9a-fA-F]+|\\b\\d+\\b",
-						},
-					],
-				};
-			});
+        <script>
+            let chaptersRegistry = [];
+            let currentChapterId = null;
 
-			// Theme management
-			function initializeTheme() {
-				const savedTheme =
-					localStorage.getItem("xpp26-theme") || "dark";
-				if (savedTheme === "light") {
-					document.body.classList.add("light-mode");
-					themeToggle.textContent = "🌙";
-				} else {
-					themeToggle.textContent = "☀️";
-				}
-			}
+            // List of documents registry to hold local file listings
+            const availableDocs = ["docs.txt", "kernel.txt", "xforth.txt"];
 
-			themeToggle.addEventListener("click", () => {
-				document.body.classList.toggle("light-mode");
-				const isLight = document.body.classList.contains("light-mode");
+            const docSelect = document.getElementById("docSelect");
+            const docList = document.getElementById("docList");
+            const viewTitle = document.getElementById("viewTitle");
+            const output = document.getElementById("output");
+            const searchBox = document.getElementById("searchBox");
+            const themeToggle = document.getElementById("themeToggle");
+            const backToTop = document.getElementById("backToTop");
+            const breadcrumb = document.getElementById("breadcrumb");
+
+            // Custom language definitions mapped strictly to your CSS style targets
+            hljs.registerLanguage("xpp26", function () {
+                return {
+                    name: "X++26",
+                    aliases: ["xpp26", "xpp"],
+                    contains: [
+                        {
+                            className: "xpp26-string",
+                            begin: '"',
+                            end: '"',
+                            illegal: "\\n",
+                            contains: [hljs.BACKSLASH_ESCAPE],
+                        },
+                        {
+                            className: "xpp26-string",
+                            begin: "'",
+                            end: "'",
+                        },
+                        {
+                            className: "xpp26-comment",
+                            begin: "#",
+                            end: "$",
+                        },
+                        {
+                            className: "xpp26-number",
+                            begin: "\\b\\d+(\\.\\d+)?\\b",
+                        },
+                        {
+                            className: "xpp26-type",
+                            begin: "\\b(int|float|bool|string|char)\\b",
+                        },
+                        {
+                            className: "xpp26-keyword",
+                            begin: "\\b(var|array|out|in|for|while|repeat|until|if|else|true|false)\\b",
+                        },
+                        {
+                            className: "xpp26-operator",
+                            begin: "\\+|-|\\*|\\/|\\%|<|>|=|&|\\||\\^|~|\\!",
+                        },
+                    ],
+                };
+            });
+
+            hljs.registerLanguage("asm", function () {
+                return {
+                    name: "Assembly",
+                    aliases: ["asm", "assembly"],
+                    contains: [
+                        {
+                            className: "asm-comment",
+                            begin: ";",
+                            end: "$",
+                        },
+                        {
+                            className: "asm-label",
+                            begin: "[\\s]*:[a-zA-Z_][a-zA-Z0-9_]*",
+                        },
+                        {
+                            className: "asm-instruction",
+                            begin: "\\b(PUSH|POP|LOAD|STORE|LOADIND|STREIND|I2F|F2I|BOOL|ADDI|SUBI|MULI|DIVI|MODI|POWI|ADDF|SUBF|MULF|DIVF|MODF|POWF|AND|OR|XOR|IEQ|INE|ILT|ILE|IGT|IGE|FEQ|FNE|FLT|FLE|FGT|FGE|NEGI|NEGF|NOT|JUMP|BRZ|BRNZ|CALL|CALZ|CALN|RET|RETZ|RETN|HALT|WAIT|INT|IRT|SYS)\\b",
+                        },
+                        {
+                            className: "asm-number",
+                            begin: "0x[0-9a-fA-F]+|\\b\\d+\\b",
+                        },
+                    ],
+                };
+            });
+
+            // Theme management
+            function initializeTheme() {
+                const savedTheme =
+                    localStorage.getItem("xpp26-theme") || "dark";
+                if (savedTheme === "light") {
+                    document.body.classList.add("light-mode");
+                    themeToggle.textContent = "🌙";
+                } else {
+                    themeToggle.textContent = "☀️";
+                }
+            }
+
+            themeToggle.addEventListener("click", () => {
+                document.body.classList.toggle("light-mode");
+                const isLight = document.body.classList.contains("light-mode");
                 const themeLink = document.getElementById('hljs-theme');
                 themeLink.href = isLight 
                     ? "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"
                     : "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css";
-				localStorage.setItem("xpp26-theme", isLight ? "light" : "dark");
-				themeToggle.textContent = isLight ? "🌙" : "☀️";
-			});
+                localStorage.setItem("xpp26-theme", isLight ? "light" : "dark");
+                themeToggle.textContent = isLight ? "🌙" : "☀️";
+            });
 
-			// Back to top button
-			output.addEventListener("scroll", () => {
-				if (output.scrollTop > 300) {
-					backToTop.classList.add("show");
-				} else {
-					backToTop.classList.remove("show");
-				}
-			});
+            // Back to top button
+            output.addEventListener("scroll", () => {
+                if (output.scrollTop > 300) {
+                    backToTop.classList.add("show");
+                } else {
+                    backToTop.classList.remove("show");
+                }
+            });
 
-			backToTop.addEventListener("click", () => {
-				output.scrollTo({ top: 0, behavior: "smooth" });
-			});
+            backToTop.addEventListener("click", () => {
+                output.scrollTo({ top: 0, behavior: "smooth" });
+            });
 
-			// Search functionality
-			searchBox.addEventListener("input", (e) => {
-				const query = e.target.value.toLowerCase();
-				const items = document.querySelectorAll(".doc-item");
+            // Search functionality
+            searchBox.addEventListener("input", (e) => {
+                const query = e.target.value.toLowerCase();
+                const items = document.querySelectorAll(".doc-item");
 
-				items.forEach((item) => {
-					if (query === "") {
-						item.classList.remove("hidden");
-					} else if (item.textContent.toLowerCase().includes(query)) {
-						item.classList.remove("hidden");
-					} else {
-						item.classList.add("hidden");
-					}
-				});
-			});
+                items.forEach((item) => {
+                    if (query === "") {
+                        item.classList.remove("hidden");
+                    } else if (item.textContent.toLowerCase().includes(query)) {
+                        item.classList.remove("hidden");
+                    } else {
+                        item.classList.add("hidden");
+                    }
+                });
+            });
 
-			const ansiMap = [
-				{
-					regex: /\{ANSI\.PURPLE\}/g,
-					html: '<span class="ansi-purple">',
-				},
-				{ regex: /\{ANSI\.CYAN\}/g, html: '<span class="ansi-cyan">' },
-				{
-					regex: /\{ANSI\.DARKCYAN\}/g,
-					html: '<span class="ansi-darkcyan">',
-				},
-				{ regex: /\{ANSI\.BLUE\}/g, html: '<span class="ansi-blue">' },
-				{
-					regex: /\{ANSI\.GREEN\}/g,
-					html: '<span class="ansi-green">',
-				},
-				{
-					regex: /\{ANSI\.YELLOW\}/g,
-					html: '<span class="ansi-yellow">',
-				},
-				{ regex: /\{ANSI\.RED\}/g, html: '<span class="ansi-red">' },
-				{ regex: /\{ANSI\.BOLD\}/g, html: '<span class="ansi-bold">' },
-				{
-					regex: /\{ANSI\.UNDERLINE\}/g,
-					html: '<span class="ansi-underline">',
-				},
-				{
-					regex: /\{ANSI\.END\}/g,
-					html: '</span><span class="ansi-reset">',
-				},
-			];
+            const ansiMap = [
+                {
+                    regex: /\{ANSI\.PURPLE\}/g,
+                    html: '<span class="ansi-purple">',
+                },
+                { regex: /\{ANSI\.CYAN\}/g, html: '<span class="ansi-cyan">' },
+                {
+                    regex: /\{ANSI\.DARKCYAN\}/g,
+                    html: '<span class="ansi-darkcyan">',
+                },
+                { regex: /\{ANSI\.BLUE\}/g, html: '<span class="ansi-blue">' },
+                {
+                    regex: /\{ANSI\.GREEN\}/g,
+                    html: '<span class="ansi-green">',
+                },
+                {
+                    regex: /\{ANSI\.YELLOW\}/g,
+                    html: '<span class="ansi-yellow">',
+                },
+                { regex: /\{ANSI\.RED\}/g, html: '<span class="ansi-red">' },
+                { regex: /\{ANSI\.BOLD\}/g, html: '<span class="ansi-bold">' },
+                {
+                    regex: /\{ANSI\.UNDERLINE\}/g,
+                    html: '<span class="ansi-underline">',
+                },
+                {
+                    regex: /\{ANSI\.END\}/g,
+                    html: '</span><span class="ansi-reset">',
+                },
+            ];
 
-			function escapeHtml(text) {
-				return text
-					.replace(/&/g, "&amp;")
-					.replace(/</g, "&lt;")
-					.replace(/>/g, "&gt;");
-			}
+            function escapeHtml(text) {
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
 
-			// Helper utility to safely unescape symbols specifically for raw code handling
-			function unescapeHtml(text) {
-				return text
-					.replace(/&lt;/g, "<")
-					.replace(/&gt;/g, ">")
-					.replace(/&amp;/g, "&");
-			}
+            function unescapeHtml(text) {
+                return text
+                    .replace(/&lt;/g, "<")
+                    .replace(/&gt;/g, ">")
+                    .replace(/&amp;/g, "&");
+            }
 
-			function parseAnsi(text) {
-				const targetRegex =
-					/\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
-				let pool = text.replace(
-					targetRegex,
-					function (match, url, linkText) {
-						return `__LINK_START__URL="${url}"__LINK_TEXT__${linkText}__LINK_END__`;
-					},
-				);
+            function parseAnsi(text) {
+                const targetRegex =
+                    /\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
+                let pool = text.replace(
+                    targetRegex,
+                    function (match, url, linkText) {
+                        return `__LINK_START__URL="${url}"__LINK_TEXT__${linkText}__LINK_END__`;
+                    },
+                );
 
-				pool = escapeHtml(pool);
+                pool = escapeHtml(pool);
 
-				const tokenRegex =
-					/__LINK_START__URL="([^"]*?)"__LINK_TEXT__(.*?)__LINK_END__/g;
-				pool = pool.replace(
-					tokenRegex,
-					function (match, url, linkText) {
-						return `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
-					},
-				);
+                const tokenRegex =
+                    /__LINK_START__URL="([^"]*?)"__LINK_TEXT__(.*?)__LINK_END__/g;
+                pool = pool.replace(
+                    tokenRegex,
+                    function (match, url, linkText) {
+                        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
+                    },
+                );
 
-				pool = pool.replace(/^(?:\r?\n)?---(?:\r?\n)?$/gm, "<hr>");
+                pool = pool.replace(/^(?:\r?\n)?---(?:\r?\n)?$/gm, "<hr>");
 
-				// Enhanced markdown code block match highlighting logic
-				pool = pool.replace(
-					/```([\w]*)\n([\s\S]*?)```/g,
-					function (match, lang, code) {
-						let language = lang
-							? lang.toLowerCase().trim()
-							: "plaintext";
+                pool = pool.replace(
+                    /```([\w]*)\n([\s\S]*?)```/g,
+                    function (match, lang, code) {
+                        let language = lang
+                            ? lang.toLowerCase().trim()
+                            : "plaintext";
 
-						if (language === "xpp") language = "xpp26";
-						if (language === "assembly") language = "asm";
+                        if (language === "xpp") language = "xpp26";
+                        if (language === "assembly") language = "asm";
 
-						// Crucial Fix: Unescape structural markup safely so code syntax targets receive clean code string raw inputs
-						const cleanCode = unescapeHtml(code.trim());
-						const codeId =
-							"code-" + Math.random().toString(36).substr(2, 9);
+                        const cleanCode = unescapeHtml(code.trim());
+                        const codeId =
+                            "code-" + Math.random().toString(36).substr(2, 9);
 
-						let highlighted;
-						try {
-							if (language === "xpp26" || language === "asm") {
-								highlighted = hljs.highlight(cleanCode, {
-									language,
-									ignoreIllegals: true,
-								}).value;
-							} else {
-								highlighted = escapeHtml(cleanCode);
-							}
-						} catch (e) {
-							highlighted = escapeHtml(cleanCode);
-						}
+                        let highlighted;
+                        try {
+                            if (language === "xpp26" || language === "asm") {
+                                highlighted = hljs.highlight(cleanCode, {
+                                    language,
+                                    ignoreIllegals: true,
+                                }).value;
+                            } else {
+                                highlighted = escapeHtml(cleanCode);
+                            }
+                        } catch (e) {
+                            highlighted = escapeHtml(cleanCode);
+                        }
 
-						return `<div class="code-block-wrapper">
+                        return `<div class="code-block-wrapper">
                 <div class="code-block-header">
                     <span>${language}</span>
                     <button class="copy-btn" onclick="copyCode('${codeId}')">📋 Copy</button>
                 </div>
                 <pre id="${codeId}"><code class="hljs language-${language}">${highlighted}</code></pre>
             </div>`;
-					},
-				);
+                    },
+                );
 
-				ansiMap.forEach((item) => {
-					pool = pool.replace(item.regex, item.html);
-				});
+                ansiMap.forEach((item) => {
+                    pool = pool.replace(item.regex, item.html);
+                });
 
-				return pool;
-			}
+                return pool;
+            }
 
-			window.copyCode = function (codeId) {
-				const codeElement = document.getElementById(codeId);
-				const text = codeElement.innerText;
+            window.copyCode = function (codeId) {
+                const codeElement = document.getElementById(codeId);
+                const text = codeElement.innerText;
 
-				navigator.clipboard
-					.writeText(text)
-					.then(() => {
-						const btn = event.target;
-						const originalText = btn.textContent;
-						btn.textContent = "✓ Copied";
-						btn.classList.add("copied");
+                navigator.clipboard
+                    .writeText(text)
+                    .then(() => {
+                        const btn = event.target;
+                        const originalText = btn.textContent;
+                        btn.textContent = "✓ Copied";
+                        btn.classList.add("copied");
 
-						setTimeout(() => {
-							btn.textContent = originalText;
-							btn.classList.remove("copied");
-						}, 2000);
-					})
-					.catch((err) => {
-						console.error("Failed to copy:", err);
-					});
-			};
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.classList.remove("copied");
+                        }, 2000);
+                    })
+                    .catch((err) => {
+                        console.error("Failed to copy:", err);
+                    });
+            };
 
-			function processPreloadedDocumentation(rawText) {
-				chaptersRegistry = [];
+            function processPreloadedDocumentation(rawText) {
+                chaptersRegistry = [];
 
-				const rawChunks = rawText.split(/={10,}/);
-				let chapterIndex = 0;
+                const rawChunks = rawText.split(/={10,}/);
+                let chapterIndex = 0;
 
-				rawChunks.forEach((chunk) => {
-					const trimmedChunk = chunk.trim();
-					if (!trimmedChunk) return;
+                rawChunks.forEach((chunk) => {
+                    const trimmedChunk = chunk.trim();
+                    if (!trimmedChunk) return;
 
-					const lines = trimmedChunk.split(/\r?\n/);
+                    const lines = trimmedChunk.split(/\r?\n/);
 
-					let rawTitle = lines[0]
-						.replace(/[\{\}#\*=\-_]|ANSI\.[A-Z]+/gi, "")
-						.trim();
-					if (!rawTitle) {
-						rawTitle = `Section ${chapterIndex + 1}`;
-					}
+                    let rawTitle = lines[0]
+                        .replace(/[\{\}#\*=\-_]|ANSI\.[A-Z]+/gi, "")
+                        .trim();
+                    if (!rawTitle) {
+                        rawTitle = `Section ${chapterIndex + 1}`;
+                    }
 
-					if (rawTitle.toUpperCase() === "END OF DOCUMENTATION")
-						return;
+                    if (rawTitle.toUpperCase() === "END OF DOCUMENTATION")
+                        return;
 
-					let contentLines = [...lines];
-					if (
-						contentLines[1] &&
-						/^[-=~#\s]+$/.test(contentLines[1])
-					) {
-						contentLines.splice(1, 1);
-					}
+                    let contentLines = [...lines];
+                    if (
+                        contentLines[1] &&
+                        /^[-=~#\s]+$/.test(contentLines[1])
+                    ) {
+                        contentLines.splice(1, 1);
+                    }
 
-					const cleanContent = contentLines.join("\n").trim();
-					const uniqueId = `ch-${chapterIndex++}`;
+                    const cleanContent = contentLines.join("\n").trim();
+                    const uniqueId = `ch-${chapterIndex++}`;
 
-					chaptersRegistry.push({
-						id: uniqueId,
-						title: rawTitle,
-						content: cleanContent,
-					});
-				});
+                    chaptersRegistry.push({
+                        id: uniqueId,
+                        title: rawTitle,
+                        content: cleanContent,
+                    });
+                });
 
-				renderSidebarNavigation();
-			}
+                renderSidebarNavigation();
+            }
 
-			function renderSidebarNavigation() {
-				docList.innerHTML = "";
+            function renderSidebarNavigation() {
+                docList.innerHTML = "";
 
-				if (chaptersRegistry.length === 0) {
-					docList.innerHTML =
-						'<li class="doc-item" style="cursor:default;color:#888;">No items parsed. Check your document formatting rules.</li>';
-					return;
-				}
+                if (chaptersRegistry.length === 0) {
+                    docList.innerHTML =
+                        '<li class="doc-item" style="cursor:default;color:#888;">No items parsed. Check your document formatting rules.</li>';
+                    return;
+                }
 
-				chaptersRegistry.forEach((chapter) => {
-					const li = document.createElement("li");
-					li.id = `item-${chapter.id}`;
-					li.className = "doc-item";
-					li.textContent = chapter.title;
-					li.title = chapter.title;
-					li.addEventListener("click", () =>
-						displayChapter(chapter.id),
-					);
-					docList.appendChild(li);
-				});
+                chaptersRegistry.forEach((chapter) => {
+                    const li = document.createElement("li");
+                    li.id = `item-${chapter.id}`;
+                    li.className = "doc-item";
+                    li.textContent = chapter.title;
+                    li.title = chapter.title;
+                    li.addEventListener("click", () =>
+                        displayChapter(chapter.id),
+                    );
+                    docList.appendChild(li);
+                });
 
-				if (chaptersRegistry.length > 0) {
-					displayChapter(chaptersRegistry[0].id);
-				}
-			}
+                if (chaptersRegistry.length > 0) {
+                    displayChapter(chaptersRegistry[0].id);
+                }
+            }
 
-			function displayChapter(id) {
-				const targetNode = chaptersRegistry.find((c) => c.id === id);
-				if (!targetNode) return;
+            function displayChapter(id) {
+                const targetNode = chaptersRegistry.find((c) => c.id === id);
+                if (!targetNode) return;
 
-				currentChapterId = id;
+                currentChapterId = id;
 
-				document
-					.querySelectorAll(".doc-item")
-					.forEach((el) => el.classList.remove("active"));
-				const activeItem = document.getElementById(`item-${id}`);
-				if (activeItem) activeItem.classList.add("active");
+                document
+                    .querySelectorAll(".doc-item")
+                    .forEach((el) => el.classList.remove("active"));
+                const activeItem = document.getElementById(`item-${id}`);
+                if (activeItem) activeItem.classList.add("active");
 
-				// Render titles accurately
-				viewTitle.textContent = targetNode.title;
-				output.innerHTML = parseAnsi(targetNode.content);
+                viewTitle.textContent = targetNode.title;
+                output.innerHTML = parseAnsi(targetNode.content);
 
-				// Update breadcrumb
-				const chapterNumber =
-					chaptersRegistry.findIndex((c) => c.id === id) + 1;
-				const totalChapters = chaptersRegistry.length;
-				breadcrumb.innerHTML = `Chapter ${chapterNumber} of ${totalChapters}`;
+                const chapterNumber =
+                    chaptersRegistry.findIndex((c) => c.id === id) + 1;
+                const totalChapters = chaptersRegistry.length;
+                
+                const currentDoc = docSelect.options[docSelect.selectedIndex].text.split(" (")[0];
+                breadcrumb.innerHTML = `${currentDoc} &gt; Chapter ${chapterNumber} of ${totalChapters}`;
 
-				output.scrollTop = 0;
-			}
+                output.scrollTop = 0;
+            }
 
-			fetch("docs.txt")
-				.then((response) => {
-					if (!response.ok)
-						throw new Error("Could not load docs.txt");
-					return response.text();
-				})
-				.then((text) => {
-					processPreloadedDocumentation(text);
-				})
-				.catch((err) => {
-					viewTitle.textContent = "Error loading system";
-					output.innerHTML =
-						"<span class='ansi-red'>Error loading <strong>docs.txt</strong>.</span>";
-					console.error(err);
-				});
+            // Core pipeline load method to request text sources dynamically
+            function loadDocumentationFile(fileName) {
+                viewTitle.textContent = "Loading documentation file...";
+                output.innerHTML = "";
+                searchBox.value = ""; 
 
-			// Initialize theme on page load
-			initializeTheme();
-		</script>
-	</body>
+                fetch(fileName)
+                    .then((response) => {
+                        if (!response.ok)
+                            throw new Error(`Could not load ${fileName}`);
+                        return response.text();
+                    })
+                    .then((text) => {
+                        processPreloadedDocumentation(text);
+                    })
+                    .catch((err) => {
+                        viewTitle.textContent = "Resource Missing";
+                        output.innerHTML = `
+                            <div style="padding: 20px; border: 1px dashed var(--border-light); border-radius: 4px;">
+                                <span class='ansi-red' style='font-weight:bold;'>Error target path unresolved: "${fileName}"</span><br/><br/>
+                                <span style='color: var(--text-muted); font-size:13px;'>
+                                    To use multiple docs views, verify that <strong>${fileName}</strong> is present in your root execution directory alongside your main HTML hub file.
+                                </span>
+                            </div>`;
+                        docList.innerHTML = '<li class="doc-item" style="cursor:default;color:var(--text-muted);">Failed to load parameters.</li>';
+                        console.error(err);
+                    });
+            }
+
+            // Multi-doc routing selector change hook
+            docSelect.addEventListener("change", (e) => {
+                loadDocumentationFile(e.target.value);
+            });
+
+            // Initialize theme and trigger core file fetching pass
+            initializeTheme();
+            loadDocumentationFile("docs.txt");
+        </script>
+    </body>
 </html>
