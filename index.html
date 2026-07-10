@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>X++26 Documentation Hub</title>
+		<title>XenonOS26 Documentation</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -23,88 +23,131 @@
 			}
 
 			:root {
-				--bg-primary: #1e1e1e;
-				--bg-secondary: #252526;
-				--bg-tertiary: #1a1a1a;
-				--border-color: #333;
-				--border-light: #3c3c3c;
-				--text-primary: #d4d4d4;
-				--text-muted: #888;
-				--accent: #4ec9b0;
-				--accent-blue: #569cd6;
-				--accent-light: #4fc1ff;
+				--bg-primary: #050816;
+				--bg-secondary: rgba(6, 12, 28, 0.84);
+				--bg-tertiary: rgba(4, 8, 20, 0.94);
+				--border-color: rgba(93, 192, 255, 0.2);
+				--border-light: rgba(255, 255, 255, 0.12);
+				--text-primary: #e8f7ff;
+				--text-muted: #7ba7c6;
+				--accent: #6ef2ff;
+				--accent-blue: #4b8cff;
+				--accent-light: #95f0ff;
+				--shadow-color: rgba(7, 20, 42, 0.55);
 			}
 
 			body {
 				margin: 0;
 				padding: 0;
-				background-color: var(--bg-primary);
+				background: var(--bg-primary);
 				color: var(--text-primary);
 				font-family: "JetBrains Mono", monospace;
 				display: flex;
 				height: 100vh;
 				overflow: hidden;
 				transition:
-					background-color 0.3s,
-					color 0.3s;
+					background 0.3s ease,
+					color 0.3s ease;
+				position: relative;
 			}
 
 			body.light-mode {
-				--bg-primary: #fafafa;
-				--bg-secondary: #f5f5f5;
-				--bg-tertiary: #ffffff;
-				--border-color: #ddd;
-				--border-light: #eee;
-				--text-primary: #333;
-				--text-muted: #999;
-				--accent: #2b8a7a;
-				--accent-blue: #0066cc;
-				--accent-light: #0080ff;
+				--bg-primary: #f4f8ff;
+				--bg-secondary: rgba(255, 255, 255, 0.8);
+				--bg-tertiary: rgba(248, 252, 255, 0.96);
+				--border-color: rgba(0, 122, 255, 0.18);
+				--border-light: rgba(18, 44, 90, 0.12);
+				--text-primary: #15334f;
+				--text-muted: #6a7d94;
+				--accent: #0077c2;
+				--accent-blue: #3b82f6;
+				--accent-light: #2f9fe2;
+				--shadow-color: rgba(147, 194, 255, 0.25);
+			}
+
+			body.light-mode::before {
+				opacity: 0.2;
+			}
+
+			aside,
+			main {
+				position: relative;
+				z-index: 1;
 			}
 
 			aside {
 				width: 320px;
-				background-color: var(--bg-secondary);
-				border-right: 2px solid var(--border-color);
+				background: linear-gradient(
+					180deg,
+					rgba(5, 8, 22, 0.95),
+					rgba(7, 14, 29, 0.9)
+				);
+				border-right: 1px solid var(--border-color);
 				display: flex;
 				flex-direction: column;
 				flex-shrink: 0;
+				backdrop-filter: blur(18px);
+				box-shadow: 8px 0 30px var(--shadow-color);
 			}
 
 			.sidebar-header {
-				padding: 15px 20px;
+				padding: 18px 12px 14px;
 				border-bottom: 1px solid var(--border-light);
+				background: linear-gradient(
+					90deg,
+					rgba(255, 255, 255, 0.04),
+					transparent
+				);
 			}
 
 			.sidebar-header h1 {
-				margin: 0 0 10px 0;
-				font-size: 1.1rem;
-				color: var(--accent-blue);
+				margin: 0 0 8px 0;
+				font-size: 1rem;
+				color: var(--accent-light);
 				text-transform: uppercase;
-				letter-spacing: 0.5px;
+				letter-spacing: 1px;
+			}
+
+			.sidebar-subtitle {
+				font-size: 10px;
+				color: var(--text-muted);
+				margin-bottom: 12px;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
 			}
 
 			.doc-selector-wrapper {
 				margin-bottom: 12px;
 			}
 
+			.doc-select,
+			.search-box,
+			.ghost-btn {
+				font-family: "JetBrains Mono", monospace;
+				border-radius: 8px;
+				border: 1px solid var(--border-light);
+				background: var(--bg-secondary);
+				color: var(--text-primary);
+			}
+
 			.doc-select {
 				width: 100%;
 				padding: 8px 10px;
-				background-color: var(--bg-primary);
-				border: 1px solid var(--border-light);
 				color: var(--accent);
-				font-family: "JetBrains Mono", monospace;
 				font-size: 12px;
 				font-weight: bold;
-				border-radius: 4px;
 				cursor: pointer;
 				outline: none;
-				transition: border-color 0.2s;
+				transition:
+					border-color 0.2s,
+					transform 0.2s;
 			}
 
-			.doc-select:focus {
+			.doc-select:focus,
+			.search-box:focus {
 				border-color: var(--accent-light);
+				outline: none;
+				transform: translateY(-1px);
 			}
 
 			.sidebar-controls {
@@ -116,36 +159,33 @@
 			.search-box {
 				flex: 1;
 				padding: 8px 12px;
-				background-color: var(--bg-primary);
-				border: 1px solid var(--border-light);
-				color: var(--text-primary);
-				font-family: "JetBrains Mono", monospace;
 				font-size: 12px;
-				border-radius: 4px;
-				transition: border-color 0.2s;
+				transition:
+					border-color 0.2s,
+					transform 0.2s;
 			}
 
-			.search-box:focus {
-				outline: none;
-				border-color: var(--accent-light);
-			}
-
-			.theme-toggle {
+			.ghost-btn {
 				padding: 8px 12px;
-				background-color: var(--bg-primary);
-				border: 1px solid var(--border-light);
-				color: var(--text-primary);
 				cursor: pointer;
 				font-size: 12px;
-				border-radius: 4px;
 				transition:
 					background-color 0.2s,
-					border-color 0.2s;
-				font-family: "JetBrains Mono", monospace;
+					border-color 0.2s,
+					transform 0.2s;
 			}
 
-			.theme-toggle:hover {
-				background-color: var(--border-light);
+			.ghost-btn:hover {
+				background-color: rgba(255, 255, 255, 0.08);
+				transform: translateY(-1px);
+			}
+
+			.search-meta {
+				font-size: 10px;
+				color: var(--text-muted);
+				margin: 6px 0 2px;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
 			}
 
 			.doc-list {
@@ -162,20 +202,27 @@
 				font-size: 13px;
 				transition:
 					background-color 0.2s,
-					color 0.2s;
+					color 0.2s,
+					transform 0.2s;
 				border-left: 3px solid transparent;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
+				color: var(--text-primary);
 			}
 
 			.doc-item:hover {
-				background-color: var(--border-light);
-				color: #fff;
+				background: rgba(255, 255, 255, 0.08);
+				color: var(--accent-light);
+				transform: translateX(2px);
 			}
 
 			.doc-item.active {
-				background-color: var(--border-light);
+				background: linear-gradient(
+					90deg,
+					rgba(75, 140, 255, 0.16),
+					rgba(110, 242, 255, 0.08)
+				);
 				color: var(--accent);
 				border-left-color: var(--accent-blue);
 				font-weight: bold;
@@ -190,35 +237,56 @@
 				display: flex;
 				flex-direction: column;
 				min-width: 0;
-				background-color: var(--bg-tertiary);
+				background: linear-gradient(
+					180deg,
+					rgba(3, 8, 20, 0.4),
+					rgba(1, 4, 12, 0.55)
+				);
 				position: relative;
 			}
 
 			.view-header {
-				padding: 15px 30px;
-				background-color: var(--bg-primary);
+				padding: 18px 30px;
+				background: rgba(5, 10, 22, 0.7);
 				border-bottom: 1px solid var(--border-color);
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
+				backdrop-filter: blur(14px);
 			}
 
 			.header-content {
 				flex: 1;
 			}
 
+			.view-title-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 12px;
+			}
+
 			.view-title {
 				margin: 0;
-				font-size: 1.1rem;
+				font-size: 1rem;
 				color: var(--accent);
 				text-transform: uppercase;
 				letter-spacing: 1px;
 			}
 
+			.progress-pill {
+				padding: 6px 10px;
+				border: 1px solid var(--border-light);
+				border-radius: 999px;
+				font-size: 11px;
+				color: var(--text-muted);
+				background: rgba(255, 255, 255, 0.04);
+			}
+
 			.breadcrumb {
 				font-size: 11px;
 				color: var(--text-muted);
-				margin-top: 5px;
+				margin-top: 6px;
 			}
 
 			.breadcrumb a {
@@ -231,6 +299,18 @@
 				text-decoration: underline;
 			}
 
+			.view-actions {
+				display: flex;
+				gap: 8px;
+				margin-top: 10px;
+			}
+
+			.ghost-btn:disabled {
+				opacity: 0.45;
+				cursor: not-allowed;
+				transform: none;
+			}
+
 			.output-container {
 				flex: 1;
 				padding: 30px;
@@ -238,7 +318,7 @@
 				font-size: 14px;
 				white-space: pre-wrap;
 				word-break: break-word;
-				line-height: 1.5;
+				line-height: 1.6;
 				position: relative;
 			}
 
@@ -253,9 +333,12 @@
 
 			.code-block-wrapper {
 				position: relative;
-				margin: 12px 0;
-				border-radius: 4px;
+				margin: 14px 0;
+				border-radius: 10px;
 				overflow: hidden;
+				border: 1px solid var(--border-light);
+				background: rgba(255, 255, 255, 0.03);
+				box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
 			}
 
 			.code-block-header {
@@ -263,10 +346,10 @@
 				justify-content: space-between;
 				align-items: center;
 				padding: 8px 12px;
-				background-color: var(--border-light);
+				background: rgba(255, 255, 255, 0.06);
 				font-size: 11px;
 				color: var(--text-muted);
-				border-bottom: 1px solid var(--border-color);
+				border-bottom: 1px solid var(--border-light);
 			}
 
 			.copy-btn {
@@ -276,14 +359,17 @@
 				color: var(--text-primary);
 				cursor: pointer;
 				font-size: 11px;
-				border-radius: 3px;
-				transition: background-color 0.2s;
+				border-radius: 6px;
+				transition:
+					background-color 0.2s,
+					transform 0.2s;
 				font-family: "JetBrains Mono", monospace;
 			}
 
 			.copy-btn:hover {
 				background-color: var(--accent);
 				color: #000;
+				transform: translateY(-1px);
 			}
 
 			.copy-btn.copied {
@@ -294,9 +380,9 @@
 			pre {
 				margin: 0;
 				padding: 12px;
-				background-color: var(--bg-secondary);
+				background: rgba(0, 0, 0, 0.22);
 				overflow-x: auto;
-				max-height: 400px;
+				max-height: 420px;
 				overflow-y: auto;
 			}
 
@@ -309,7 +395,7 @@
 			hr {
 				border: none;
 				border-top: 2px dashed var(--border-light);
-				margin: 20px 0;
+				margin: 22px 0;
 			}
 
 			.ansi-purple {
@@ -339,7 +425,6 @@
 			.ansi-underline {
 				text-decoration: underline;
 			}
-
 			.ansi-reset {
 				color: var(--text-primary);
 				font-weight: normal;
@@ -347,77 +432,99 @@
 			}
 
 			.code-stmt {
-				background-color: #000;
-                color: white;
-                padding: 0 4px;
-                border-radius: 2px;
-                border: solid 1px #ffffff12;
+				background-color: rgba(0, 0, 0, 0.6);
+				color: #f8faff;
+				padding: 0 4px;
+				border-radius: 4px;
+				border: 1px solid rgba(255, 255, 255, 0.12);
 			}
 
-			/* Highlight.js customization */
+			.output-container h1,
+			.output-container h2,
+			.output-container h3,
+			.output-container h4 {
+				margin: 1.2em 0 0.5em;
+				color: var(--accent-light);
+				letter-spacing: 0.04em;
+			}
+
+			.output-container ul,
+			.output-container ol {
+				padding-left: 1.4em;
+				margin: 0.6em 0 1em;
+			}
+
+			.output-container li {
+				margin: 0.35em 0;
+			}
+
+			.output-container blockquote {
+				margin: 1em 0;
+				padding: 0.8em 1em;
+				border-left: 3px solid var(--accent-blue);
+				background: rgba(255, 255, 255, 0.04);
+				color: var(--text-muted);
+			}
+
+			.output-container p {
+				margin: 0.7em 0;
+			}
+
 			.hljs {
 				background-color: transparent !important;
 				padding: 0;
 				color: var(--text-primary);
 			}
-
-			/* X++26 syntax highlighting CSS targets */
-			.hljs-xpp26-keyword {
+			.hljs-xe-keyword {
 				color: #d16dff;
 				font-weight: bold;
 			}
-			.hljs-xpp26-type {
+			.hljs-xe-type {
 				color: #569cd6;
 			}
-			.hljs-xpp26-string {
+			.hljs-xe-string {
 				color: #ce9178;
 			}
-			.hljs-xpp26-number {
+			.hljs-xe-number {
 				color: #b5cea8;
 			}
-			.hljs-xpp26-comment {
+			.hljs-xe-comment {
 				color: #6a9955;
 			}
-			.hljs-xpp26-operator {
+			.hljs-xe-operator {
 				color: #d16dff;
 			}
-            .hljs-xpp26-class {
-				color: #009073;
+			.hljs-xe-class {
+				color: #4ec9b0;
 			}
-
-			/* Assembly syntax highlighting CSS targets */
-			.hljs-asm-instruction {
+			.hljs-xas-instruction {
 				color: #f44747;
 				font-weight: bold;
 			}
-			.hljs-asm-register {
+			.hljs-xas-register {
 				color: #9cdcfe;
 			}
-			.hljs-asm-number {
+			.hljs-xas-number {
 				color: #b5cea8;
 			}
-			.hljs-asm-label {
+			.hljs-xas-label {
 				color: #4ec9b0;
 			}
-			.hljs-asm-comment {
+			.hljs-xas-comment {
 				color: #6a9955;
 			}
 
-			/* Scrollbar styling */
 			::-webkit-scrollbar {
 				width: 10px;
 				height: 10px;
 			}
-
 			::-webkit-scrollbar-track {
-				background: var(--bg-primary);
+				background: rgba(255, 255, 255, 0.04);
 			}
-
 			::-webkit-scrollbar-thumb {
-				background: var(--border-light);
-				border-radius: 5px;
+				background: rgba(255, 255, 255, 0.16);
+				border-radius: 999px;
 			}
-
 			::-webkit-scrollbar-thumb:hover {
 				background: var(--accent);
 			}
@@ -427,42 +534,66 @@
 				bottom: 30px;
 				right: 30px;
 				padding: 10px 15px;
-				background-color: var(--accent-blue);
+				background: linear-gradient(
+					135deg,
+					var(--accent-blue),
+					var(--accent)
+				);
 				color: #fff;
 				border: none;
-				border-radius: 4px;
+				border-radius: 999px;
 				cursor: pointer;
 				font-size: 12px;
 				opacity: 0;
 				visibility: hidden;
 				transition:
 					opacity 0.3s,
-					visibility 0.3s;
+					visibility 0.3s,
+					box-shadow 0.2s;
 				font-family: "JetBrains Mono", monospace;
 				z-index: 100;
+				box-shadow: 0 10px 24px transparent;
 			}
 
 			.back-to-top.show {
-				opacity: 1;
+				opacity: 0.6;
 				visibility: visible;
 			}
-
 			.back-to-top:hover {
-				background-color: var(--accent);
+				opacity: 1;
+				box-shadow: 0 10px 24px rgba(75, 140, 255, 0.24);
+			}
+
+			@keyframes drift {
+				from {
+					transform: translate3d(0, 0, 0);
+				}
+				to {
+					transform: translate3d(-40px, 30px, 0);
+				}
+			}
+
+			@keyframes sweep {
+				to {
+					transform: translateX(100%);
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<aside>
 			<div class="sidebar-header">
-				<h1>XenonOS Documentation Hub</h1>
+				<h1>XenonOS Documentation</h1>
+				<div class="sidebar-subtitle">
+					Stranger among conventional systems.
+				</div>
 				<div class="doc-selector-wrapper">
 					<select
 						id="docSelect"
 						class="doc-select"
 						title="Select Documentation"
 					>
-						<option value="docs.txt">X++26</option>
+						<option value="docs.txt">Xe</option>
 						<option value="xasm.txt">XAssembly</option>
 					</select>
 				</div>
@@ -474,13 +605,9 @@
 						placeholder="Search sections..."
 						autocomplete="off"
 					/>
-					<button
-						id="themeToggle"
-						class="theme-toggle"
-						title="Toggle dark/light mode"
-					>
-						☀️
-					</button>
+				</div>
+				<div id="searchMeta" class="search-meta">
+					Ready for traversal
 				</div>
 			</div>
 			<ul id="docList" class="doc-list"></ul>
@@ -489,10 +616,26 @@
 		<main>
 			<div class="view-header">
 				<div class="header-content">
-					<h2 id="viewTitle" class="view-title">
-						Loading documentation...
-					</h2>
+					<div class="view-title-row">
+						<h2 id="viewTitle" class="view-title">
+							Loading documentation...
+						</h2>
+						<div id="chapterProgress" class="progress-pill">
+							Section 0 / 0
+						</div>
+					</div>
 					<div id="breadcrumb" class="breadcrumb"></div>
+					<div class="view-actions">
+						<button id="prevChapterBtn" class="ghost-btn">
+							← Prev
+						</button>
+						<button id="copyChapterBtn" class="ghost-btn">
+							⧉ Copy
+						</button>
+						<button id="nextChapterBtn" class="ghost-btn">
+							Next →
+						</button>
+					</div>
 				</div>
 			</div>
 			<div id="output" class="output-container"></div>
@@ -504,7 +647,6 @@
 			let chaptersRegistry = [];
 			let currentChapterId = null;
 
-			// List of documents registry to hold local file listings
 			const availableDocs = ["docs.txt", "xasm.txt"];
 
 			const docSelect = document.getElementById("docSelect");
@@ -512,107 +654,86 @@
 			const viewTitle = document.getElementById("viewTitle");
 			const output = document.getElementById("output");
 			const searchBox = document.getElementById("searchBox");
-			const themeToggle = document.getElementById("themeToggle");
+			const searchMeta = document.getElementById("searchMeta");
 			const backToTop = document.getElementById("backToTop");
 			const breadcrumb = document.getElementById("breadcrumb");
+			const chapterProgress = document.getElementById("chapterProgress");
+			const prevChapterBtn = document.getElementById("prevChapterBtn");
+			const nextChapterBtn = document.getElementById("nextChapterBtn");
+			const copyChapterBtn = document.getElementById("copyChapterBtn");
 
-			// Custom language definitions mapped strictly to your CSS style targets
-			hljs.registerLanguage("xpp26", function () {
+			hljs.registerLanguage("xe", function () {
 				return {
-					name: "X++26",
-					aliases: ["xpp26", "xpp"],
+					name: "Xe",
+					aliases: ["xe"],
 					contains: [
 						{
-							className: "xpp26-string",
+							className: "xe-string",
 							begin: '"',
 							end: '"',
 							illegal: "\\n",
 							contains: [hljs.BACKSLASH_ESCAPE],
 						},
 						{
-							className: "xpp26-string",
+							className: "xe-string",
 							begin: "'",
 							end: "'",
 						},
 						{
-							className: "xpp26-comment",
+							className: "xe-comment",
 							begin: "#",
 							end: "$",
 						},
 						{
-							className: "xpp26-number",
+							className: "xe-number",
 							begin: "\\b\\d+(\\.\\d+)?\\b",
 						},
 						{
-							className: "xpp26-type",
+							className: "xe-type",
 							begin: "\\b(int|float|bool|string|char|type|return_type)\\b",
 						},
 						{
-							className: "xpp26-keyword",
-							begin: "\\b(var|array|out|in|for|while|repeat|until|if|else|true|false|proc|call|fn|return|class|new|free|this|struct)\\b",
+							className: "xe-keyword",
+							begin: "\\b(var|array|out|in|for|while|repeat|until|if|elseif|else|switch|case|default|break|continue|true|false|proc|call|fn|return|class|new|free|this|struct)\\b",
 						},
 						{
-							className: "xpp26-operator",
+							className: "xe-operator",
 							begin: "\\+|-|\\*|\\/|\\%|<|>|=|&|\\||\\^|~|\\!",
 						},
-                        {
-                            className: "xpp26-class",
-                            begin: "[A-Z][a-z]+"
-                        }
+						{
+							className: "xe-class",
+							begin: "[A-Z][a-z]+",
+						},
 					],
 				};
 			});
 
-			hljs.registerLanguage("asm", function () {
+			hljs.registerLanguage("xas", function () {
 				return {
-					name: "Assembly",
-					aliases: ["asm", "assembly"],
+					name: "XAssembly",
+					aliases: ["xas", "xassembly"],
 					contains: [
 						{
-							className: "asm-comment",
+							className: "xas-comment",
 							begin: ";",
 							end: "$",
 						},
 						{
-							className: "asm-label",
+							className: "xas-label",
 							begin: "[\\s]*:[a-zA-Z_][a-zA-Z0-9_]*",
 						},
 						{
-							className: "asm-instruction",
+							className: "xas-instruction",
 							begin: "\\b(PUSH|POP|DUP|SWAP|OVER|ROT|LOAD|STORE|LOADIND|STREIND|I2F|F2I|BOOL|ADDI|SUBI|MULI|DIVI|MODI|POWI|ADDF|SUBF|MULF|DIVF|MODF|POWF|AND|OR|XOR|IEQ|INE|ILT|ILE|IGT|IGE|FEQ|FNE|FLT|FLE|FGT|FGE|NEGI|NEGF|NOT|JUMP|BRZ|BRNZ|CALL|CALZ|CALN|RET|RETZ|RETN|HALT|WAIT|INT|IRT|SYS|INCI|DECI|INCF|DECF|LOOKUP|PUSHFP|POPFP|SETFP|LOADSP|STORESP)\\b",
 						},
 						{
-							className: "asm-number",
+							className: "xas-number",
 							begin: "0x[0-9a-fA-F]+|\\b\\d+\\b",
 						},
 					],
 				};
 			});
-
-			// Theme management
-			function initializeTheme() {
-				const savedTheme =
-					localStorage.getItem("xpp26-theme") || "dark";
-				if (savedTheme === "light") {
-					document.body.classList.add("light-mode");
-					themeToggle.textContent = "🌙";
-				} else {
-					themeToggle.textContent = "☀️";
-				}
-			}
-
-			themeToggle.addEventListener("click", () => {
-				document.body.classList.toggle("light-mode");
-				const isLight = document.body.classList.contains("light-mode");
-				const themeLink = document.getElementById("hljs-theme");
-				themeLink.href = isLight
-					? "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"
-					: "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css";
-				localStorage.setItem("xpp26-theme", isLight ? "light" : "dark");
-				themeToggle.textContent = isLight ? "🌙" : "☀️";
-			});
-
-			// Back to top button
+			
 			output.addEventListener("scroll", () => {
 				if (output.scrollTop > 300) {
 					backToTop.classList.add("show");
@@ -625,7 +746,64 @@
 				output.scrollTo({ top: 0, behavior: "smooth" });
 			});
 
-			// Search functionality
+			function updateSearchMeta() {
+				const visibleItems = Array.from(
+					document.querySelectorAll(".doc-item"),
+				).filter(
+					(item) => !item.classList.contains("hidden") && item.id,
+				).length;
+
+				if (!searchBox.value.trim()) {
+					searchMeta.textContent = `${chaptersRegistry.length} sections available`;
+				} else {
+					searchMeta.textContent = `${visibleItems} matching sections`;
+				}
+			}
+
+			function updateChapterMeta() {
+				if (!chaptersRegistry.length) {
+					chapterProgress.textContent = "Section 0 / 0";
+					prevChapterBtn.disabled = true;
+					nextChapterBtn.disabled = true;
+					return;
+				}
+
+				const index = chaptersRegistry.findIndex(
+					(c) => c.id === currentChapterId,
+				);
+				const chapterNumber = index >= 0 ? index + 1 : 1;
+				chapterProgress.textContent = `Section ${chapterNumber} / ${chaptersRegistry.length}`;
+				prevChapterBtn.disabled = chapterNumber === 1;
+				nextChapterBtn.disabled =
+					chapterNumber === chaptersRegistry.length;
+			}
+
+			function navigateChapter(offset) {
+				if (!chaptersRegistry.length) return;
+				const currentIndex = chaptersRegistry.findIndex(
+					(c) => c.id === currentChapterId,
+				);
+				const nextIndex = Math.min(
+					Math.max(currentIndex + offset, 0),
+					chaptersRegistry.length - 1,
+				);
+				displayChapter(chaptersRegistry[nextIndex].id);
+			}
+
+			function copyCurrentChapter() {
+				const currentNode = chaptersRegistry.find(
+					(c) => c.id === currentChapterId,
+				);
+				if (!currentNode) return;
+				const textToCopy = `${currentNode.title}\n\n${currentNode.content}`;
+				navigator.clipboard.writeText(textToCopy).then(() => {
+					copyChapterBtn.textContent = "✓ Copied";
+					setTimeout(() => {
+						copyChapterBtn.textContent = "⧉ Copy";
+					}, 1600);
+				});
+			}
+
 			searchBox.addEventListener("input", (e) => {
 				const query = e.target.value.toLowerCase();
 				const items = document.querySelectorAll(".doc-item");
@@ -639,6 +817,23 @@
 						item.classList.add("hidden");
 					}
 				});
+
+				updateSearchMeta();
+			});
+
+			prevChapterBtn.addEventListener("click", () => navigateChapter(-1));
+			nextChapterBtn.addEventListener("click", () => navigateChapter(1));
+			copyChapterBtn.addEventListener("click", copyCurrentChapter);
+
+			window.addEventListener("keydown", (event) => {
+				if (
+					(event.ctrlKey || event.metaKey) &&
+					event.key.toLowerCase() === "k"
+				) {
+					event.preventDefault();
+					searchBox.focus();
+					searchBox.select();
+				}
 			});
 
 			const ansiMap = [
@@ -686,6 +881,122 @@
 					.replace(/&amp;/g, "&");
 			}
 
+			function renderInlineMarkup(text) {
+				return text
+					.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+					.replace(/__(.+?)__/g, "<strong>$1</strong>")
+					.replace(/\*(.+?)\*/g, "<em>$1</em>")
+					.replace(/_(.+?)_/g, "<em>$1</em>");
+			}
+
+			function renderMarkdownBlocks(text) {
+				const lines = text.split(/\r?\n/);
+				const output = [];
+				let paragraphLines = [];
+				let listType = null;
+				let listItems = [];
+				let quoteLines = [];
+
+				const flushParagraph = () => {
+					if (paragraphLines.length) {
+						output.push(
+							`<p>${renderInlineMarkup(paragraphLines.join(" "))}</p>`,
+						);
+						paragraphLines = [];
+					}
+				};
+
+				const flushList = () => {
+					if (listItems.length) {
+						const tag = listType === "ol" ? "ol" : "ul";
+						output.push(
+							`<${tag}>${listItems
+								.map(
+									(item) =>
+										`<li>${renderInlineMarkup(item)}</li>`,
+								)
+								.join("")}</${tag}>`,
+						);
+						listItems = [];
+						listType = null;
+					}
+				};
+
+				const flushQuote = () => {
+					if (quoteLines.length) {
+						output.push(
+							`<blockquote>${quoteLines
+								.map((line) => renderInlineMarkup(line))
+								.join("<br>")}</blockquote>`,
+						);
+						quoteLines = [];
+					}
+				};
+
+				lines.forEach((line) => {
+					const trimmed = line.trim();
+
+					if (!trimmed) {
+						flushParagraph();
+						flushList();
+						flushQuote();
+						return;
+					}
+
+					const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
+					if (headingMatch) {
+						flushParagraph();
+						flushList();
+						flushQuote();
+						const level = headingMatch[1].length;
+						output.push(
+							`<h${level}>${renderInlineMarkup(headingMatch[2])}</h${level}>`,
+						);
+						return;
+					}
+
+					if (/^>\s?/.test(trimmed)) {
+						flushParagraph();
+						flushList();
+						quoteLines.push(trimmed.replace(/^>\s?/, ""));
+						return;
+					}
+
+					const orderedMatch = trimmed.match(/^\d+\.\s+(.*)$/);
+					if (orderedMatch) {
+						flushParagraph();
+						flushQuote();
+						if (listType !== "ol") {
+							flushList();
+							listType = "ol";
+						}
+						listItems.push(orderedMatch[1]);
+						return;
+					}
+
+					if (/^[-*+]\s+/.test(trimmed)) {
+						flushParagraph();
+						flushQuote();
+						if (listType !== "ul") {
+							flushList();
+							listType = "ul";
+						}
+						listItems.push(trimmed.replace(/^[-*+]\s+/, ""));
+						return;
+					}
+
+					flushList();
+					flushQuote();
+					paragraphLines.push(trimmed);
+				});
+
+				flushParagraph();
+				flushList();
+				flushQuote();
+
+				return output.join("\n");
+			}
+
 			function parseAnsi(text) {
 				const targetRegex =
 					/\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
@@ -709,6 +1020,8 @@
 
 				pool = pool.replace(/^(?:\r?\n)?---(?:\r?\n)?$/gm, "<hr>");
 
+				const codeBlocks = [];
+				let codeBlockIndex = 0;
 				pool = pool.replace(
 					/```([\w]*)\n([\s\S]*?)```/g,
 					function (match, lang, code) {
@@ -716,16 +1029,17 @@
 							? lang.toLowerCase().trim()
 							: "plaintext";
 
-						if (language === "xpp") language = "xpp26";
-						if (language === "assembly") language = "asm";
+						if (language === "xpp") language = "xe";
+						if (language === "xassembly") language = "xas";
 
 						const cleanCode = unescapeHtml(code.trim());
 						const codeId =
 							"code-" + Math.random().toString(36).substr(2, 9);
+						const placeholder = `--DOC-CODE-BLOCK-${codeBlockIndex}--`;
 
 						let highlighted;
 						try {
-							if (language === "xpp26" || language === "asm") {
+							if (language === "xe" || language === "xas") {
 								highlighted = hljs.highlight(cleanCode, {
 									language,
 									ignoreIllegals: true,
@@ -737,19 +1051,31 @@
 							highlighted = escapeHtml(cleanCode);
 						}
 
-						return `<div class="code-block-wrapper">
-                <div class="code-block-header">
-                    <span>${language}</span>
-                    <button class="copy-btn" onclick="copyCode('${codeId}')">📋 Copy</button>
-                </div>
-                <pre id="${codeId}"><code class="hljs language-${language}">${highlighted}</code></pre>
-            </div>`;
+						codeBlocks.push(`<div class="code-block-wrapper">
+				<div class="code-block-header">
+					<span>${language}</span>
+					<button class="copy-btn" onclick="copyCode('${codeId}', this)">📋 Copy</button>
+				</div>
+				<pre id="${codeId}"><code class="hljs language-${language}">${highlighted}</code></pre>
+			</div>`);
+
+						codeBlockIndex += 1;
+						return placeholder;
 					},
 				);
 
-                pool = pool.replace(
+				pool = renderMarkdownBlocks(pool);
+				pool = pool.replace(
+					/--DOC-CODE-BLOCK-(\d+)--/g,
+					function (_, index) {
+						return codeBlocks[Number(index)] || "";
+					},
+				);
+
+				pool = pool.replace(
 					/(?<!`)`([^`\r\n]+)`(?!`)/g,
-					(content) => `<span class='code-stmt'>${content.slice(1, -1)}</span>`,
+					(content) =>
+						`<span class='code-stmt'>${content.slice(1, -1)}</span>`,
 				);
 
 				ansiMap.forEach((item) => {
@@ -759,14 +1085,16 @@
 				return pool;
 			}
 
-			window.copyCode = function (codeId) {
+			window.copyCode = function (codeId, button) {
 				const codeElement = document.getElementById(codeId);
+				if (!codeElement) return;
 				const text = codeElement.innerText;
 
 				navigator.clipboard
 					.writeText(text)
 					.then(() => {
-						const btn = event.target;
+						const btn = button || null;
+						if (!btn) return;
 						const originalText = btn.textContent;
 						btn.textContent = "✓ Copied";
 						btn.classList.add("copied");
@@ -845,6 +1173,8 @@
 					docList.appendChild(li);
 				});
 
+				updateSearchMeta();
+
 				if (chaptersRegistry.length > 0) {
 					displayChapter(chaptersRegistry[0].id);
 				}
@@ -864,6 +1194,7 @@
 
 				viewTitle.textContent = targetNode.title;
 				output.innerHTML = parseAnsi(targetNode.content);
+				updateChapterMeta();
 
 				const chapterNumber =
 					chaptersRegistry.findIndex((c) => c.id === id) + 1;
@@ -878,11 +1209,12 @@
 				output.scrollTop = 0;
 			}
 
-			// Core pipeline load method to request text sources dynamically
 			function loadDocumentationFile(fileName) {
 				viewTitle.textContent = "Loading documentation file...";
 				output.innerHTML = "";
 				searchBox.value = "";
+				searchMeta.textContent = "Loading document...";
+				chapterProgress.textContent = "Section 0 / 0";
 
 				fetch(fileName)
 					.then((response) => {
@@ -896,25 +1228,22 @@
 					.catch((err) => {
 						viewTitle.textContent = "Resource Missing";
 						output.innerHTML = `
-                            <div style="padding: 20px; border: 1px dashed var(--border-light); border-radius: 4px;">
-                                <span class='ansi-red' style='font-weight:bold;'>Error target path unresolved: "${fileName}"</span><br/><br/>
-                                <span style='color: var(--text-muted); font-size:13px;'>
-                                    To use multiple docs views, verify that <strong>${fileName}</strong> is present in your root execution directory alongside your main HTML hub file.
-                                </span>
-                            </div>`;
+							<div style="padding: 20px; border: 1px dashed var(--border-light); border-radius: 4px;">
+								<span class='ansi-red' style='font-weight:bold;'>Error target path unresolved: "${fileName}"</span><br/><br/>
+								<span style='color: var(--text-muted); font-size:13px;'>
+									To use multiple doc views, verify that <strong>${fileName}</strong> is present in your root execution directory alongside your main HTML hub file.
+								</span>
+							</div>`;
 						docList.innerHTML =
 							'<li class="doc-item" style="cursor:default;color:var(--text-muted);">Failed to load parameters.</li>';
 						console.error(err);
 					});
 			}
 
-			// Multi-doc routing selector change hook
 			docSelect.addEventListener("change", (e) => {
 				loadDocumentationFile(e.target.value);
 			});
 
-			// Initialize theme and trigger core file fetching pass
-			initializeTheme();
 			loadDocumentationFile("docs.txt");
 		</script>
 	</body>
