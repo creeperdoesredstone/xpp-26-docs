@@ -20,8 +20,8 @@ Instruction Set
 PUSH x      - Pushes a 32-bit integer x to the stack.
 POP         - Pops the last value from the stack.
 
-LOAD x      - Loads the 32-bit integer at address x and pushes it to the stack.
-STORE x     - Stores the top of the stack to address x and pops the stack.
+LOAD x      - Loads the 32-bit integer at address `x+OFFSET` and pushes it to the stack.
+STORE x     - Stores the top of the stack to address `x+OFFSET` and pops the stack.
 LOADIND     - Pops a from the stack and loads from address a.
 STREIND     - Pops a and b from the stack and stores b to address a.
 
@@ -126,17 +126,27 @@ RETN x   - Pops the call stack into IP if the top of stack is not 0 and pops `x`
 {ANSI.BOLD}System Instructions:{ANSI.END}
 
 ```
-HALT     - Shuts down the entire VM.
-WAIT     - Pauses execution until interrupts are raised.
+HALT      - Shuts down the entire VM.
+WAIT      - Pauses execution until interrupts are raised.
 
-INT x    - Raises an interrupt to the VM.
-IRT      - Resolves the current interrupt.
-IRTZ     - Resolves the current interrupt if the value on top of stack is 0.
-IRTN     - Resolves the current interrupt if the value on top of stack is not 0.
+INT x     - Raises an interrupt to the VM.
+IRT       - Resolves the current interrupt.
+IRTZ      - Resolves the current interrupt if the value on top of stack is 0.
+IRTN      - Resolves the current interrupt if the value on top of stack is not 0.
+IM x      - Sets the interrupt mask to `x`.
 
-LOOKUP   - Pops &src, &dest, and size from the stack, and copys `size` bytes from &src in PROM to &dest in RAM.
+LOOKUP    - Pops &src, &dest, and size from the stack, and copys `size` bytes from &src in PROM to &dest in RAM.
 
-SYS x    - Raises a syscall to be handled by the kernel.
+SYS x     - Raises a syscall to be handled by the kernel.
+
+OFFSET x  - Sets the current store offset to `x`.
+LOADOFF x - Sets the store offset to the value at address `x`.
+LOADINOFF - Sets the store offset to the value at the address on the top of the stack.
+PUSHOFF   - Pushes `OFFSET` to the stack.
+POPOFF    - Pops the topmost value of the stack to `OFFSET`.
+
+ENABOFF  - Disables offseting when reading from memory
+DISABOFF - Enables offseting when reading from memory
 ```
 
 ==================================================
@@ -187,7 +197,7 @@ Syscalls
 {ANSI.CYAN}1 - OUTPUT_STR{ANSI.END}
 Outputs the string at the string pointer on top of the stack.
 
-```asm
+```xas
 PUSH &str
 LOADIND
 SYS 1
@@ -196,7 +206,7 @@ SYS 1
 {ANSI.CYAN}2 - READ_STR{ANSI.END}
 Pauses execution in the current process and waits for user input.
 
-```asm
+```xas
 PUSH &str
 SYS 2
 ```
@@ -204,23 +214,27 @@ SYS 2
 {ANSI.CYAN}3 - STRTOINT{ANSI.END}
 Converts the string at the pointer on top of the stack to an integer.
 
-```asm
+```xas
 PUSH &str
 SYS 3
 ```
+{ANSI.PURPLE}RETURNS{ANSI.END}
+    {ANSI.RED}integer{ANSI.END} value
 
 {ANSI.CYAN}4 - STRTOFLOAT{ANSI.END}
 Converts the string at the pointer on top of the stack to a float.
 
-```asm
+```xas
 PUSH &str
 SYS 4
 ```
+{ANSI.PURPLE}RETURNS{ANSI.END}
+    {ANSI.RED}float{ANSI.END} value
 
 {ANSI.CYAN}5 - INTTOSTR{ANSI.END}
 Converts the integer at the top of the stack to a string at address &str.
 
-```asm
+```xas
 PUSH &str
 PUSH 42
 SYS 5
@@ -229,7 +243,7 @@ SYS 5
 {ANSI.CYAN}6 - FLOATTOSTR{ANSI.END}
 Converts the float at the top of the stack to a string at address &str.
 
-```asm
+```xas
 PUSH &str
 PUSH 0x4048F5C3  ; 0x4048F5C3 -> 3.14
 SYS 6
@@ -238,7 +252,7 @@ SYS 6
 {ANSI.CYAN}7 - BOOLTOSTR{ANSI.END}
 Converts the boolean at the top of the stack to a string at address &str.
 
-```asm
+```xas
 PUSH &str
 PUSH 0xFFFFFFFF  ; true
 SYS 7
@@ -247,7 +261,7 @@ SYS 7
 {ANSI.CYAN}8 - INTTOHEX{ANSI.END}
 Converts the integer at the top of the stack to a hexadecimal string at address &str.
 
-```asm
+```xas
 PUSH &str
 PUSH 255
 SYS 8  ; converts to "0x00FF"
@@ -256,7 +270,7 @@ SYS 8  ; converts to "0x00FF"
 {ANSI.CYAN}9 - PUT_CHAR{ANSI.END}
 Outputs the character on top of the stack.
 
-```asm
+```xas
 PUSH 65  ; ASCII 'A'
 SYS 9
 ```
@@ -266,7 +280,7 @@ SYS 9
 {ANSI.CYAN}10 - STR_CONCAT{ANSI.END}
 Concatenates str1 and str2, storing the result in str3.
 
-```asm
+```xas
 PUSH &str1
 PUSH &str2
 PUSH &str3
@@ -276,16 +290,18 @@ SYS 10
 {ANSI.CYAN}11 - STR_COMPARE{ANSI.END}
 Compares str1 and str2, pushing the boolean result to the stack.
 
-```asm
+```xas
 PUSH &str1
 PUSH &str2
-SYS 11  ; pushes -1 (true) if equal, 0 (false) otherwise
+SYS 11
 ```
+{ANSI.PURPLE}RETURNS{ANSI.END}
+    {ANSI.RED}boolean{ANSI.END} str1 == str2
 
 {ANSI.CYAN}12 - STR_COPY{ANSI.END}
 Copies str1 to str2.
 
-```asm
+```xas
 PUSH &str1
 PUSH &str2
 SYS 12
@@ -296,15 +312,17 @@ SYS 12
 {ANSI.CYAN}20 - SYS_GETTIME{ANSI.END}
 Pushes the current execution time (in milliseconds) to the stack.
 
-```asm
-SYS 20  ; -> int (time in ms)
+```xas
+SYS 20
 ```
+{ANSI.PURPLE}RETURNS{ANSI.END}
+    {ANSI.RED}integer{ANSI.END} time (ms)
 
 {ANSI.CYAN}21 - SYS_MALLOC{ANSI.END}
 Allocates a block of memory with size {ANSI.BLUE}size{ANSI.END} in the heap and returns the address of the first element of that block.
 Raises a {ANSI.RED}HeapOverflow{ANSI.END} interrupt if no more memory is free in the heap.
 
-```asm
+```xas
 PUSH size  ; size of memory block to allocate
 SYS 21
 ```
@@ -312,23 +330,71 @@ SYS 21
 {ANSI.CYAN}30 - SYS_EXIT{ANSI.END}
 Pops the exit code from the stack and commands the VM to terminate the current process.
 
-```asm
+```xas
 PUSH 0
 SYS 30  ; exit with code 0
 ```
 
-{ANSI.BOLD}Graphics Syscalls{ANSI.END}
-(Reserved for future use)
+{ANSI.BOLD}Primitive Graphics Syscalls{ANSI.END}
+
+{ANSI.CYAN}40 - GFX_CLEAR{ANSI.END}
+{ANSI.CYAN}41 - GFX_PIXEL{ANSI.END}
+{ANSI.CYAN}42 - GFX_LINE{ANSI.END}
+{ANSI.CYAN}43 - GFX_DRAW_RECT{ANSI.END}
+{ANSI.CYAN}44 - GFX_FILL_RECT{ANSI.END}
+{ANSI.CYAN}45 - GFX_DRAW_CIRC{ANSI.END}
+{ANSI.CYAN}46 - GFX_FILL_CIRC{ANSI.END}
+{ANSI.CYAN}47 - GFX_DRAW_TRI{ANSI.END}
+{ANSI.CYAN}48 - GFX_FILL_TRI{ANSI.END}
+{ANSI.CYAN}49 - GFX_IMAGE{ANSI.END}
+
+{ANSI.BOLD}Other Graphics Syscalls{ANSI.END}
+
+{ANSI.CYAN}50 - GFX_DRAW_CHR{ANSI.END}
+{ANSI.CYAN}51 - GFX_DRAW_STR{ANSI.END}
+
+{ANSI.CYAN}52 - GFX_DRAW_WIN{ANSI.END}
+{ANSI.CYAN}53 - GFX_DRAW_TITLEBAR{ANSI.END}
+{ANSI.CYAN}54 - GFX_DRAW_BORDER{ANSI.END}
+{ANSI.CYAN}55 - GFX_DRAW_BTN{ANSI.END}
+
+{ANSI.CYAN}56 - GFX_SET_CLIP{ANSI.END}
+{ANSI.CYAN}57 - GFX_RESET_CLIP{ANSI.END}
+
+{ANSI.CYAN}57 - GFX_REFRESH{ANSI.END}
+
+{ANSI.BOLD}Device Syscalls{ANSI.END}
+
+{ANSI.CYAN}60 - DVC_GETMOUSEX{ANSI.END}
+{ANSI.CYAN}61 - DVC_GETMOUSEY{ANSI.END}
+{ANSI.CYAN}62 - DVC_GETMOUSEBTN{ANSI.END}
+
+{ANSI.CYAN}63 - DVC_POLL_KEYBOARD{ANSI.END}
+
+{ANSI.PURPLE}RETURNS{ANSI.END}
+    {ANSI.RED}integer{ANSI.END} event
+    {ANSI.RED}integer{ANSI.END} code
+    {ANSI.RED}integer{ANSI.END} modifier
+
+{ANSI.CYAN}64 - DVC_KEY_IS_DOWN{ANSI.END}
+
+{ANSI.PURPLE}RETURNS{ANSI.END}
+    {ANSI.RED}boolean{ANSI.END} key is down
+
+{ANSI.CYAN}65 - DVC_GET_MODIFIERS{ANSI.END}
+
+{ANSI.PURPLE}RETURNS{ANSI.END}
+    {ANSI.RED}integer{ANSI.END} modifier
 
 {ANSI.BOLD}Other Syscalls{ANSI.END}
 
-{ANSI.CYAN}60 - REQUEST{ANSI.END}
+{ANSI.CYAN}80 - REQUEST{ANSI.END}
 Sends a request to a cloud backend using cloud variables and waits for the result.
 
-```asm
+```xas
 PUSH backend_id
 PUSH destination_address
-SYS 60  ; sends request and stores result
+SYS 80  ; sends request and stores result
 ```
 
 ==================================================
@@ -337,11 +403,11 @@ I/O Assembly Implementation
 
 {ANSI.BOLD}Output String{ANSI.END}
 
-```xpp26
+```xe
 out << str
 ```
 
-```asm
+```xas
 LOAD &str  ; &str.descriptionVec[0]
 LOADIND    ; &str[0]
 SYS 1      ; output syscall
@@ -349,33 +415,33 @@ SYS 1      ; output syscall
 
 {ANSI.BOLD}Output Character Array{ANSI.END}
 
-```xpp26
+```xe
 out << char_array
 ```
 
-```asm
+```xas
 LOAD &char_array[0]
 SYS 1  ; output syscall
 ```
 
 {ANSI.BOLD}Output Character{ANSI.END}
 
-```xpp26
+```xe
 out << 'A'
 ```
 
-```asm
+```xas
 PUSH 65  ; 'A'
 SYS 9    ; put_char syscall
 ```
 
 {ANSI.BOLD}Output Integer{ANSI.END}
 
-```xpp26
+```xe
 out << 42
 ```
 
-```asm
+```xas
 PUSH &buffer
 PUSH 42
 SYS 5  ; inttostr syscall
@@ -387,11 +453,11 @@ SYS 1         ; output syscall
 
 {ANSI.BOLD}Output Float{ANSI.END}
 
-```xpp26
+```xe
 out << 3.14
 ```
 
-```asm
+```xas
 PUSH &buffer
 PUSH 0x4048F5C3  ; 0x4048F5C3 -> 3.14
 SYS 6            ; floattostr syscall
@@ -403,11 +469,11 @@ SYS 1            ; output syscall
 
 {ANSI.BOLD}Output Boolean{ANSI.END}
 
-```xpp26
+```xe
 out << true
 ```
 
-```asm
+```xas
 PUSH &buffer
 PUSH 0xFFFFFFFF  ; true
 SYS 7            ; booltostr syscall
@@ -418,11 +484,11 @@ SYS 1            ; output syscall
 
 {ANSI.BOLD}Output Pointer{ANSI.END}
 
-```xpp26
+```xe
 out << ptr
 ```
 
-```asm
+```xas
 PUSH &buffer
 LOAD &ptr
 SYS 8         ; inttohex syscall
@@ -437,11 +503,25 @@ The semantic analyzer will handle these cases automatically.
 
 {ANSI.BOLD}Input String{ANSI.END}
 
-```xpp26
+```xe
 in >> message
 ```
 
-```asm
+```xas
 LOAD &str
 SYS 2  ; input syscall
+```
+
+==================================================
+Pre-Initialization
+========
+
+Before the VM is booted up, the following defaults are loaded:
+```
+IM     - 0xffffffff
+FP     - 0x00000000
+OFFSET - 0x00000000
+
+IP     - 0x00000000
+HP     - 0x00002000
 ```

@@ -2,23 +2,23 @@
 Overview
 ========
 
-X++26 is a statically-typed compiled programming language that targets the Xenon-131 Virtual Machine (XVM).
+Xe is a statically-typed compiled programming language that targets the Xenon-131 Virtual Machine (XVM).
 It will be used for the development of {ANSI.CYAN}]8;;https://scratch.mit.edu/users/XenonOS26/\XenonOS]8;;\{ANSI.END} in {ANSI.CYAN}]8;;https://scratch.mit.edu/users/OSWars-26/\OS Wars 26]8;;\{ANSI.END}.
 
 ---
 
 {ANSI.BOLD}{ANSI.YELLOW}Compilation Pipeline:{ANSI.END}
-Source Code -> Lexer -> Tokens -> Parser -> AST -> Semantic Analyzer -> Assembly Generator -> XAssembly -> Xenon-131 VM.
+Source Code -> Lexer -> Tokens -> Parser -> AST -> AST Optimizer -> Semantic Analyzer -> Assembly Generator -> XAssembly -> Xenon-131 VM.
 
 ==================================================
 Getting Started
 =======
 
-Welcome to {ANSI.BOLD}X++26{ANSI.END}, a statically-typed compiled programming language designed for the {ANSI.CYAN}Xenon-131 Virtual Machine{ANSI.END}.
+Welcome to {ANSI.BOLD}Xe{ANSI.END}, a statically-typed compiled programming language designed for the {ANSI.CYAN}Xenon-131 Virtual Machine{ANSI.END}.
 
-{ANSI.BOLD}{ANSI.YELLOW}What is X++26?{ANSI.END}
+{ANSI.BOLD}{ANSI.YELLOW}What is Xe?{ANSI.END}
 
-X++26 is a programming language developed for {ANSI.CYAN}]8;;https://scratch.mit.edu/users/XenonOS26/\XenonOS]8;;\{ANSI.END} that combines {ANSI.BOLD}low-level control{ANSI.END} with {ANSI.BOLD}high-level abstractions{ANSI.END}. Its features are:
+Xe is a programming language developed for {ANSI.CYAN}]8;;https://scratch.mit.edu/users/XenonOS26/\XenonOS]8;;\{ANSI.END} that combines {ANSI.BOLD}low-level control{ANSI.END} with {ANSI.BOLD}high-level abstractions{ANSI.END}. Its features are:
 
 * {ANSI.GREEN}Static Typing{ANSI.END} - Catch errors at compile time, not runtime
 * {ANSI.GREEN}Direct Memory Access{ANSI.END} - Full control over pointers and memory addresses
@@ -27,29 +27,29 @@ X++26 is a programming language developed for {ANSI.CYAN}]8;;https://scratch.mi
 
 {ANSI.BOLD}{ANSI.YELLOW}Downloading the CLI{ANSI.END}
 
-The CLI will be used to run X++ and XAssembly programs.
+The CLI will be used to run Xe and XAssembly programs.
 {ANSI.BOLD}Note: {ANSI.END}{ANSI.BLUE}The CLI is currently unavailable for download until OS Wars 26 starts.{ANSI.END}
 
 {ANSI.BOLD}{ANSI.YELLOW}Hello World{ANSI.END}
 
-Let's create a new `.xpp` file with the name `{ANSI.RED}my_first_program.xpp`{ANSI.END}.
+Let's create a new `.xe` file with the name `{ANSI.RED}my_first_program.xe`{ANSI.END}.
 Enter this code into the file:
 
-```xpp26
+```xe
 out << "Hello, World!\n"
 ```
 
 Don't worry if you don't understand the code above; we will discuss it in detail in later chapters.
 
-Congratulations! You have now written and executed your first X++ program.
+Congratulations! You have now written and executed your first Xe program.
 
 ==================================================
 Syntax
 =======
 
-{ANSI.BOLD}{ANSI.YELLOW}X++26 Language Layout{ANSI.END}
-X++26 scripts use clear structural symbols for program stream input and output evaluation, comments, and string definitions.
-```xpp26
+{ANSI.BOLD}{ANSI.YELLOW}Xe Language Layout{ANSI.END}
+Xe scripts use clear structural symbols for program stream input and output evaluation, comments, and string definitions.
+```xe
 # This is a code comment line
 out << "This handles basic stream output\n"
 ```
@@ -58,12 +58,12 @@ out << "This handles basic stream output\n"
 
 {ANSI.BOLD}{ANSI.YELLOW}Xenon-131 Assembly Format{ANSI.END}
 The underlying target Xenon-131 Virtual Machine execution syntax leverages basic positional parameters, instruction mnemonics, program tags (labels), and inline instruction comments.
-```asm
+```xas
 ; This is a raw assembly comment
 :label_name         ; A structural branch tag marker
 PUSH 42             ; Immediate literal instruction operation
 SYS 1               ; System syscall dispatcher interaction
-JUMP :label_name    ; Control flow transition utilizing labels
+JUMP label_name    ; Control flow transition utilizing labels
 ```
 
 ==================================================
@@ -84,13 +84,13 @@ Data Types & Literals
 {ANSI.BOLD}Type Casting{ANSI.END}
 Syntax:
 
-```xpp26
+```xe
 (type)(expr)
 ```
 
 Examples:
 
-```xpp26
+```xe
 (int)   3.0       # 3
 (int)   -2.71828  # -2 (truncated)
 (float) 5         # 5.0
@@ -132,43 +132,43 @@ Each variable corresponds to a memory address in the Xenon-131 VM.
 
 {ANSI.BOLD}Declaration{ANSI.END}
 
-```xpp26
+```xe
 var x: int
 ```
 
 {ANSI.YELLOW}Assembly Output:{ANSI.END}
-```asm
+```xas
 ; Nothing! This is for the semantic analyzer to handle.
 ; The variable `x` would be assigned to the next free address (0x1000 in this case).
 ```
 
 {ANSI.BOLD}Assignment{ANSI.END}
 
-```xpp26
+```xe
 x = 5
 ```
 
-```asm
+```xas
 PUSH 5
 STORE 0x1000  ; x
 ```
 
 {ANSI.BOLD}Access{ANSI.END}
 
-```xpp26
+```xe
 x
 ```
 
-```asm
+```xas
 LOAD 0x1000  ; x
 ```
 
 ==================================================
-Pointers [ NOT IMPLEMENTED ]
+Pointers
 ========
 
 A pointer is a special variable that holds the address of a value.
-Arrays and strings are examples of pointers in X++26.
+Arrays and strings are examples of pointers in Xe.
 
 * {ANSI.BOLD}Declaration:{ANSI.END}  `var ptr: int*`
 * {ANSI.BOLD}Assignment:{ANSI.END}   `ptr = &x  # assign address to pointer`
@@ -179,23 +179,23 @@ Arrays and strings are examples of pointers in X++26.
 
 {ANSI.BOLD}Declaration{ANSI.END}
 
-```xpp26
+```xe
 var ptr: int*
 ```
 
-```asm
+```xas
 ; Nothing! This is for the semantic analyzer to handle.
 ; The variable `ptr` would be assigned to the next free address (0x1001 in this case).
 ```
 
 {ANSI.BOLD}Assignment{ANSI.END}
 
-```xpp26
+```xe
 ptr = &x
 *ptr = 42
 ```
 
-```asm
+```xas
 ; ptr = &x
 PUSH 0x1000  ; &x
 STORE 0x1001 ; ptr
@@ -208,18 +208,18 @@ STREIND
 
 {ANSI.BOLD}Access Value:{ANSI.END}
 
-```xpp26
+```xe
 *ptr
 ```
 
-```asm
+```xas
 LOAD 0x1001  ; ptr
 LOADIND
 ```
 
 {ANSI.YELLOW}Example program using pointers:{ANSI.END}
 
-```xpp26
+```xe
 var x: int
 var ptr: int*
 
@@ -237,7 +237,7 @@ out << x << '\n'     # 19
 ```
 
 ==================================================
-Arrays [ NOT IMPLEMENTED ]
+Arrays
 ========
 
 Arrays are pointers to the first element of a contiguous block of memory.
@@ -251,11 +251,11 @@ Arrays are pointers to the first element of a contiguous block of memory.
 
 {ANSI.BOLD}Declaration{ANSI.END}
 
-```xpp26
+```xe
 array arr: int[3]
 ```
 
-```asm
+```xas
 ; Nothing! This is for the semantic analyzer to handle.
 ; The array pointer `arr` would be assigned to the next free address (0x1002 in this case).
 ; The next free address would be 0x1007, as arr[] occupies 3+1+1 = 5 memory addresses.
@@ -263,11 +263,11 @@ array arr: int[3]
 
 {ANSI.BOLD}Initialization{ANSI.END}
 
-```xpp26
+```xe
 arr = [1, 2, 3]
 ```
 
-```asm
+```xas
 ; store pointer
 PUSH 0x1003  ; &arr[0]
 STORE 0x1002 ; arr
@@ -285,11 +285,11 @@ STORE 0x1006 ; terminator, useful when printing arrays
 
 {ANSI.BOLD}Set Element{ANSI.END}
 
-```xpp26
+```xe
 arr[2] = 4
 ```
 
-```asm
+```xas
 PUSH 2
 LOAD 0x1002
 ADDI
@@ -299,11 +299,11 @@ STREIND
 
 {ANSI.BOLD}Access Element{ANSI.END}
 
-```xpp26
+```xe
 arr[2]
 ```
 
-```asm
+```xas
 PUSH 2
 LOAD 0x1002
 ADDI
@@ -321,10 +321,10 @@ LOADIND
 ```
 
 ==================================================
-Strings [ NOT IMPLEMENTED ]
+Strings
 =======
 
-Strings in X++26 are {ANSI.BOLD}pointers{ANSI.END} leading to the first element of a contiguous block of memory containing sequence-ordered characters, terminated by a null character.
+Strings in Xe are {ANSI.BOLD}pointers{ANSI.END} leading to the first element of a contiguous block of memory containing sequence-ordered characters, terminated by a null character.
 Like {ANSI.PURPLE}integers{ANSI.END} and {ANSI.PURPLE}booleans{ANSI.END}, each character in the string occupies 1 full 32-bit memory address in the XVM.
 
 * {ANSI.BOLD}Declaration:{ANSI.END}      `var str: string`
@@ -335,11 +335,11 @@ Like {ANSI.PURPLE}integers{ANSI.END} and {ANSI.PURPLE}booleans{ANSI.END}, each c
 
 {ANSI.BOLD}Declaration{ANSI.END}
 
-```xpp26
+```xe
 var str: string
 ```
 
-```asm
+```xas
 ; initialize str.descriptionVec
 PUSH 1       ; length including '\0'
 STORE 0x1009 ; str.descriptionVec[1] = str.length
@@ -358,11 +358,11 @@ STORE 0x1007 ; str
 
 {ANSI.BOLD}Assignment (if new string length <= current capacity){ANSI.END}
 
-```xpp26
+```xe
 str = "Hi"
 ```
 
-```asm
+```xas
 LOAD 0x1007  ; Push address of string pointer (&str[0])
 LOADIND      ; Stack: `[ ptr ]` (points to str[0])
 
@@ -386,8 +386,8 @@ STORE 0x1009 ; str.descriptionVec[1] = 3
 
 or alternatively:
 
-```asm
-PUSH :STR_LIT_0  ; assumes "Hi\0" is at label `STR_LIT_0` in PROM
+```xas
+PUSH STR_LIT_0  ; assumes "Hi\0" is at label `STR_LIT_0` in PROM
 LOAD 0x1007      ; &str.descriptionVec[0]
 LOADIND          ; &str[0]
 PUSH 3           ; ('H', 'i', '\0')
@@ -400,11 +400,11 @@ STORE 0x1009     ; str.descriptionVec[1] = 3
 
 {ANSI.BOLD}Access Character{ANSI.END}
 
-```xpp26
+```xe
 str[1]
 ```
 
-```asm
+```xas
 PUSH 1
 LOAD 0x1007  ; &str.descriptionVec[0]
 LOADIND      ; &str[0]
@@ -428,19 +428,19 @@ LOADIND
 ```
 
 ==================================================
-Input and Output [ NOT IMPLEMENTED ]
+Input and Output
 ========
 
 {ANSI.BOLD}Output{ANSI.END}
 Use the {ANSI.BOLD}out{ANSI.END} statement to output values to the terminal as a string (syntactically similar to C++'s std::ostream):
 
-```xpp26
+```xe
 out << val1 << val2 << ...
 ```
 
 {ANSI.YELLOW}Example:{ANSI.END}
 
-```xpp26
+```xe
 out << "Hello," << " World!\n"
 ```
 
@@ -450,13 +450,13 @@ Hello, World!
 {ANSI.BOLD}Input{ANSI.END}
 Use the {ANSI.BOLD}in{ANSI.END} statement to request user input from the terminal as a string (syntactically similar to C++'s std::istream):
 
-```xpp26
+```xe
 in >> var_name
 ```
 
 {ANSI.YELLOW}Example:{ANSI.END}
 
-```xpp26
+```xe
 var message: string
 in >> message
 out << "You have entered: " << message << '\n'
@@ -472,7 +472,7 @@ You have entered: Lorem ipsum
 Implicit Type Conversions
 ========
 
-X++26 performs implicit widening conversions but never implicit narrowing conversions.
+Xe performs implicit widening conversions but never implicit narrowing conversions.
 
 {ANSI.BOLD}Allowed:{ANSI.END}
 - int + float -> float
@@ -480,13 +480,13 @@ X++26 performs implicit widening conversions but never implicit narrowing conver
 
 {ANSI.BOLD}Example 1:{ANSI.END}
 
-```xpp26
+```xe
 5 + 3.14
 ```
 
 {ANSI.YELLOW}Compiler output:{ANSI.END}
 
-```asm
+```xas
 PUSH 5
 I2F
 PUSH 0x4048F5C3 ; 0x4048F5C3 -> 3.14
@@ -499,25 +499,25 @@ ADDF
 
 {ANSI.BOLD}Example 2:{ANSI.END}
 
-```xpp26
+```xe
 var x: int
 x = 3.14  # error!
 ```
 
 This requires an explicit conversion:
 
-```xpp26
+```xe
 x = (int) 3.14
 ```
 
 ==================================================
-Iteration [ NOT IMPLEMENTED ]
+Iteration
 ========
 
 {ANSI.BOLD}For Loop{ANSI.END}
 Syntax:
 
-```xpp26
+```xe
 for (start_expr; end_expr; step_expr) {
     # body
 }
@@ -530,14 +530,14 @@ for (start_expr; end_expr; step_expr) {
 
 {ANSI.YELLOW}Compiler output:{ANSI.END}
 
-```asm
+```xas
 ; start_expr
 :beginfor
 ; end_expr
-BRZ :endfor
+BRZ endfor
 ; body
 ; step_expr
-JUMP :beginfor
+JUMP beginfor
 :endfor
 
 ; rest of the program...
@@ -546,7 +546,7 @@ JUMP :beginfor
 {ANSI.BOLD}While Loop{ANSI.END}
 Syntax:
 
-```xpp26
+```xe
 while (condition) {
     # body
 }
@@ -557,12 +557,12 @@ This makes the while loop a {ANSI.UNDERLINE}pre-condition{ANSI.END} loop.
 
 {ANSI.YELLOW}Compiler output:{ANSI.END}
 
-```asm
+```xas
 :beginwhile
 ; condition
-BRZ :endwhile
+BRZ endwhile
 ; body
-JUMP :beginwhile
+JUMP beginwhile
 :endwhile
 
 ; rest of the program...
@@ -571,7 +571,7 @@ JUMP :beginwhile
 {ANSI.BOLD}Repeat Loop{ANSI.END}
 Syntax:
 
-```xpp26
+```xe
 repeat {
     # body
 } until (condition)
@@ -582,24 +582,149 @@ This makes the repeat loop a {ANSI.UNDERLINE}post-condition{ANSI.END} loop, as t
 
 {ANSI.YELLOW}Compiler output:{ANSI.END}
 
-```asm
+```xas
 :beginrepeat
 ; body
 ; condition
-BRNZ :beginrepeat
+BRNZ beginrepeat
 
 ; rest of the program...
 ```
 
 ==================================================
-Functions and Procedures [ NOT IMPLEMENTED ]
+If Statements
 ========
 
-In X++26, reusable code units are divided into two distinct paradigms:
+In Xe, conditional execution is handled with `if`, `else if`, and `else` blocks.
+Conditional expressions evaluate to a boolean result, and the matching branch is executed.
+
+{ANSI.BOLD}Syntax:{ANSI.END}
+
+```xe
+if (condition) {
+    # body
+}
+elseif (condition2) {
+    # alternate body
+}
+else {
+    # fallback body
+}
+```
+
+{ANSI.YELLOW}Example:{ANSI.END}
+
+```xe
+var x: int
+x = 10
+
+if (x > 5) {
+    out << "x is greater than 5\n"
+}
+else {
+    out << "x is not greater than 5\n"
+}
+```
+
+{ANSI.YELLOW}Compiler output:{ANSI.END}
+
+```xas
+PUSH 10
+STORE 0x1000 ; x
+
+LOAD 0x1000
+PUSH 5
+IGT
+BRZ else_label
+
+; if body
+PUSH 21
+SYS 21
+PUSH STR_LIT_0 ; assume "x is greater than 5\n" is stored at `STR_LIT_0`
+LOOKUP 20
+SYS 1
+JUMP end_if
+
+:else_label
+PUSH 25
+SYS 21
+PUSH STR_LIT_1 ; assume "x is not greater than 5\n" is stored at `STR_LIT_1`
+LOOKUP 25
+SYS 1
+
+:end_if
+```
+
+{ANSI.BOLD}Notes:{ANSI.END}
+* Conditions must evaluate to a boolean.
+* `elseif` chains are supported by nesting conditional branches.
+* The compiler lowers `if` statements into branch instructions such as `BRZ` and `JUMP`.
+
+{ANSI.BOLD}Example with `elseif`:{ANSI.END}
+
+```xe
+var score: int
+score = 75
+
+if (score >= 90) {
+    out << 'A'
+}
+elseif (score >= 80) {
+    out << 'B'
+}
+else {
+    out << 'C'
+}
+
+out << '\n'
+```
+
+{ANSI.YELLOW}Compiler output:{ANSI.END}
+
+```xas
+PUSH 75
+STORE 0x1000 ; score
+
+LOAD 0x1000
+PUSH 90
+IGE
+BRZ branch_0_0
+
+; if body
+PUSH 65 ; 'A'
+SYS 9
+JUMP endif_0
+
+:branch_0_0
+LOAD 0x1000
+PUSH 80
+IGE
+BRZ else_0
+
+; elseif body
+PUSH 66 ; 'B'
+SYS 9
+JUMP endif_0
+
+:else_0
+PUSH 67 ; 'C'
+SYS 9
+
+:endif_0
+
+PUSH 10 ; '\n'
+SYS 9
+```
+
+==================================================
+Functions and Procedures
+========
+
+In Xe, reusable code units are divided into two distinct paradigms:
 
 {ANSI.CYAN}Functions (`fn`){ANSI.END}: Perform a computation and return a single typed value.
 
-{ANSI.CYAN}Procedures (`proc`){ANSI.END}: Perform actions, modify state, or execute procedures without returning a value.
+{ANSI.CYAN}Procedures (`proc`){ANSI.END}: Perform actions, modify state, or execute subroutines without returning a value.
 
 Because the Xenon-131 VM utilizes an isolated hardware Data Stack (DS) and Return Stack (RS) separate from RAM, call frames and local variables cannot reside in RAM. Instead, they are managed directly on the Data Stack using a stack-relative Frame Pointer (FP) register.
 
@@ -617,7 +742,7 @@ Procedures are defined using the `proc` keyword, do not return a value, and must
 
 {ANSI.BOLD}Declaration Syntax:{ANSI.END}
 
-```xpp26
+```xe
 proc name(arg1: type, arg2: type, ...) {
     # local variable declarations
     # body
@@ -627,13 +752,13 @@ proc name(arg1: type, arg2: type, ...) {
 
 {ANSI.BOLD}Syntax of calling a procedure:{ANSI.END}
 
-```xpp26
+```xe
 call name(arg1, arg2, ...)
 ```
 
 {ANSI.YELLOW}Example procedure:{ANSI.END}
 
-```xpp26
+```xe
 proc print_sum(a: int, b: int) {
     var temp: int
     temp = a + b
@@ -646,11 +771,11 @@ call print_sum(5, 12)
 
 {ANSI.YELLOW}Compiler Output:{ANSI.END}
 
-```asm
+```xas
 ; --- Call Site ---
 PUSH 5              ; Arg 'a' (will be at FP + 2)
 PUSH 12             ; Arg 'b' (will be at FP + 1)
-CALL :print_sum     ; Push return PC to RS and branch
+CALL print_sum     ; Push return PC to RS and branch
 
 ; --- Subroutine Implementation ---
 :print_sum
@@ -691,7 +816,7 @@ Functions are defined using the `fn` keyword, must specify a return type, must t
 
 {ANSI.BOLD}Declaration Syntax:{ANSI.END}
 
-```xpp26
+```xe
 fn return_type name(arg1: type, arg2: type, ...) {
     # local variable declarations
     # body
@@ -701,14 +826,14 @@ fn return_type name(arg1: type, arg2: type, ...) {
 
 {ANSI.BOLD}Syntax of calling a function:{ANSI.END}
 
-```xpp26
+```xe
 var result: type
 result = name(arg1, arg2, ...)
 ```
 
 {ANSI.YELLOW}Example: Recursive Factorial (`n!`){ANSI.END}
 
-```xpp26
+```xe
 fn int factorial(n: int) {
     if (n <= 1) {
         return 1
@@ -722,10 +847,10 @@ x = factorial(5)
 
 {ANSI.YELLOW}Compiler Output:{ANSI.END}
 
-```asm
+```xas
 ; --- Call Site ---
 PUSH 5              ; Push argument N
-CALL :factorial     ; Jump to recursive function
+CALL factorial     ; Jump to recursive function
 STORE 0x1000        ; Store returned value in variable `x`
 
 ; --- Function Implementation ---
@@ -737,7 +862,7 @@ STORE 0x1000        ; Store returned value in variable `x`
     LOADSP 1        ; Load 'n'
     PUSH 1
     ILE
-    BRNZ :base_case ; If n - 1 < 0, jump to base case
+    BRNZ base_case ; If n - 1 < 0, jump to base case
     
     ; Recursive path: return n * factorial(n - 1)
     LOADSP 1        ; Load 'n' to preserve on the stack for later multiplication
@@ -746,10 +871,10 @@ STORE 0x1000        ; Store returned value in variable `x`
     PUSH 1
     SUBI            ; n - 1
     
-    CALL :factorial ; Recursive invocation!
+    CALL factorial ; Recursive invocation!
                     ; Stack top is now: [..., n, factorial(n - 1)]
     MULI            ; n * factorial(n - 1)
-    JUMP :cleanup
+    JUMP cleanup
 
 :base_case
     PUSH 1          ; Return value for base case
@@ -787,7 +912,7 @@ This architecture permits unlimited recursion and local variable scopes, as ever
 Dynamic Memory
 ========
 
-Dynamic memory allocation in X++26 allows variables to be instantiated on the heap during runtime. This is critical for resizing arrays, dynamic string adjustments, and creating long-lived object/struct instances that persist beyond their local function/procedure scope.
+Dynamic memory allocation in Xe allows variables to be instantiated on the heap during runtime. This is critical for resizing arrays, dynamic string adjustments, and creating long-lived object/struct instances that persist beyond their local function/procedure scope.
 
 {ANSI.BOLD}{ANSI.YELLOW}The Heap Model{ANSI.END}
 The Xenon-131 Virtual Machine handles heap allocations via the standard syscall interface:
@@ -799,7 +924,7 @@ The Xenon-131 Virtual Machine handles heap allocations via the standard syscall 
 {ANSI.BOLD}Allocation (new Operator){ANSI.END}
 The new operator dynamically requests a block of memory of a specific size or type.
 
-```xpp26
+```xe
 # Allocate a raw buffer of 5 elements
 var my_ptr: int*
 my_ptr = new int[5]
@@ -808,7 +933,7 @@ my_ptr = new int[5]
 
 {ANSI.YELLOW}Compiler Output:{ANSI.END}
 
-```asm
+```xas
 PUSH 5       ; Number of 32-bit cells to allocate
 SYS 21       ; SYS_MALLOC. Returns heap address (e.g., 0x8050)
 STORE 0x1000 ; Store address in `my_ptr`
@@ -819,12 +944,12 @@ STORE 0x1000 ; Store address in `my_ptr`
 Structs
 ========
 
-Structs are contiguous blocks of memory containing structured, typed data fields. In X++26, a struct variable is represented as a {ANSI.PURPLE}pointer{ANSI.END} holding the starting address of its data block in RAM (either on the stack frame or heap).
+Structs are contiguous blocks of memory containing structured, typed data fields. In Xe, a struct variable is represented as a {ANSI.PURPLE}pointer{ANSI.END} holding the starting address of its data block in RAM (either on the stack frame or heap).
 
 {ANSI.BOLD}Declaration & Definition{ANSI.END}
 Struct types are declared with named, typed fields.
 
-```xpp26
+```xe
 struct Point {
     x: int
     y: int
@@ -846,14 +971,14 @@ p ---> [ offset 0: x (int) ] (RAM Address/Base Offset)
 {ANSI.BOLD}Field Access & Assignment{ANSI.END}
 Fields are accessed using dot notation (struct.field). The compiler translates these accesses into static offsets relative to the struct instance's base pointer.
 
-```xpp26
+```xe
 p.x = 10
 p.y = 20
 ```
 
 {ANSI.YELLOW}Compiler Output (Assuming p resides at address 0x1015):{ANSI.END}
 
-```asm
+```xas
 ; p.x = 10 (offset 0)
 PUSH 10
 STORE 0x1015   ; p.x
@@ -867,7 +992,7 @@ STORE 0x1016   ; p.y (0x1015 + 1)
 {ANSI.BOLD}Dynamic Struct Instantiation (new Structs){ANSI.END}
 When a struct is created dynamically via the new keyword, its memory is requested on the heap via SYS 21.
 
-```xpp26
+```xe
 var dynamic_p: Point*
 dynamic_p = new Point
 dynamic_p.y = 42
@@ -875,7 +1000,7 @@ dynamic_p.y = 42
 
 {ANSI.YELLOW}Compiler Output:{ANSI.END}
 
-```asm
+```xas
 ; dynamic_p = new Point (Size of Point is 2)
 PUSH 2
 SYS 21         ; SYS_MALLOC. Stack: [ heap_addr ]
@@ -890,15 +1015,15 @@ STREIND        ; Store 42 at address (heap_addr + 1)
 ```
 
 ==================================================
-OOP (Object-Oriented Programming)
+OOP (Object Oriented Programming)
 ========
 
-Object-Oriented Programming in X++26 extends the structural layout of structs by introducing encapsulation, methods, constructors, and inheritance.
+Object-Oriented Programming in Xe extends the structural layout of structs by introducing encapsulation, methods, constructors, and inheritance.
 Under the hood, objects are represented similarly to structs, with fields mapped to offset values and methods translated into standard functions/procedures with an implicit pointer parameter named `this`.
 
 {ANSI.BOLD}Class Definition Syntax{ANSI.END}
 
-```xpp26
+```xe
 class Player {
     # Member fields
     hp: int
@@ -918,7 +1043,7 @@ class Player {
 ```
 
 {ANSI.BOLD}Object Layout in Memory{ANSI.END}
-An instance of Player is stored as a block of contiguous memory containing only its member fields. Methods are stored as global routines in PROM; they do not occupy space inside individual object instances.
+An instance of `{ANSI.CYAN}Player`{ANSI.END} is stored as a block of contiguous memory containing only its member fields. Methods are stored as global routines in PROM; they do not occupy space inside individual object instances.
 
 ```
 player_inst ---> [ offset 0: `hp`    ] (32-bit signed int)
@@ -927,16 +1052,16 @@ player_inst ---> [ offset 0: `hp`    ] (32-bit signed int)
 
 
 {ANSI.BOLD}Constructors (init Procedures){ANSI.END}
-When an object is instantiated, memory is allocated (either on the stack or dynamically on the heap), and its explicit initialization routine (init) is executed immediately.
+When an object is instantiated, memory is allocated (either on the stack or dynamically on the heap), and its explicit initialization routine (`{ANSI.PURPLE}init`{ANSI.END}) is executed immediately.
 
-```xpp26
+```xe
 var hero: Player*
 hero = new Player(100)
 ```
 
 {ANSI.YELLOW}Compiler Output:{ANSI.END}
 
-```asm
+```xas
 ; --- Instantiate and Call Constructor ---
 PUSH 2              ; Size of Player fields (hp, score)
 SYS 21              ; Allocate on heap. Stack: [ heap_ptr ]
@@ -945,7 +1070,7 @@ STORE 0x1010        ; hero = heap_ptr
 ; --- Call Constructor Hero.init(100) ---
 LOAD 0x1010         ; Pass `this` pointer implicitly (will be at FP + 2)
 PUSH 100            ; Pass parameter `starting_hp` (will be at FP + 1)
-CALL :Player__init   ; Jump to constructor label
+CALL Player__init   ; Jump to constructor label
 
 :Player__init
     PUSHFP          ; Save caller's FP
@@ -970,17 +1095,17 @@ CALL :Player__init   ; Jump to constructor label
 {ANSI.BOLD}Method Dispatching & the `this` Pointer{ANSI.END}
 Method invocations translate directly into normal subroutine calls where the target instance pointer is prepended to the stack arguments, acting as the this variable.
 
-```xpp26
+```xe
 var s: int
 s = hero.get_score()
 ```
 
 {ANSI.YELLOW}Compiler Output:{ANSI.END}
 
-```asm
+```xas
 ; --- Method Call Site ---
 LOAD 0x1010         ; Push base object address `hero` onto stack as `this`
-CALL :Player__get_score
+CALL Player__get_score
 STORE 0x1012        ; Store return value in `s`
 
 :Player__get_score
@@ -1002,14 +1127,14 @@ STORE 0x1012        ; Store return value in `s`
 {ANSI.BOLD}Inheritance & Virtual Tables (Vtables){ANSI.END}
 For advanced OOP, single inheritance is supported. If virtual methods are used, the first field of the object instance (offset 0) is reserved as a pointer to a Virtual Method Table (Vtable) stored in PROM.
 
-Derived Object Instance (RAM)      Vtable (PROM)
-┌───────────────────────────┐      ┌──────────────────────────┐
-│ 0: Vtable Pointer ────────┼────> │ 0: Override Method A     │
-├───────────────────────────┤      │ 1: Base Method B         │
-│ 1: Parent Field 1         │      └──────────────────────────┘
-│ 2: Child Field 1          │
-└───────────────────────────┘
+```
+`Derived Object Instance (RAM)`     `Vtable (PROM)`
 
+0: Vtable Pointer ---------------> 0: Override Method A
+                                   1: Base Method B
+1: Parent Field 1
+2. Child Field 1
+```
 
 Virtual calls are resolved at runtime by loading the vtable pointer, offsetting by the method index, loading the target PROM address, and executing a dynamic jump.
 
