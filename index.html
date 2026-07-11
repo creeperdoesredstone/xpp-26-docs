@@ -1,1049 +1,1044 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>XenonOS26 Documentation</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
-			id="hljs-theme"
-		/>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-		<style>
-			* {
-				box-sizing: border-box;
-			}
-
-			:root {
-				--bg-primary: #050816;
-				--bg-secondary: rgba(6, 12, 28, 0.84);
-				--bg-tertiary: rgba(4, 8, 20, 0.94);
-				--border-color: rgba(93, 192, 255, 0.2);
-				--border-light: rgba(255, 255, 255, 0.12);
-				--text-primary: #e8f7ff;
-				--text-muted: #7ba7c6;
-				--accent: #6ef2ff;
-				--accent-blue: #4b8cff;
-				--accent-light: #95f0ff;
-				--shadow-color: rgba(7, 20, 42, 0.55);
-			}
-
-			body {
-				margin: 0;
-				padding: 0;
-				background: var(--bg-primary);
-				color: var(--text-primary);
-				font-family: "JetBrains Mono", monospace;
-				display: flex;
-				height: 100vh;
-				overflow: hidden;
-				transition:
-					background 0.3s ease,
-					color 0.3s ease;
-				position: relative;
-			}
-
-			body.light-mode {
-				--bg-primary: #f4f8ff;
-				--bg-secondary: rgba(255, 255, 255, 0.8);
-				--bg-tertiary: rgba(248, 252, 255, 0.96);
-				--border-color: rgba(0, 122, 255, 0.18);
-				--border-light: rgba(18, 44, 90, 0.12);
-				--text-primary: #15334f;
-				--text-muted: #6a7d94;
-				--accent: #0077c2;
-				--accent-blue: #3b82f6;
-				--accent-light: #2f9fe2;
-				--shadow-color: rgba(147, 194, 255, 0.25);
-			}
-
-			body.light-mode::before {
-				opacity: 0.2;
-			}
-
-			aside,
-			main {
-				position: relative;
-				z-index: 1;
-			}
-
-			aside {
-				width: 320px;
-				background: linear-gradient(
-					180deg,
-					rgba(5, 8, 22, 0.95),
-					rgba(7, 14, 29, 0.9)
-				);
-				border-right: 1px solid var(--border-color);
-				display: flex;
-				flex-direction: column;
-				flex-shrink: 0;
-				backdrop-filter: blur(18px);
-				box-shadow: 8px 0 30px var(--shadow-color);
-			}
-
-			.sidebar-header {
-				padding: 18px 12px 14px;
-				border-bottom: 1px solid var(--border-light);
-				background: linear-gradient(
-					90deg,
-					rgba(255, 255, 255, 0.04),
-					transparent
-				);
-			}
-
-			.sidebar-header h1 {
-				margin: 0 0 8px 0;
-				font-size: 1rem;
-				color: var(--accent-light);
-				text-transform: uppercase;
-				letter-spacing: 1px;
-			}
-
-			.sidebar-subtitle {
-				font-size: 10px;
-				color: var(--text-muted);
-				margin-bottom: 12px;
-				letter-spacing: 0.2em;
-				text-transform: uppercase;
-			}
-
-			.doc-selector-wrapper {
-				margin-bottom: 12px;
-			}
-
-			.doc-select,
-			.search-box,
-			.ghost-btn {
-				font-family: "JetBrains Mono", monospace;
-				border-radius: 8px;
-				border: 1px solid var(--border-light);
-				background: var(--bg-secondary);
-				color: var(--text-primary);
-			}
-
-			.doc-select {
-				width: 100%;
-				padding: 8px 10px;
-				color: var(--accent);
-				font-size: 12px;
-				font-weight: bold;
-				cursor: pointer;
-				outline: none;
-				transition:
-					border-color 0.2s,
-					transform 0.2s;
-			}
-
-			.doc-select:focus,
-			.search-box:focus {
-				border-color: var(--accent-light);
-				outline: none;
-				transform: translateY(-1px);
-			}
-
-			.sidebar-controls {
-				display: flex;
-				gap: 8px;
-				margin-bottom: 10px;
-			}
-
-			.search-box {
-				flex: 1;
-				padding: 8px 12px;
-				font-size: 12px;
-				transition:
-					border-color 0.2s,
-					transform 0.2s;
-			}
-
-			.ghost-btn {
-				padding: 8px 12px;
-				cursor: pointer;
-				font-size: 12px;
-				transition:
-					background-color 0.2s,
-					border-color 0.2s,
-					transform 0.2s;
-			}
-
-			.ghost-btn:hover {
-				background-color: rgba(255, 255, 255, 0.08);
-				transform: translateY(-1px);
-			}
-
-			.search-meta {
-				font-size: 10px;
-				color: var(--text-muted);
-				margin: 6px 0 2px;
-				letter-spacing: 0.14em;
-				text-transform: uppercase;
-			}
-
-			.doc-list {
-				list-style: none;
-				padding: 10px 0;
-				margin: 0;
-				overflow-y: auto;
-				flex: 1;
-			}
-
-			.doc-item {
-				padding: 12px 20px;
-				cursor: pointer;
-				font-size: 13px;
-				transition:
-					background-color 0.2s,
-					color 0.2s,
-					transform 0.2s;
-				border-left: 3px solid transparent;
-				white-space: nowrap;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				color: var(--text-primary);
-			}
-
-			.doc-item:hover {
-				background: rgba(255, 255, 255, 0.08);
-				color: var(--accent-light);
-				transform: translateX(2px);
-			}
-
-			.doc-item.active {
-				background: linear-gradient(
-					90deg,
-					rgba(75, 140, 255, 0.16),
-					rgba(110, 242, 255, 0.08)
-				);
-				color: var(--accent);
-				border-left-color: var(--accent-blue);
-				font-weight: bold;
-			}
-
-			.doc-item.hidden {
-				display: none;
-			}
-
-			main {
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				min-width: 0;
-				background: linear-gradient(
-					180deg,
-					rgba(3, 8, 20, 0.4),
-					rgba(1, 4, 12, 0.55)
-				);
-				position: relative;
-			}
-
-			.view-header {
-				padding: 18px 30px;
-				background: rgba(5, 10, 22, 0.7);
-				border-bottom: 1px solid var(--border-color);
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				backdrop-filter: blur(14px);
-			}
-
-			.header-content {
-				flex: 1;
-			}
-
-			.view-title-row {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				gap: 12px;
-			}
-
-			.view-title {
-				margin: 0;
-				font-size: 1rem;
-				color: var(--accent);
-				text-transform: uppercase;
-				letter-spacing: 1px;
-			}
-
-			.progress-pill {
-				padding: 6px 10px;
-				border: 1px solid var(--border-light);
-				border-radius: 999px;
-				font-size: 11px;
-				color: var(--text-muted);
-				background: rgba(255, 255, 255, 0.04);
-			}
-
-			.breadcrumb {
-				font-size: 11px;
-				color: var(--text-muted);
-				margin-top: 6px;
-			}
-
-			.breadcrumb a {
-				color: var(--accent-light);
-				cursor: pointer;
-				text-decoration: none;
-			}
-
-			.breadcrumb a:hover {
-				text-decoration: underline;
-			}
-
-			.view-actions {
-				display: flex;
-				gap: 8px;
-				margin-top: 10px;
-			}
-
-			.ghost-btn:disabled {
-				opacity: 0.45;
-				cursor: not-allowed;
-				transform: none;
-			}
-
-			.output-container {
-				flex: 1;
-				padding: 30px;
-				overflow-y: auto;
-				font-size: 14px;
-				white-space: pre-wrap;
-				word-break: break-word;
-				line-height: 1.6;
-				position: relative;
-			}
-
-			.output-container a {
-				color: var(--accent-light);
-				text-decoration: underline;
-			}
-
-			.output-container a:hover {
-				color: var(--accent-blue);
-			}
-
-			.code-block-wrapper {
-				position: relative;
-				margin: 14px 0;
-				border-radius: 10px;
-				overflow: hidden;
-				border: 1px solid var(--border-light);
-				background: rgba(255, 255, 255, 0.03);
-				box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
-			}
-
-			.code-block-header {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 8px 12px;
-				background: rgba(255, 255, 255, 0.06);
-				font-size: 11px;
-				color: var(--text-muted);
-				border-bottom: 1px solid var(--border-light);
-			}
-
-			.copy-btn {
-				padding: 4px 8px;
-				background-color: transparent;
-				border: 1px solid var(--border-light);
-				color: var(--text-primary);
-				cursor: pointer;
-				font-size: 11px;
-				border-radius: 6px;
-				transition:
-					background-color 0.2s,
-					transform 0.2s;
-				font-family: "JetBrains Mono", monospace;
-			}
-
-			.copy-btn:hover {
-				background-color: var(--accent);
-				color: #000;
-				transform: translateY(-1px);
-			}
-
-			.copy-btn.copied {
-				background-color: #4ec9b0;
-				color: #000;
-			}
-
-			pre {
-				margin: 0;
-				padding: 12px;
-				background: rgba(0, 0, 0, 0.22);
-				overflow-x: auto;
-				max-height: 420px;
-				overflow-y: auto;
-			}
-
-			code {
-				font-family: "JetBrains Mono", monospace;
-				font-size: 13px;
-				line-height: 1.4;
-			}
-
-			hr {
-				border: none;
-				border-top: 2px dashed var(--border-light);
-				margin: 22px 0;
-			}
-
-			.ansi-purple {
-				color: #d16dff;
-			}
-			.ansi-cyan {
-				color: #4fc1ff;
-			}
-			.ansi-darkcyan {
-				color: #208080;
-			}
-			.ansi-blue {
-				color: #569cd6;
-			}
-			.ansi-green {
-				color: #608b4e;
-			}
-			.ansi-yellow {
-				color: #b3b300;
-			}
-			.ansi-red {
-				color: #f44747;
-			}
-			.ansi-bold {
-				font-weight: bold;
-			}
-			.ansi-underline {
-				text-decoration: underline;
-			}
-			.ansi-reset {
-				color: var(--text-primary);
-				font-weight: normal;
-				text-decoration: none;
-			}
-
-			.code-stmt {
-				background-color: rgba(0, 0, 0, 0.6);
-				color: #f8faff;
-				padding: 0 4px;
-				border-radius: 4px;
-				border: 1px solid rgba(255, 255, 255, 0.12);
-			}
-
-			.output-container h1,
-			.output-container h2,
-			.output-container h3,
-			.output-container h4 {
-				margin: 1.2em 0 0.5em;
-				color: var(--accent-light);
-				letter-spacing: 0.04em;
-			}
-
-			.output-container ul,
-			.output-container ol {
-				padding-left: 1.4em;
-				margin: 0.6em 0 1em;
-			}
-
-			.output-container li {
-				margin: 0.35em 0;
-			}
-
-			.output-container blockquote {
-				margin: 1em 0;
-				padding: 0.8em 1em;
-				border-left: 3px solid var(--accent-blue);
-				background: rgba(255, 255, 255, 0.04);
-				color: var(--text-muted);
-			}
-
-			.output-container p {
-				margin: 0.7em 0;
-			}
-
-			.hljs {
-				background-color: transparent !important;
-				padding: 0;
-				color: var(--text-primary);
-			}
-			.hljs-xe-keyword {
-				color: #d16dff;
-				font-weight: bold;
-			}
-			.hljs-xe-type {
-				color: #569cd6;
-			}
-			.hljs-xe-string {
-				color: #ce9178;
-			}
-			.hljs-xe-number {
-				color: #b5cea8;
-			}
-			.hljs-xe-comment {
-				color: #6a9955;
-			}
-			.hljs-xe-operator {
-				color: #d16dff;
-			}
-			.hljs-xe-class {
-				color: #4ec9b0;
-			}
-			.hljs-xas-instruction {
-				color: #f44747;
-				font-weight: bold;
-			}
-			.hljs-xas-register {
-				color: #9cdcfe;
-			}
-			.hljs-xas-number {
-				color: #b5cea8;
-			}
-			.hljs-xas-label {
-				color: #4ec9b0;
-			}
-			.hljs-xas-comment {
-				color: #6a9955;
-			}
-
-			::-webkit-scrollbar {
-				width: 10px;
-				height: 10px;
-			}
-			::-webkit-scrollbar-track {
-				background: rgba(255, 255, 255, 0.04);
-			}
-			::-webkit-scrollbar-thumb {
-				background: rgba(255, 255, 255, 0.16);
-				border-radius: 999px;
-			}
-			::-webkit-scrollbar-thumb:hover {
-				background: var(--accent);
-			}
-
-			.back-to-top {
-				position: fixed;
-				bottom: 30px;
-				right: 30px;
-				padding: 10px 15px;
-				background: linear-gradient(
-					135deg,
-					var(--accent-blue),
-					var(--accent)
-				);
-				color: #fff;
-				border: none;
-				border-radius: 999px;
-				cursor: pointer;
-				font-size: 12px;
-				opacity: 0;
-				visibility: hidden;
-				transition:
-					opacity 0.3s,
-					visibility 0.3s,
-					box-shadow 0.2s;
-				font-family: "JetBrains Mono", monospace;
-				z-index: 100;
-				box-shadow: 0 10px 24px transparent;
-			}
-
-			.back-to-top.show {
-				opacity: 0.6;
-				visibility: visible;
-			}
-			.back-to-top:hover {
-				opacity: 1;
-				box-shadow: 0 10px 24px rgba(75, 140, 255, 0.24);
-			}
-
-			@keyframes drift {
-				from {
-					transform: translate3d(0, 0, 0);
-				}
-				to {
-					transform: translate3d(-40px, 30px, 0);
-				}
-			}
-
-			@keyframes sweep {
-				to {
-					transform: translateX(100%);
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<aside>
-			<div class="sidebar-header">
-				<h1>XenonOS Documentation</h1>
-				<div class="sidebar-subtitle">
-					Stranger among conventional systems.
-				</div>
-				<div class="doc-selector-wrapper">
-					<select
-						id="docSelect"
-						class="doc-select"
-						title="Select Documentation"
-					>
-						<option value="docs.txt">Xe</option>
-						<option value="xasm.txt">XAssembly</option>
-					</select>
-				</div>
-				<div class="sidebar-controls">
-					<input
-						type="text"
-						id="searchBox"
-						class="search-box"
-						placeholder="Search sections..."
-						autocomplete="off"
-					/>
-				</div>
-				<div id="searchMeta" class="search-meta">
-					Ready for traversal
-				</div>
-			</div>
-			<ul id="docList" class="doc-list"></ul>
-		</aside>
-
-		<main>
-			<div class="view-header">
-				<div class="header-content">
-					<div class="view-title-row">
-						<h2 id="viewTitle" class="view-title">
-							Loading documentation...
-						</h2>
-						<div id="chapterProgress" class="progress-pill">
-							Section 0 / 0
-						</div>
-					</div>
-					<div id="breadcrumb" class="breadcrumb"></div>
-					<div class="view-actions">
-						<button id="prevChapterBtn" class="ghost-btn">
-							← Prev
-						</button>
-						<button id="copyChapterBtn" class="ghost-btn">
-							⧉ Copy
-						</button>
-						<button id="nextChapterBtn" class="ghost-btn">
-							Next →
-						</button>
-					</div>
-				</div>
-			</div>
-			<div id="output" class="output-container"></div>
-		</main>
-
-		<button id="backToTop" class="back-to-top">↑ Top</button>
-
-		<script>
-			let chaptersRegistry = [];
-			let currentChapterId = null;
-
-			const availableDocs = ["docs.txt", "xasm.txt"];
-
-			const docSelect = document.getElementById("docSelect");
-			const docList = document.getElementById("docList");
-			const viewTitle = document.getElementById("viewTitle");
-			const output = document.getElementById("output");
-			const searchBox = document.getElementById("searchBox");
-			const searchMeta = document.getElementById("searchMeta");
-			const backToTop = document.getElementById("backToTop");
-			const breadcrumb = document.getElementById("breadcrumb");
-			const chapterProgress = document.getElementById("chapterProgress");
-			const prevChapterBtn = document.getElementById("prevChapterBtn");
-			const nextChapterBtn = document.getElementById("nextChapterBtn");
-			const copyChapterBtn = document.getElementById("copyChapterBtn");
-
-			hljs.registerLanguage("xe", function () {
-				return {
-					name: "Xe",
-					aliases: ["xe"],
-					contains: [
-						{
-							className: "xe-string",
-							begin: '"',
-							end: '"',
-							illegal: "\\n",
-							contains: [hljs.BACKSLASH_ESCAPE],
-						},
-						{
-							className: "xe-string",
-							begin: "'",
-							end: "'",
-						},
-						{
-							className: "xe-comment",
-							begin: "#",
-							end: "$",
-						},
-						{
-							className: "xe-number",
-							begin: "\\b\\d+(\\.\\d+)?\\b",
-						},
-						{
-							className: "xe-type",
-							begin: "\\b(int|float|bool|string|char|type|return_type)\\b",
-						},
-						{
-							className: "xe-keyword",
-							begin: "\\b(var|array|out|in|for|while|repeat|until|if|elseif|else|switch|case|default|break|continue|true|false|proc|call|fn|return|class|new|free|this|struct)\\b",
-						},
-						{
-							className: "xe-operator",
-							begin: "\\+|-|\\*|\\/|\\%|<|>|=|&|\\||\\^|~|\\!",
-						},
-						{
-							className: "xe-class",
-							begin: "[A-Z][a-z]+",
-						},
-					],
-				};
-			});
-
-			hljs.registerLanguage("xas", function () {
-				return {
-					name: "XAssembly",
-					aliases: ["xas", "xassembly"],
-					contains: [
-						{
-							className: "xas-comment",
-							begin: ";",
-							end: "$",
-						},
-						{
-							className: "xas-label",
-							begin: "[\\s]*:[a-zA-Z_][a-zA-Z0-9_]*",
-						},
-						{
-							className: "xas-instruction",
-							begin: "\\b(PUSH|POP|DUP|SWAP|OVER|ROT|LOAD|STORE|LOADIND|STREIND|I2F|F2I|BOOL|ADDI|SUBI|MULI|DIVI|MODI|POWI|ADDF|SUBF|MULF|DIVF|MODF|POWF|AND|OR|XOR|IEQ|INE|ILT|ILE|IGT|IGE|FEQ|FNE|FLT|FLE|FGT|FGE|NEGI|NEGF|NOT|JUMP|BRZ|BRNZ|CALL|CALZ|CALN|RET|RETZ|RETN|HALT|WAIT|INT|IRT|SYS|INCI|DECI|INCF|DECF|LOOKUP|PUSHFP|POPFP|SETFP|LOADSP|STORESP)\\b",
-						},
-						{
-							className: "xas-number",
-							begin: "0x[0-9a-fA-F]+|\\b\\d+\\b",
-						},
-					],
-				};
-			});
-
-			output.addEventListener("scroll", () => {
-				if (output.scrollTop > 300) {
-					backToTop.classList.add("show");
-				} else {
-					backToTop.classList.remove("show");
-				}
-			});
-
-			backToTop.addEventListener("click", () => {
-				output.scrollTo({ top: 0, behavior: "smooth" });
-			});
-
-			function updateSearchMeta() {
-				const visibleItems = Array.from(
-					document.querySelectorAll(".doc-item"),
-				).filter(
-					(item) => !item.classList.contains("hidden") && item.id,
-				).length;
-
-				if (!searchBox.value.trim()) {
-					searchMeta.textContent = `${chaptersRegistry.length} sections available`;
-				} else {
-					searchMeta.textContent = `${visibleItems} matching sections`;
-				}
-			}
-
-			function updateChapterMeta() {
-				if (!chaptersRegistry.length) {
-					chapterProgress.textContent = "Section 0 / 0";
-					prevChapterBtn.disabled = true;
-					nextChapterBtn.disabled = true;
-					return;
-				}
-
-				const index = chaptersRegistry.findIndex(
-					(c) => c.id === currentChapterId,
-				);
-				const chapterNumber = index >= 0 ? index + 1 : 1;
-				chapterProgress.textContent = `Section ${chapterNumber} / ${chaptersRegistry.length}`;
-				prevChapterBtn.disabled = chapterNumber === 1;
-				nextChapterBtn.disabled =
-					chapterNumber === chaptersRegistry.length;
-			}
-
-			function navigateChapter(offset) {
-				if (!chaptersRegistry.length) return;
-				const currentIndex = chaptersRegistry.findIndex(
-					(c) => c.id === currentChapterId,
-				);
-				const nextIndex = Math.min(
-					Math.max(currentIndex + offset, 0),
-					chaptersRegistry.length - 1,
-				);
-				displayChapter(chaptersRegistry[nextIndex].id);
-			}
-
-			function copyCurrentChapter() {
-				const currentNode = chaptersRegistry.find(
-					(c) => c.id === currentChapterId,
-				);
-				if (!currentNode) return;
-				const textToCopy = `${currentNode.title}\n\n${currentNode.content}`;
-				navigator.clipboard.writeText(textToCopy).then(() => {
-					copyChapterBtn.textContent = "✓ Copied";
-					setTimeout(() => {
-						copyChapterBtn.textContent = "⧉ Copy";
-					}, 1600);
-				});
-			}
-
-			searchBox.addEventListener("input", (e) => {
-				const query = e.target.value.toLowerCase();
-				const items = document.querySelectorAll(".doc-item");
-
-				items.forEach((item) => {
-					if (query === "") {
-						item.classList.remove("hidden");
-					} else if (item.textContent.toLowerCase().includes(query)) {
-						item.classList.remove("hidden");
-					} else {
-						item.classList.add("hidden");
-					}
-				});
-
-				updateSearchMeta();
-			});
-
-			prevChapterBtn.addEventListener("click", () => navigateChapter(-1));
-			nextChapterBtn.addEventListener("click", () => navigateChapter(1));
-			copyChapterBtn.addEventListener("click", copyCurrentChapter);
-
-			window.addEventListener("keydown", (event) => {
-				if (
-					(event.ctrlKey || event.metaKey) &&
-					event.key.toLowerCase() === "k"
-				) {
-					event.preventDefault();
-					searchBox.focus();
-					searchBox.select();
-				}
-			});
-
-			const ansiMap = [
-				{
-					regex: /\{ANSI\.PURPLE\}/g,
-					html: '<span class="ansi-purple">',
-				},
-				{ regex: /\{ANSI\.CYAN\}/g, html: '<span class="ansi-cyan">' },
-				{
-					regex: /\{ANSI\.DARKCYAN\}/g,
-					html: '<span class="ansi-darkcyan">',
-				},
-				{ regex: /\{ANSI\.BLUE\}/g, html: '<span class="ansi-blue">' },
-				{
-					regex: /\{ANSI\.GREEN\}/g,
-					html: '<span class="ansi-green">',
-				},
-				{
-					regex: /\{ANSI\.YELLOW\}/g,
-					html: '<span class="ansi-yellow">',
-				},
-				{ regex: /\{ANSI\.RED\}/g, html: '<span class="ansi-red">' },
-				{ regex: /\{ANSI\.BOLD\}/g, html: '<span class="ansi-bold">' },
-				{
-					regex: /\{ANSI\.UNDERLINE\}/g,
-					html: '<span class="ansi-underline">',
-				},
-				{
-					regex: /\{ANSI\.END\}/g,
-					html: '</span><span class="ansi-reset">',
-				},
-			];
-
-			function escapeHtml(text) {
-				return text
-					.replace(/&/g, "&amp;")
-					.replace(/</g, "&lt;")
-					.replace(/>/g, "&gt;");
-			}
-
-			function unescapeHtml(text) {
-				return text
-					.replace(/&lt;/g, "<")
-					.replace(/&gt;/g, ">")
-					.replace(/&amp;/g, "&");
-			}
-
-			function renderMarkdownBlocks(text) {
-				const lines = text.split(/\r?\n/);
-				const output = [];
-				let paragraphLines = [];
-				let listType = null;
-				let listItems = [];
-				let quoteLines = [];
-
-				const flushParagraph = () => {
-					if (paragraphLines.length) {
-						output.push(
-							`<p>${paragraphLines.join(" ")}</p>`,
-						);
-						paragraphLines = [];
-					}
-				};
-
-				const flushList = () => {
-					if (listItems.length) {
-						const tag = listType === "ol" ? "ol" : "ul";
-						output.push(
-							`<${tag}>${listItems
-								.map(
-									(item) =>
-										`<li>${renderInlineMarkup(item)}</li>`,
-								)
-								.join("")}</${tag}>`,
-						);
-						listItems = [];
-						listType = null;
-					}
-				};
-
-				const flushQuote = () => {
-					if (quoteLines.length) {
-						output.push(
-							`<blockquote>${quoteLines
-								.map((line) => renderInlineMarkup(line))
-								.join("<br>")}</blockquote>`,
-						);
-						quoteLines = [];
-					}
-				};
-
-				lines.forEach((line) => {
-					const trimmed = line.trim();
-
-					if (!trimmed) {
-						flushParagraph();
-						flushList();
-						flushQuote();
-						return;
-					}
-
-					const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
-					if (headingMatch) {
-						flushParagraph();
-						flushList();
-						flushQuote();
-						const level = headingMatch[1].length;
-						output.push(
-							`<h${level}>${renderInlineMarkup(headingMatch[2])}</h${level}>`,
-						);
-						return;
-					}
-
-					if (/^>\s?/.test(trimmed)) {
-						flushParagraph();
-						flushList();
-						quoteLines.push(trimmed.replace(/^>\s?/, ""));
-						return;
-					}
-
-					const orderedMatch = trimmed.match(/^\d+\.\s+(.*)$/);
-					if (orderedMatch) {
-						flushParagraph();
-						flushQuote();
-						if (listType !== "ol") {
-							flushList();
-							listType = "ol";
-						}
-						listItems.push(orderedMatch[1]);
-						return;
-					}
-
-					if (/^[-*+]\s+/.test(trimmed)) {
-						flushParagraph();
-						flushQuote();
-						if (listType !== "ul") {
-							flushList();
-							listType = "ul";
-						}
-						listItems.push(trimmed.replace(/^[-*+]\s+/, ""));
-						return;
-					}
-
-					flushList();
-					flushQuote();
-					paragraphLines.push(trimmed);
-				});
-
-				flushParagraph();
-				flushList();
-				flushQuote();
-
-				return output.join("\n");
-			}
-
-			function parseAnsi(text) {
-				const targetRegex =
-					/\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
-				let pool = text.replace(
-					targetRegex,
-					function (match, url, linkText) {
-						return `__LINK_START__URL="${url}"__LINK_TEXT__${linkText}__LINK_END__`;
-					},
-				);
-
-				pool = escapeHtml(pool);
-
-				const tokenRegex =
-					/__LINK_START__URL="([^"]*?)"__LINK_TEXT__(.*?)__LINK_END__/g;
-				pool = pool.replace(
-					tokenRegex,
-					function (match, url, linkText) {
-						return `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
-					},
-				);
-
-				pool = pool.replace(/^(?:\r?\n)?---(?:\r?\n)?$/gm, "<hr>");
-
-				const codeBlocks = [];
-				let codeBlockIndex = 0;
-				pool = pool.replace(
-					/```([\w]*)\n([\s\S]*?)```/g,
-					function (match, lang, code) {
-						let language = lang
-							? lang.toLowerCase().trim()
-							: "plaintext";
-
-						if (language === "xpp") language = "xe";
-						if (language === "xassembly") language = "xas";
-
-						const cleanCode = unescapeHtml(code.trim());
-						const codeId =
-							"code-" + Math.random().toString(36).substr(2, 9);
-						const placeholder = `--DOC-CODE-BLOCK-${codeBlockIndex}--`;
-
-						let highlighted;
-						try {
-							if (language === "xe" || language === "xas") {
-								highlighted = hljs.highlight(cleanCode, {
-									language,
-									ignoreIllegals: true,
-								}).value;
-							} else {
-								highlighted = escapeHtml(cleanCode);
-							}
-						} catch (e) {
-							highlighted = escapeHtml(cleanCode);
-						}
-
-						codeBlocks.push(`<div class="code-block-wrapper">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>XenonOS26 Documentation</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+            id="hljs-theme"
+        />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            :root {
+                --bg-primary: #050816;
+                --bg-secondary: rgba(6, 12, 28, 0.84);
+                --bg-tertiary: rgba(4, 8, 20, 0.94);
+                --border-color: rgba(93, 192, 255, 0.2);
+                --border-light: rgba(255, 255, 255, 0.12);
+                --text-primary: #e8f7ff;
+                --text-muted: #7ba7c6;
+                --accent: #6ef2ff;
+                --accent-blue: #4b8cff;
+                --accent-light: #95f0ff;
+                --shadow-color: rgba(7, 20, 42, 0.55);
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background: var(--bg-primary);
+                color: var(--text-primary);
+                font-family: "JetBrains Mono", monospace;
+                display: flex;
+                height: 100vh;
+                overflow: hidden;
+                transition:
+                    background 0.3s ease,
+                    color 0.3s ease;
+                position: relative;
+            }
+
+            body.light-mode {
+                --bg-primary: #f4f8ff;
+                --bg-secondary: rgba(255, 255, 255, 0.8);
+                --bg-tertiary: rgba(248, 252, 255, 0.96);
+                --border-color: rgba(0, 122, 255, 0.18);
+                --border-light: rgba(18, 44, 90, 0.12);
+                --text-primary: #15334f;
+                --text-muted: #6a7d94;
+                --accent: #0077c2;
+                --accent-blue: #3b82f6;
+                --accent-light: #2f9fe2;
+                --shadow-color: rgba(147, 194, 255, 0.25);
+            }
+
+            body.light-mode::before {
+                opacity: 0.2;
+            }
+
+            aside,
+            main {
+                position: relative;
+                z-index: 1;
+            }
+
+            aside {
+                width: 320px;
+                background: linear-gradient(
+                    180deg,
+                    rgba(5, 8, 22, 0.95),
+                    rgba(7, 14, 29, 0.9)
+                );
+                border-right: 1px solid var(--border-color);
+                display: flex;
+                flex-direction: column;
+                flex-shrink: 0;
+                backdrop-filter: blur(18px);
+                box-shadow: 8px 0 30px var(--shadow-color);
+            }
+
+            .sidebar-header {
+                padding: 18px 12px 14px;
+                border-bottom: 1px solid var(--border-light);
+                background: linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.04),
+                    transparent
+                );
+            }
+
+            .sidebar-header h1 {
+                margin: 0 0 8px 0;
+                font-size: 1rem;
+                color: var(--accent-light);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .sidebar-subtitle {
+                font-size: 10px;
+                color: var(--text-muted);
+                margin-bottom: 12px;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+            }
+
+            .doc-selector-wrapper {
+                margin-bottom: 12px;
+            }
+
+            .doc-select,
+            .search-box,
+            .ghost-btn {
+                font-family: "JetBrains Mono", monospace;
+                border-radius: 8px;
+                border: 1px solid var(--border-light);
+                background: var(--bg-secondary);
+                color: var(--text-primary);
+            }
+
+            .doc-select {
+                width: 100%;
+                padding: 8px 10px;
+                color: var(--accent);
+                font-size: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                outline: none;
+                transition:
+                    border-color 0.2s,
+                    transform 0.2s;
+            }
+
+            .doc-select:focus,
+            .search-box:focus {
+                border-color: var(--accent-light);
+                outline: none;
+                transform: translateY(-1px);
+            }
+
+            .sidebar-controls {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .search-box {
+                flex: 1;
+                padding: 8px 12px;
+                font-size: 12px;
+                transition:
+                    border-color 0.2s,
+                    transform 0.2s;
+            }
+
+            .ghost-btn {
+                padding: 8px 12px;
+                cursor: pointer;
+                font-size: 12px;
+                transition:
+                    background-color 0.2s,
+                    border-color 0.2s,
+                    transform 0.2s;
+            }
+
+            .ghost-btn:hover {
+                background-color: rgba(255, 255, 255, 0.08);
+                transform: translateY(-1px);
+            }
+
+            .search-meta {
+                font-size: 10px;
+                color: var(--text-muted);
+                margin: 6px 0 2px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+            }
+
+            .doc-list {
+                list-style: none;
+                padding: 10px 0;
+                margin: 0;
+                overflow-y: auto;
+                flex: 1;
+            }
+
+            .doc-item {
+                padding: 12px 20px;
+                cursor: pointer;
+                font-size: 13px;
+                transition:
+                    background-color 0.2s,
+                    color 0.2s,
+                    transform 0.2s;
+                border-left: 3px solid transparent;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: var(--text-primary);
+            }
+
+            .doc-item:hover {
+                background: rgba(255, 255, 255, 0.08);
+                color: var(--accent-light);
+                transform: translateX(2px);
+            }
+
+            .doc-item.active {
+                background: linear-gradient(
+                    90deg,
+                    rgba(75, 140, 255, 0.16),
+                    rgba(110, 242, 255, 0.08)
+                );
+                color: var(--accent);
+                border-left-color: var(--accent-blue);
+                font-weight: bold;
+            }
+
+            .doc-item.hidden {
+                display: none;
+            }
+
+            main {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                background: linear-gradient(
+                    180deg,
+                    rgba(3, 8, 20, 0.4),
+                    rgba(1, 4, 12, 0.55)
+                );
+                position: relative;
+            }
+
+            .view-header {
+                padding: 18px 30px;
+                background: rgba(5, 10, 22, 0.7);
+                border-bottom: 1px solid var(--border-color);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                backdrop-filter: blur(14px);
+            }
+
+            .header-content {
+                flex: 1;
+            }
+
+            .view-title-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .view-title {
+                margin: 0;
+                font-size: 1rem;
+                color: var(--accent);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .progress-pill {
+                padding: 6px 10px;
+                border: 1px solid var(--border-light);
+                border-radius: 999px;
+                font-size: 11px;
+                color: var(--text-muted);
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .breadcrumb {
+                font-size: 11px;
+                color: var(--text-muted);
+                margin-top: 6px;
+            }
+
+            .breadcrumb a {
+                color: var(--accent-light);
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+            .view-actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 10px;
+            }
+
+            .ghost-btn:disabled {
+                opacity: 0.45;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            .output-container {
+                flex: 1;
+                padding: 30px;
+                overflow-y: auto;
+                font-size: 14px;
+                white-space: pre-wrap;
+                word-break: break-word;
+                line-height: 1.6;
+                position: relative;
+            }
+
+            .output-container a {
+                color: var(--accent-light);
+                text-decoration: underline;
+            }
+
+            .output-container a:hover {
+                color: var(--accent-blue);
+            }
+
+            .code-block-wrapper {
+                position: relative;
+                margin: 14px 0;
+                border-radius: 10px;
+                overflow: hidden;
+                border: 1px solid var(--border-light);
+                background: rgba(255, 255, 255, 0.03);
+                box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+            }
+
+            .code-block-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 12px;
+                background: rgba(255, 255, 255, 0.06);
+                font-size: 11px;
+                color: var(--text-muted);
+                border-bottom: 1px solid var(--border-light);
+            }
+
+            .copy-btn {
+                padding: 4px 8px;
+                background-color: transparent;
+                border: 1px solid var(--border-light);
+                color: var(--text-primary);
+                cursor: pointer;
+                font-size: 11px;
+                border-radius: 6px;
+                transition:
+                    background-color 0.2s,
+                    transform 0.2s;
+                font-family: "JetBrains Mono", monospace;
+            }
+
+            .copy-btn:hover {
+                background-color: var(--accent);
+                color: #000;
+                transform: translateY(-1px);
+            }
+
+            .copy-btn.copied {
+                background-color: #4ec9b0;
+                color: #000;
+            }
+
+            pre {
+                margin: 0;
+                padding: 12px;
+                background: rgba(0, 0, 0, 0.22);
+                overflow-x: auto;
+                max-height: 420px;
+                overflow-y: auto;
+            }
+
+            code {
+                font-family: "JetBrains Mono", monospace;
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            hr {
+                border: none;
+                border-top: 2px dashed var(--border-light);
+                margin: 22px 0;
+            }
+
+            .ansi-purple {
+                color: #d16dff;
+            }
+            .ansi-cyan {
+                color: #4fc1ff;
+            }
+            .ansi-darkcyan {
+                color: #208080;
+            }
+            .ansi-blue {
+                color: #569cd6;
+            }
+            .ansi-green {
+                color: #608b4e;
+            }
+            .ansi-yellow {
+                color: #b3b300;
+            }
+            .ansi-red {
+                color: #f44747;
+            }
+            .ansi-bold {
+                font-weight: bold;
+            }
+            .ansi-underline {
+                text-decoration: underline;
+            }
+            .ansi-reset {
+                color: var(--text-primary);
+                font-weight: normal;
+                text-decoration: none;
+            }
+
+            .code-stmt {
+                background-color: rgba(0, 0, 0, 0.6);
+                color: #f8faff;
+                padding: 0 4px;
+                border-radius: 4px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+            }
+
+            .output-container h1,
+            .output-container h2,
+            .output-container h3,
+            .output-container h4 {
+                margin: 1.2em 0 0.5em;
+                color: var(--accent-light);
+                letter-spacing: 0.04em;
+            }
+
+            .output-container ul,
+            .output-container ol {
+                padding-left: 1.4em;
+                margin: 0.6em 0 1em;
+            }
+
+            .output-container li {
+                margin: 0.35em 0;
+            }
+
+            .output-container blockquote {
+                margin: 1em 0;
+                padding: 0.8em 1em;
+                border-left: 3px solid var(--accent-blue);
+                background: rgba(255, 255, 255, 0.04);
+                color: var(--text-muted);
+            }
+
+            .output-container p {
+                margin: 0.7em 0;
+            }
+
+            .hljs {
+                background-color: transparent !important;
+                padding: 0;
+                color: var(--text-primary);
+            }
+            .hljs-xe-keyword {
+                color: #d16dff;
+                font-weight: bold;
+            }
+            .hljs-xe-type {
+                color: #569cd6;
+            }
+            .hljs-xe-string {
+                color: #ce9178;
+            }
+            .hljs-xe-number {
+                color: #b5cea8;
+            }
+            .hljs-xe-comment {
+                color: #6a9955;
+            }
+            .hljs-xe-operator {
+                color: #d16dff;
+            }
+            .hljs-xe-class {
+                color: #4ec9b0;
+            }
+            .hljs-xas-instruction {
+                color: #f44747;
+                font-weight: bold;
+            }
+            .hljs-xas-register {
+                color: #9cdcfe;
+            }
+            .hljs-xas-number {
+                color: #b5cea8;
+            }
+            .hljs-xas-label {
+                color: #4ec9b0;
+            }
+            .hljs-xas-comment {
+                color: #6a9955;
+            }
+
+            ::-webkit-scrollbar {
+                width: 10px;
+                height: 10px;
+            }
+            ::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.04);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.16);
+                border-radius: 999px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--accent);
+            }
+
+            .back-to-top {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                padding: 10px 15px;
+                background: linear-gradient(
+                    135deg,
+                    var(--accent-blue),
+                    var(--accent)
+                );
+                color: #fff;
+                border: none;
+                border-radius: 999px;
+                cursor: pointer;
+                font-size: 12px;
+                opacity: 0;
+                visibility: hidden;
+                transition:
+                    opacity 0.3s,
+                    visibility 0.3s,
+                    box-shadow 0.2s;
+                font-family: "JetBrains Mono", monospace;
+                z-index: 100;
+                box-shadow: 0 10px 24px transparent;
+            }
+
+            .back-to-top.show {
+                opacity: 0.6;
+                visibility: visible;
+            }
+            .back-to-top:hover {
+                opacity: 1;
+                box-shadow: 0 10px 24px rgba(75, 140, 255, 0.24);
+            }
+
+            @keyframes drift {
+                from {
+                    transform: translate3d(0, 0, 0);
+                }
+                to {
+                    transform: translate3d(-40px, 30px, 0);
+                }
+            }
+
+            @keyframes sweep {
+                to {
+                    transform: translateX(100%);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <aside>
+            <div class="sidebar-header">
+                <h1>XenonOS Documentation</h1>
+                <div class="sidebar-subtitle">
+                    Stranger among conventional systems.
+                </div>
+                <div class="doc-selector-wrapper">
+                    <select
+                        id="docSelect"
+                        class="doc-select"
+                        title="Select Documentation"
+                    >
+                        <option value="docs.txt">Xe</option>
+                        <option value="xasm.txt">XAssembly</option>
+                    </select>
+                </div>
+                <div class="sidebar-controls">
+                    <input
+                        type="text"
+                        id="searchBox"
+                        class="search-box"
+                        placeholder="Search sections..."
+                        autocomplete="off"
+                    />
+                </div>
+                <div id="searchMeta" class="search-meta">
+                    Ready for traversal
+                </div>
+            </div>
+            <ul id="docList" class="doc-list"></ul>
+        </aside>
+
+        <main>
+            <div class="view-header">
+                <div class="header-content">
+                    <div class="view-title-row">
+                        <h2 id="viewTitle" class="view-title">
+                            Loading documentation...
+                        </h2>
+                        <div id="chapterProgress" class="progress-pill">
+                            Section 0 / 0
+                        </div>
+                    </div>
+                    <div id="breadcrumb" class="breadcrumb"></div>
+                    <div class="view-actions">
+                        <button id="prevChapterBtn" class="ghost-btn">
+                            ← Prev
+                        </button>
+                        <button id="copyChapterBtn" class="ghost-btn">
+                            ⧉ Copy
+                        </button>
+                        <button id="nextChapterBtn" class="ghost-btn">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="output" class="output-container"></div>
+        </main>
+
+        <button id="backToTop" class="back-to-top">↑ Top</button>
+
+        <script>
+            let chaptersRegistry = [];
+            let currentChapterId = null;
+
+            const availableDocs = ["docs.txt", "xasm.txt"];
+
+            const docSelect = document.getElementById("docSelect");
+            const docList = document.getElementById("docList");
+            const viewTitle = document.getElementById("viewTitle");
+            const output = document.getElementById("output");
+            const searchBox = document.getElementById("searchBox");
+            const searchMeta = document.getElementById("searchMeta");
+            const backToTop = document.getElementById("backToTop");
+            const breadcrumb = document.getElementById("breadcrumb");
+            const chapterProgress = document.getElementById("chapterProgress");
+            const prevChapterBtn = document.getElementById("prevChapterBtn");
+            const nextChapterBtn = document.getElementById("nextChapterBtn");
+            const copyChapterBtn = document.getElementById("copyChapterBtn");
+
+            hljs.registerLanguage("xe", function () {
+                return {
+                    name: "Xe",
+                    aliases: ["xe"],
+                    contains: [
+                        {
+                            className: "xe-string",
+                            begin: '"',
+                            end: '"',
+                            illegal: "\\n",
+                            contains: [hljs.BACKSLASH_ESCAPE],
+                        },
+                        {
+                            className: "xe-string",
+                            begin: "'",
+                            end: "'",
+                        },
+                        {
+                            className: "xe-comment",
+                            begin: "#",
+                            end: "$",
+                        },
+                        {
+                            className: "xe-number",
+                            begin: "\\b\\d+(\\.\\d+)?\\b",
+                        },
+                        {
+                            className: "xe-type",
+                            begin: "\\b(int|float|bool|string|char|type|return_type)\\b",
+                        },
+                        {
+                            className: "xe-keyword",
+                            begin: "\\b(var|array|out|in|for|while|repeat|until|if|elseif|else|switch|case|default|break|continue|true|false|proc|call|fn|return|class|new|free|this|struct)\\b",
+                        },
+                        {
+                            className: "xe-operator",
+                            begin: "\\+|-|\\*|\\/|\\%|<|>|=|&|\\||\\^|~|\\!",
+                        },
+                        {
+                            className: "xe-class",
+                            begin: "[A-Z][a-z]+",
+                        },
+                    ],
+                };
+            });
+
+            hljs.registerLanguage("xas", function () {
+                return {
+                    name: "XAssembly",
+                    aliases: ["xas", "xassembly"],
+                    contains: [
+                        {
+                            className: "xas-comment",
+                            begin: ";",
+                            end: "$",
+                        },
+                        {
+                            className: "xas-label",
+                            begin: "[\\s]*:[a-zA-Z_][a-zA-Z0-9_]*",
+                        },
+                        {
+                            className: "xas-instruction",
+                            begin: "\\b(PUSH|POP|DUP|SWAP|OVER|ROT|LOAD|STORE|LOADIND|STREIND|I2F|F2I|BOOL|ADDI|SUBI|MULI|DIVI|MODI|POWI|ADDF|SUBF|MULF|DIVF|MODF|POWF|AND|OR|XOR|IEQ|INE|ILT|ILE|IGT|IGE|FEQ|FNE|FLT|FLE|FGT|FGE|NEGI|NEGF|NOT|JUMP|BRZ|BRNZ|CALL|CALZ|CALN|RET|RETZ|RETN|HALT|WAIT|INT|IRT|SYS|INCI|DECI|INCF|DECF|LOOKUP|PUSHFP|POPFP|SETFP|LOADSP|STORESP)\\b",
+                        },
+                        {
+                            className: "xas-number",
+                            begin: "0x[0-9a-fA-F]+|\\b\\d+\\b",
+                        },
+                    ],
+                };
+            });
+
+            output.addEventListener("scroll", () => {
+                if (output.scrollTop > 300) {
+                    backToTop.classList.add("show");
+                } else {
+                    backToTop.classList.remove("show");
+                }
+            });
+
+            backToTop.addEventListener("click", () => {
+                output.scrollTo({ top: 0, behavior: "smooth" });
+            });
+
+            function updateSearchMeta() {
+                const visibleItems = Array.from(
+                    document.querySelectorAll(".doc-item"),
+                ).filter(
+                    (item) => !item.classList.contains("hidden") && item.id,
+                ).length;
+
+                if (!searchBox.value.trim()) {
+                    searchMeta.textContent = `${chaptersRegistry.length} sections available`;
+                } else {
+                    searchMeta.textContent = `${visibleItems} matching sections`;
+                }
+            }
+
+            function updateChapterMeta() {
+                if (!chaptersRegistry.length) {
+                    chapterProgress.textContent = "Section 0 / 0";
+                    prevChapterBtn.disabled = true;
+                    nextChapterBtn.disabled = true;
+                    return;
+                }
+
+                const index = chaptersRegistry.findIndex(
+                    (c) => c.id === currentChapterId,
+                );
+                const chapterNumber = index >= 0 ? index + 1 : 1;
+                chapterProgress.textContent = `Section ${chapterNumber} / ${chaptersRegistry.length}`;
+                prevChapterBtn.disabled = chapterNumber === 1;
+                nextChapterBtn.disabled =
+                    chapterNumber === chaptersRegistry.length;
+            }
+
+            function navigateChapter(offset) {
+                if (!chaptersRegistry.length) return;
+                const currentIndex = chaptersRegistry.findIndex(
+                    (c) => c.id === currentChapterId,
+                );
+                const nextIndex = Math.min(
+                    Math.max(currentIndex + offset, 0),
+                    chaptersRegistry.length - 1,
+                );
+                displayChapter(chaptersRegistry[nextIndex].id);
+            }
+
+            function copyCurrentChapter() {
+                const currentNode = chaptersRegistry.find(
+                    (c) => c.id === currentChapterId,
+                );
+                if (!currentNode) return;
+                const textToCopy = `${currentNode.title}\n\n${currentNode.content}`;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    copyChapterBtn.textContent = "✓ Copied";
+                    setTimeout(() => {
+                        copyChapterBtn.textContent = "⧉ Copy";
+                    }, 1600);
+                });
+            }
+
+            searchBox.addEventListener("input", (e) => {
+                const query = e.target.value.toLowerCase();
+                const items = document.querySelectorAll(".doc-item");
+
+                items.forEach((item) => {
+                    if (query === "") {
+                        item.classList.remove("hidden");
+                    } else if (item.textContent.toLowerCase().includes(query)) {
+                        item.classList.remove("hidden");
+                    } else {
+                        item.classList.add("hidden");
+                    }
+                });
+
+                updateSearchMeta();
+            });
+
+            prevChapterBtn.addEventListener("click", () => navigateChapter(-1));
+            nextChapterBtn.addEventListener("click", () => navigateChapter(1));
+            copyChapterBtn.addEventListener("click", copyCurrentChapter);
+
+            window.addEventListener("keydown", (event) => {
+                if (
+                    (event.ctrlKey || event.metaKey) &&
+                    event.key.toLowerCase() === "k"
+                ) {
+                    event.preventDefault();
+                    searchBox.focus();
+                    searchBox.select();
+                }
+            });
+
+            const ansiMap = [
+                {
+                    regex: /\{ANSI\.PURPLE\}/g,
+                    html: '<span class="ansi-purple">',
+                },
+                { regex: /\{ANSI\.CYAN\}/g, html: '<span class="ansi-cyan">' },
+                {
+                    regex: /\{ANSI\.DARKCYAN\}/g,
+                    html: '<span class="ansi-darkcyan">',
+                },
+                { regex: /\{ANSI\.BLUE\}/g, html: '<span class="ansi-blue">' },
+                {
+                    regex: /\{ANSI\.GREEN\}/g,
+                    html: '<span class="ansi-green">',
+                },
+                {
+                    regex: /\{ANSI\.YELLOW\}/g,
+                    html: '<span class="ansi-yellow">',
+                },
+                { regex: /\{ANSI\.RED\}/g, html: '<span class="ansi-red">' },
+                { regex: /\{ANSI\.BOLD\}/g, html: '<span class="ansi-bold">' },
+                {
+                    regex: /\{ANSI\.UNDERLINE\}/g,
+                    html: '<span class="ansi-underline">',
+                },
+                {
+                    regex: /\{ANSI\.END\}/g,
+                    html: '</span><span class="ansi-reset">',
+                },
+            ];
+
+            function escapeHtml(text) {
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+            }
+
+            function unescapeHtml(text) {
+                return text
+                    .replace(/&lt;/g, "<")
+                    .replace(/&gt;/g, ">")
+                    .replace(/&amp;/g, "&");
+            }
+
+            function renderMarkdownBlocks(text) {
+                const lines = text.split(/\r?\n/);
+                const output = [];
+                let paragraphLines = [];
+                let listType = null;
+                let listItems = [];
+                let quoteLines = [];
+
+                const flushParagraph = () => {
+                    if (paragraphLines.length) {
+                        output.push(`<p>${paragraphLines.join(" ")}</p>`);
+                        paragraphLines = [];
+                    }
+                };
+
+                const flushList = () => {
+                    if (listItems.length) {
+                        const tag = listType === "ol" ? "ol" : "ul";
+                        output.push(
+                            `<${tag}>${listItems
+                                .map((item) => `<li>${item}</li>`)
+                                .join("")}</${tag}>`,
+                        );
+                        listItems = [];
+                        listType = null;
+                    }
+                };
+
+                const flushQuote = () => {
+                    if (quoteLines.length) {
+                        output.push(
+                            `<blockquote>${quoteLines
+                                .map((line) => line)
+                                .join("<br>")}</blockquote>`,
+                        );
+                        quoteLines = [];
+                    }
+                };
+
+                lines.forEach((line) => {
+                    const trimmed = line.trim();
+
+                    if (!trimmed) {
+                        flushParagraph();
+                        flushList();
+                        flushQuote();
+                        return;
+                    }
+
+                    const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
+                    if (headingMatch) {
+                        flushParagraph();
+                        flushList();
+                        flushQuote();
+                        const level = headingMatch[1].length;
+                        output.push(
+                            `<h${level}>${headingMatch[2]}</h${level}>`,
+                        );
+                        return;
+                    }
+
+                    if (/^>\s?/.test(trimmed)) {
+                        flushParagraph();
+                        flushList();
+                        quoteLines.push(trimmed.replace(/^>\s?/, ""));
+                        return;
+                    }
+
+                    const orderedMatch = trimmed.match(/^\d+\.\s+(.*)$/);
+                    if (orderedMatch) {
+                        flushParagraph();
+                        flushQuote();
+                        if (listType !== "ol") {
+                            flushList();
+                            listType = "ol";
+                        }
+                        listItems.push(orderedMatch[1]);
+                        return;
+                    }
+
+                    if (/^[-*+]\s+/.test(trimmed)) {
+                        flushParagraph();
+                        flushQuote();
+                        if (listType !== "ul") {
+                            flushList();
+                            listType = "ul";
+                        }
+                        listItems.push(trimmed.replace(/^[-*+]\s+/, ""));
+                        return;
+                    }
+
+                    flushList();
+                    flushQuote();
+                    paragraphLines.push(trimmed);
+                });
+
+                flushParagraph();
+                flushList();
+                flushQuote();
+
+                return output.join("\n");
+            }
+
+            function parseAnsi(text) {
+                const targetRegex =
+                    /\x1b\]8;;([^\\]*?)\x1b\\(.*?)\x1b\]8;;\s*\x1b\\/g;
+                let pool = text.replace(
+                    targetRegex,
+                    function (match, url, linkText) {
+                        return `__LINK_START__URL="${url}"__LINK_TEXT__${linkText}__LINK_END__`;
+                    },
+                );
+
+                pool = escapeHtml(pool);
+
+                const tokenRegex =
+                    /__LINK_START__URL="([^"]*?)"__LINK_TEXT__(.*?)__LINK_END__/g;
+                pool = pool.replace(
+                    tokenRegex,
+                    function (match, url, linkText) {
+                        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${linkText}</a>`;
+                    },
+                );
+
+                pool = pool.replace(/^(?:\r?\n)?---(?:\r?\n)?$/gm, "<hr>");
+
+                const codeBlocks = [];
+                let codeBlockIndex = 0;
+                pool = pool.replace(
+                    /```([\w]*)\n([\s\S]*?)```/g,
+                    function (match, lang, code) {
+                        let language = lang
+                            ? lang.toLowerCase().trim()
+                            : "plaintext";
+
+                        if (language === "xpp") language = "xe";
+                        if (language === "xassembly") language = "xas";
+
+                        const cleanCode = unescapeHtml(code.trim());
+                        const codeId =
+                            "code-" + Math.random().toString(36).substr(2, 9);
+                        const placeholder = `--DOC-CODE-BLOCK-${codeBlockIndex}--`;
+
+                        let highlighted;
+                        try {
+                            if (language === "xe" || language === "xas") {
+                                highlighted = hljs.highlight(cleanCode, {
+                                    language,
+                                    ignoreIllegals: true,
+                                }).value;
+                            } else {
+                                highlighted = escapeHtml(cleanCode);
+                            }
+                        } catch (e) {
+                            highlighted = escapeHtml(cleanCode);
+                        }
+
+                        codeBlocks.push(`<div class="code-block-wrapper">
 				<div class="code-block-header">
 					<span>${language}</span>
 					<button class="copy-btn" onclick="copyCode('${codeId}', this)">📋 Copy</button>
@@ -1051,192 +1046,192 @@
 				<pre id="${codeId}"><code class="hljs language-${language}">${highlighted}</code></pre>
 			</div>`);
 
-						codeBlockIndex += 1;
-						return placeholder;
-					},
-				);
+                        codeBlockIndex += 1;
+                        return placeholder;
+                    },
+                );
 
-				pool = renderMarkdownBlocks(pool);
-				pool = pool.replace(
-					/--DOC-CODE-BLOCK-(\d+)--/g,
-					function (_, index) {
-						return codeBlocks[Number(index)] || "";
-					},
-				);
+                pool = renderMarkdownBlocks(pool);
+                pool = pool.replace(
+                    /--DOC-CODE-BLOCK-(\d+)--/g,
+                    function (_, index) {
+                        return codeBlocks[Number(index)] || "";
+                    },
+                );
 
-				pool = pool.replace(
-					/(?<!`)`([^`\r\n]+)`(?!`)/g,
-					(content) =>
-						`<span class='code-stmt'>${content.slice(1, -1)}</span>`,
-				);
+                pool = pool.replace(
+                    /(?<!`)`([^`\r\n]+)`(?!`)/g,
+                    (content) =>
+                        `<span class='code-stmt'>${content.slice(1, -1)}</span>`,
+                );
 
-				ansiMap.forEach((item) => {
-					pool = pool.replace(item.regex, item.html);
-				});
+                ansiMap.forEach((item) => {
+                    pool = pool.replace(item.regex, item.html);
+                });
 
-				return pool;
-			}
+                return pool;
+            }
 
-			window.copyCode = function (codeId, button) {
-				const codeElement = document.getElementById(codeId);
-				if (!codeElement) return;
-				const text = codeElement.innerText;
+            window.copyCode = function (codeId, button) {
+                const codeElement = document.getElementById(codeId);
+                if (!codeElement) return;
+                const text = codeElement.innerText;
 
-				navigator.clipboard
-					.writeText(text)
-					.then(() => {
-						const btn = button || null;
-						if (!btn) return;
-						const originalText = btn.textContent;
-						btn.textContent = "✓ Copied";
-						btn.classList.add("copied");
+                navigator.clipboard
+                    .writeText(text)
+                    .then(() => {
+                        const btn = button || null;
+                        if (!btn) return;
+                        const originalText = btn.textContent;
+                        btn.textContent = "✓ Copied";
+                        btn.classList.add("copied");
 
-						setTimeout(() => {
-							btn.textContent = originalText;
-							btn.classList.remove("copied");
-						}, 2000);
-					})
-					.catch((err) => {
-						console.error("Failed to copy:", err);
-					});
-			};
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.classList.remove("copied");
+                        }, 2000);
+                    })
+                    .catch((err) => {
+                        console.error("Failed to copy:", err);
+                    });
+            };
 
-			function processPreloadedDocumentation(rawText) {
-				chaptersRegistry = [];
+            function processPreloadedDocumentation(rawText) {
+                chaptersRegistry = [];
 
-				const rawChunks = rawText.split(/={10,}/);
-				let chapterIndex = 0;
+                const rawChunks = rawText.split(/={10,}/);
+                let chapterIndex = 0;
 
-				rawChunks.forEach((chunk) => {
-					const trimmedChunk = chunk.trim();
-					if (!trimmedChunk) return;
+                rawChunks.forEach((chunk) => {
+                    const trimmedChunk = chunk.trim();
+                    if (!trimmedChunk) return;
 
-					const lines = trimmedChunk.split(/\r?\n/);
+                    const lines = trimmedChunk.split(/\r?\n/);
 
-					let rawTitle = lines[0]
-						.replace(/[\{\}#\*=\-_]|ANSI\.[A-Z]+/gi, "")
-						.trim();
-					if (!rawTitle) {
-						rawTitle = `Section ${chapterIndex + 1}`;
-					}
+                    let rawTitle = lines[0]
+                        .replace(/[\{\}#\*=\-_]|ANSI\.[A-Z]+/gi, "")
+                        .trim();
+                    if (!rawTitle) {
+                        rawTitle = `Section ${chapterIndex + 1}`;
+                    }
 
-					if (rawTitle.toUpperCase() === "END OF DOCUMENTATION")
-						return;
+                    if (rawTitle.toUpperCase() === "END OF DOCUMENTATION")
+                        return;
 
-					let contentLines = [...lines];
-					if (
-						contentLines[1] &&
-						/^[-=~#\s]+$/.test(contentLines[1])
-					) {
-						contentLines.splice(1, 1);
-					}
+                    let contentLines = [...lines];
+                    if (
+                        contentLines[1] &&
+                        /^[-=~#\s]+$/.test(contentLines[1])
+                    ) {
+                        contentLines.splice(1, 1);
+                    }
 
-					const cleanContent = contentLines.join("\n").trim();
-					const uniqueId = `ch-${chapterIndex++}`;
+                    const cleanContent = contentLines.join("\n").trim();
+                    const uniqueId = `ch-${chapterIndex++}`;
 
-					chaptersRegistry.push({
-						id: uniqueId,
-						title: rawTitle,
-						content: cleanContent,
-					});
-				});
+                    chaptersRegistry.push({
+                        id: uniqueId,
+                        title: rawTitle,
+                        content: cleanContent,
+                    });
+                });
 
-				renderSidebarNavigation();
-			}
+                renderSidebarNavigation();
+            }
 
-			function renderSidebarNavigation() {
-				docList.innerHTML = "";
+            function renderSidebarNavigation() {
+                docList.innerHTML = "";
 
-				if (chaptersRegistry.length === 0) {
-					docList.innerHTML =
-						'<li class="doc-item" style="cursor:default;color:#888;">No items parsed. Check your document formatting rules.</li>';
-					return;
-				}
+                if (chaptersRegistry.length === 0) {
+                    docList.innerHTML =
+                        '<li class="doc-item" style="cursor:default;color:#888;">No items parsed. Check your document formatting rules.</li>';
+                    return;
+                }
 
-				chaptersRegistry.forEach((chapter) => {
-					const li = document.createElement("li");
-					li.id = `item-${chapter.id}`;
-					li.className = "doc-item";
-					li.textContent = chapter.title;
-					li.title = chapter.title;
-					li.addEventListener("click", () =>
-						displayChapter(chapter.id),
-					);
-					docList.appendChild(li);
-				});
+                chaptersRegistry.forEach((chapter) => {
+                    const li = document.createElement("li");
+                    li.id = `item-${chapter.id}`;
+                    li.className = "doc-item";
+                    li.textContent = chapter.title;
+                    li.title = chapter.title;
+                    li.addEventListener("click", () =>
+                        displayChapter(chapter.id),
+                    );
+                    docList.appendChild(li);
+                });
 
-				updateSearchMeta();
+                updateSearchMeta();
 
-				if (chaptersRegistry.length > 0) {
-					displayChapter(chaptersRegistry[0].id);
-				}
-			}
+                if (chaptersRegistry.length > 0) {
+                    displayChapter(chaptersRegistry[0].id);
+                }
+            }
 
-			function displayChapter(id) {
-				const targetNode = chaptersRegistry.find((c) => c.id === id);
-				if (!targetNode) return;
+            function displayChapter(id) {
+                const targetNode = chaptersRegistry.find((c) => c.id === id);
+                if (!targetNode) return;
 
-				currentChapterId = id;
+                currentChapterId = id;
 
-				document
-					.querySelectorAll(".doc-item")
-					.forEach((el) => el.classList.remove("active"));
-				const activeItem = document.getElementById(`item-${id}`);
-				if (activeItem) activeItem.classList.add("active");
+                document
+                    .querySelectorAll(".doc-item")
+                    .forEach((el) => el.classList.remove("active"));
+                const activeItem = document.getElementById(`item-${id}`);
+                if (activeItem) activeItem.classList.add("active");
 
-				viewTitle.textContent = targetNode.title;
-				output.innerHTML = parseAnsi(targetNode.content);
-				updateChapterMeta();
+                viewTitle.textContent = targetNode.title;
+                output.innerHTML = parseAnsi(targetNode.content);
+                updateChapterMeta();
 
-				const chapterNumber =
-					chaptersRegistry.findIndex((c) => c.id === id) + 1;
-				const totalChapters = chaptersRegistry.length;
+                const chapterNumber =
+                    chaptersRegistry.findIndex((c) => c.id === id) + 1;
+                const totalChapters = chaptersRegistry.length;
 
-				const currentDoc =
-					docSelect.options[docSelect.selectedIndex].text.split(
-						" (",
-					)[0];
-				breadcrumb.innerHTML = `${currentDoc} &gt; Chapter ${chapterNumber} of ${totalChapters}`;
+                const currentDoc =
+                    docSelect.options[docSelect.selectedIndex].text.split(
+                        " (",
+                    )[0];
+                breadcrumb.innerHTML = `${currentDoc} &gt; Chapter ${chapterNumber} of ${totalChapters}`;
 
-				output.scrollTop = 0;
-			}
+                output.scrollTop = 0;
+            }
 
-			function loadDocumentationFile(fileName) {
-				viewTitle.textContent = "Loading documentation file...";
-				output.innerHTML = "";
-				searchBox.value = "";
-				searchMeta.textContent = "Loading document...";
-				chapterProgress.textContent = "Section 0 / 0";
+            function loadDocumentationFile(fileName) {
+                viewTitle.textContent = "Loading documentation file...";
+                output.innerHTML = "";
+                searchBox.value = "";
+                searchMeta.textContent = "Loading document...";
+                chapterProgress.textContent = "Section 0 / 0";
 
-				fetch(fileName)
-					.then((response) => {
-						if (!response.ok)
-							throw new Error(`Could not load ${fileName}`);
-						return response.text();
-					})
-					.then((text) => {
-						processPreloadedDocumentation(text);
-					})
-					.catch((err) => {
-						viewTitle.textContent = "Resource Missing";
-						output.innerHTML = `
+                fetch(fileName)
+                    .then((response) => {
+                        if (!response.ok)
+                            throw new Error(`Could not load ${fileName}`);
+                        return response.text();
+                    })
+                    .then((text) => {
+                        processPreloadedDocumentation(text);
+                    })
+                    .catch((err) => {
+                        viewTitle.textContent = "Resource Missing";
+                        output.innerHTML = `
 							<div style="padding: 20px; border: 1px dashed var(--border-light); border-radius: 4px;">
 								<span class='ansi-red' style='font-weight:bold;'>Error target path unresolved: "${fileName}"</span><br/><br/>
 								<span style='color: var(--text-muted); font-size:13px;'>
 									To use multiple doc views, verify that <strong>${fileName}</strong> is present in your root execution directory alongside your main HTML hub file.
 								</span>
 							</div>`;
-						docList.innerHTML =
-							'<li class="doc-item" style="cursor:default;color:var(--text-muted);">Failed to load parameters.</li>';
-						console.error(err);
-					});
-			}
+                        docList.innerHTML =
+                            '<li class="doc-item" style="cursor:default;color:var(--text-muted);">Failed to load parameters.</li>';
+                        console.error(err);
+                    });
+            }
 
-			docSelect.addEventListener("change", (e) => {
-				loadDocumentationFile(e.target.value);
-			});
+            docSelect.addEventListener("change", (e) => {
+                loadDocumentationFile(e.target.value);
+            });
 
-			loadDocumentationFile("docs.txt");
-		</script>
-	</body>
+            loadDocumentationFile("docs.txt");
+        </script>
+    </body>
 </html>
