@@ -93,6 +93,20 @@ FGT   - Performs a > b, assuming the operands are floats.    [  a b -> a > b  ]
 FGE   - Performs a >= b, assuming the operands are floats.   [  a b -> a >= b ]
 ```
 
+Other Operations:
+```
+ICR   - Checks if the last operation resulted in an overflow.     [  -> bool                ]
+
+SINF  - Performs sin(a), assuming `a` is a float.                 [  a -> sin(a)            ]
+COSF  - Performs cos(a), assuming `a` is a float.                 [  a -> cos(a)            ]
+TANF  - Performs tan(a), assuming `a` is a float.                 [  a -> tan(a)            ]
+ASINF - Performs asin(a), assuming `a` is a float.                [  a -> asin(a)           ]
+ACOSF - Performs acos(a), assuming `a` is a float.                [  a -> acos(a)           ]
+ATANF - Performs atan(a), assuming `a` is a float.                [  a -> atan(a)           ]
+LERPF - Performs lerp(a, b, t), assuming the operands are floats. [  a b t -> lerp(a, b, t) ]
+SQRTF - Performs sqrt(a), assuming `a` is a float.                [  a -> sqrt(a)           ]
+```
+
 {ANSI.BOLD}Unary Operations:{ANSI.END}
 {ANSI.YELLOW}These operations pop a value a from the stack and push the result to the stack.{ANSI.END}
 
@@ -185,7 +199,9 @@ Value = (-1)^S * 2^(E + 127) * (1 + M)
   - {ANSI.PURPLE}true{ANSI.END}  = `0xFFFFFFFF (-1)`
 * This allows logical and bitwise AND, OR, NOT, and XOR to share the same opcodes.
 
-{ANSI.BOLD}Pointer{ANSI.END} - not implemented
+{ANSI.BOLD}Pointer{ANSI.END}
+* Pointers are represented using a 32-bit integer which value is the pointer's target address.
+
 {ANSI.BOLD}Array{ANSI.END} - not implemented
 {ANSI.BOLD}String{ANSI.END} - not implemented
 {ANSI.BOLD}Character{ANSI.END} - not implemented
