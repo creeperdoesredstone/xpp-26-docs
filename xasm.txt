@@ -17,6 +17,27 @@ Instruction Set
 The Instruction Set for the Xenon-131 VM can be found ]8;;https://docs.google.com/spreadsheets/d/e/2PACX-1vSXIRg-2vOg7YarBNxWA8Zf9IoN2UAg7TZvaC8-n-IGAZg_Ex9gLWxxkDmKuqriEUM_G1t7QZeJC924/pubhtml\here]8;;\.
 
 ==================================================
+Registers
+========
+
+
+Despite being a stack-based VM, the Xenon-131 VM has 5 registers:
+* {ANSI.BOLD}FP (Frame Pointer){ANSI.END} - Stores the current frame pointer. Used for subroutines.
+* {ANSI.BOLD}SP (Stack Pointer){ANSI.END} - Stores the address that values will get pushed to the data stack.
+* {ANSI.BOLD}IP (Instruction Pointer){ANSI.END} - Stores the address of the current instruction.
+* {ANSI.BOLD}BP (Base Pointer){ANSI.END} - Stores the base pointer. Used for relative addressing.
+* {ANSI.BOLD}IM (Interrupt Mask){ANSI.END} - Stores the interrupt mask.
+
+Before the VM is booted up, the following defaults are loaded:
+
+{ANSI.RED}FP{ANSI.END} <- {ANSI.CYAN}0x00000000{ANSI.END}
+{ANSI.RED}SP{ANSI.END} <- {ANSI.CYAN}0x00000000{ANSI.END}
+{ANSI.RED}IP{ANSI.END} <- {ANSI.CYAN}0x00000000{ANSI.END}
+{ANSI.RED}BP{ANSI.END} <- {ANSI.CYAN}0x00000000{ANSI.END}
+{ANSI.RED}IM{ANSI.END} <- {ANSI.CYAN}0xffffffff{ANSI.END}
+
+
+==================================================
 Data Structure Representations
 ========
 
@@ -31,12 +52,13 @@ Data Structure Representations
 ```
 x xxxxxxxx xxxxxxxxxxxxxxxxxxxxxxx
 _ ________ _______________________
+S    E                M
 
-1 sign bit        -> `S`
-8 exponent bits   -> `E + 127`
-23 mantissa bits  -> `1 + M` (24 bits of precision)
+1 sign bit
+8 exponent bits
+23 mantissa bits
 
-Value = (-1)^S * 2^(E + 127) * (1 + M)
+Value = (-1)^S * 2^(E - 127) * (1 + M)
 ```
 
 * Range: `-3.4e38` to `3.4e38` inclusive.
@@ -51,11 +73,35 @@ Value = (-1)^S * 2^(E + 127) * (1 + M)
 {ANSI.BOLD}Pointer{ANSI.END}
 * Pointers are represented using a 32-bit integer which value is the pointer's target address.
 
-{ANSI.BOLD}Array{ANSI.END} - not implemented
-{ANSI.BOLD}String{ANSI.END} - not implemented
-{ANSI.BOLD}Character{ANSI.END} - not implemented
-{ANSI.BOLD}Subroutine{ANSI.END} - not implemented
-{ANSI.BOLD}Objects{ANSI.END} - not implemented
+{ANSI.BOLD}Array{ANSI.END}
+* Arrays are dynamically allocated contiguous blocks of memory.
+* An array variable stores a pointer to the array's first element.
+* Each element occupies one 32-bit memory address, regardless of its type.
+
+{ANSI.BOLD}String{ANSI.END}
+* Strings are dynamically allocated contiguous blocks of ANSI characters terminated by a null character (`'\0'`).
+* A string variable stores a pointer to a string descriptor.
+* The string descriptor contains:
+  - Pointer to the character buffer.
+  - Current length (including the terminating null character).
+  - Allocated capacity.
+* Each character occupies one 32-bit memory address, although only the least-significant 8 bits are used.
+
+{ANSI.BOLD}Character{ANSI.END}
+* Characters are stored as unsigned 8-bit ANSI values.
+* Like every primitive value in the XVM, each character occupies one 32-bit memory address.
+* The remaining upper 24 bits are ignored.
+
+{ANSI.BOLD}Subroutine{ANSI.END}
+* Subroutines (functions and procedures) are represented by their entry address within program memory.
+* Calling a subroutine transfers execution to its entry address while creating a new stack frame.
+* A subroutine value therefore occupies one 32-bit memory address.
+
+{ANSI.BOLD}Object{ANSI.END}
+* Objects are dynamically allocated blocks of memory.
+* An object variable stores a pointer to the first field of the object's memory.
+* Object fields are laid out contiguously in declaration order.
+* Member access is performed by adding the field's compile-time offset to the object's base address.
 
 ==================================================
 Syscalls
@@ -64,116 +110,126 @@ Syscalls
 {ANSI.BOLD}I/O Syscalls{ANSI.END}
 
 {ANSI.CYAN}1 - OUTPUT_STR{ANSI.END}
-Outputs the string at the string pointer on top of the stack.
+Outputs the characters until a null-terminator is reached from the pointer to the character buffer on top of the stack.
 
-```xas
-PUSH &str
-LOADIND
-SYS 1
+```
+Stack before:
+`[ &char_buffer ]`
+
+Stack after:
+`[]`
 ```
 
 {ANSI.CYAN}2 - READ_STR{ANSI.END}
-Pauses execution in the current process and waits for user input.
+Pauses execution in the current process and waits for user input, then creates a new string with the received input.
 
-```xas
-PUSH &str
-SYS 2
+```
+Stack before:
+`[]`
+
+Stack after:
+`[ &input.descriptor ]`
 ```
 
-{ANSI.CYAN}3 - STRTOINT{ANSI.END}
-Converts the string at the pointer on top of the stack to an integer.
+{ANSI.CYAN}3 - CHARS2INT{ANSI.END}
+Converts the characters at the pointer to the character buffer on top of the stack to an integer.
 
-```xas
-PUSH &str
-SYS 3
 ```
-{ANSI.PURPLE}RETURNS{ANSI.END}
-    {ANSI.RED}integer{ANSI.END} value
+Stack before:
+`[ &char_buffer ]`
 
-{ANSI.CYAN}4 - STRTOFLOAT{ANSI.END}
+Stack after:
+`[ int_value ]`
+```
+
+{ANSI.CYAN}4 - CHARS2FLOAT{ANSI.END}
 Converts the string at the pointer on top of the stack to a float.
 
-```xas
-PUSH &str
-SYS 4
 ```
-{ANSI.PURPLE}RETURNS{ANSI.END}
-    {ANSI.RED}float{ANSI.END} value
+Stack before:
+`[ &char_buffer ]`
 
-{ANSI.CYAN}5 - INTTOSTR{ANSI.END}
+Stack after:
+`[ float_value ]`
+```
+
+{ANSI.CYAN}5 - INT2CHARS{ANSI.END}
 Converts the integer at the top of the stack to a string at address &str.
 
-```xas
-PUSH &str
-PUSH 42
-SYS 5
+```
+Stack before:
+`[ &char_buffer, int_value ]`
+
+Stack after:
+`[]`
 ```
 
-{ANSI.CYAN}6 - FLOATTOSTR{ANSI.END}
+{ANSI.CYAN}6 - FLOAT2CHARS{ANSI.END}
 Converts the float at the top of the stack to a string at address &str.
 
-```xas
-PUSH &str
-PUSH 0x4048F5C3  ; 0x4048F5C3 -> 3.14
-SYS 6
+```
+Stack before:
+`[ &char_buffer, float_value ]`
+
+Stack after:
+`[]`
 ```
 
-{ANSI.CYAN}7 - BOOLTOSTR{ANSI.END}
+{ANSI.CYAN}7 - BOOL2CHARS{ANSI.END}
 Converts the boolean at the top of the stack to a string at address &str.
 
-```xas
-PUSH &str
-PUSH 0xFFFFFFFF  ; true
-SYS 7
+```
+Stack before:
+`[ &char_buffer, bool_value ]`
+
+Stack after:
+`[]`
 ```
 
-{ANSI.CYAN}8 - INTTOHEX{ANSI.END}
+{ANSI.CYAN}8 - INT2HEX{ANSI.END}
 Converts the integer at the top of the stack to a hexadecimal string at address &str.
 
-```xas
-PUSH &str
-PUSH 255
-SYS 8  ; converts to "0x00FF"
+```
+Stack before:
+`[ &char_buffer, int_value ]`
+
+Stack after:
+`[]`
 ```
 
 {ANSI.CYAN}9 - PUT_CHAR{ANSI.END}
 Outputs the character on top of the stack.
 
-```xas
-PUSH 65  ; ASCII 'A'
-SYS 9
+```
+Stack before:
+`[ &char_value ]`
+
+Stack after:
+`[]`
 ```
 
 {ANSI.BOLD}String Syscalls{ANSI.END}
 
 {ANSI.CYAN}10 - STR_CONCAT{ANSI.END}
-Concatenates str1 and str2, storing the result in str3.
+Concatenates the strings at `&str1.descriptor` and `&str2.descriptor` and pushes the resultant string's descriptor to the stack.
 
-```xas
-PUSH &str1
-PUSH &str2
-PUSH &str3
-SYS 10
+```
+Stack before:
+`[ &str1.descriptor, &str2.descriptor ]`
+
+Stack after:
+`[ &res_str.descriptor ]`
 ```
 
 {ANSI.CYAN}11 - STR_COMPARE{ANSI.END}
 Compares str1 and str2, pushing the boolean result to the stack.
 
-```xas
-PUSH &str1
-PUSH &str2
-SYS 11
 ```
-{ANSI.PURPLE}RETURNS{ANSI.END}
-    {ANSI.RED}boolean{ANSI.END} str1 == str2
+Stack before:
+`[ &str1.descriptor, &str2.descriptor ]`
 
-{ANSI.CYAN}12 - STR_COPY{ANSI.END}
-Copies str1 to str2.
-
-```xas
-PUSH &str1
-PUSH &str2
-SYS 12
+Stack after:
+`[ bool_value ]`
 ```
 
 {ANSI.BOLD}System Syscalls{ANSI.END}
@@ -181,89 +237,315 @@ SYS 12
 {ANSI.CYAN}20 - SYS_GETTIME{ANSI.END}
 Pushes the current execution time (in milliseconds) to the stack.
 
-```xas
-SYS 20
 ```
-{ANSI.PURPLE}RETURNS{ANSI.END}
-    {ANSI.RED}integer{ANSI.END} time (ms)
+Stack before:
+`[]`
+
+Stack after:
+`[ time_ms ]`
+```
 
 {ANSI.CYAN}21 - SYS_MALLOC{ANSI.END}
 Allocates a block of memory with size {ANSI.BLUE}size{ANSI.END} in the heap and returns the address of the first element of that block.
 Raises a {ANSI.RED}HeapOverflow{ANSI.END} interrupt if no more memory is free in the heap.
 
-```xas
-PUSH size  ; size of memory block to allocate
-SYS 21
+```
+Stack before:
+`[ size ]`
+
+Stack after:
+`[ &block[0] ]`
 ```
 
 {ANSI.CYAN}30 - SYS_EXIT{ANSI.END}
 Pops the exit code from the stack and commands the VM to terminate the current process.
 
-```xas
-PUSH 0
-SYS 30  ; exit with code 0
+```
+Stack before:
+`[ code ]`
+
+Stack after:
+`[]`
 ```
 
 {ANSI.BOLD}Primitive Graphics Syscalls{ANSI.END}
 
 {ANSI.CYAN}40 - GFX_CLEAR{ANSI.END}
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}41 - GFX_PIXEL{ANSI.END}
+
+```
+Stack before:
+`[ x, y, color ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}42 - GFX_LINE{ANSI.END}
+
+```
+Stack before:
+`[ x1, y1, x2, y2, color ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}43 - GFX_DRAW_RECT{ANSI.END}
+
+```
+Stack before:
+`[ x, y, width, height, color ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}44 - GFX_FILL_RECT{ANSI.END}
+
+```
+Stack before:
+`[ x, y, width, height, color ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}45 - GFX_DRAW_CIRC{ANSI.END}
+
+```
+Stack before:
+`[ x, y, radius, color ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}46 - GFX_FILL_CIRC{ANSI.END}
+
+```
+Stack before:
+`[ x, y, radius, color ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}47 - GFX_DRAW_TRI{ANSI.END}
+
+```
+Stack before:
+`[ x1, y1, x2, y2, x3, y3, col ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}48 - GFX_FILL_TRI{ANSI.END}
+
+```
+Stack before:
+`[ x1, y1, x2, y2, x3, y3, col ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}49 - GFX_IMAGE{ANSI.END}
+
+```
+Stack before:
+`[ x, y, scale, format ]`
+
+Stack after:
+`[]`
+```
 
 {ANSI.BOLD}Other Graphics Syscalls{ANSI.END}
 
 {ANSI.CYAN}50 - GFX_DRAW_CHR{ANSI.END}
+
+```
+Stack before:
+`[ x, y, char ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}51 - GFX_DRAW_STR{ANSI.END}
 
+```
+Stack before:
+`[ x, y, &str.buffer ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}52 - GFX_DRAW_WIN{ANSI.END}
-{ANSI.CYAN}53 - GFX_DRAW_TITLEBAR{ANSI.END}
-{ANSI.CYAN}54 - GFX_DRAW_BORDER{ANSI.END}
+
+```
+Stack before:
+`[ &window.descriptor ]`
+
+Stack after:
+`[]`
+```
+
+{ANSI.CYAN}53 - GFX_DRAW_POPUP{ANSI.END}
+
+```
+Stack before:
+`[ &popup.descriptor ]`
+
+Stack after:
+`[]`
+```
+
+{ANSI.CYAN}54 - GFX_DRAW_TASKBAR{ANSI.END}
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}55 - GFX_DRAW_BTN{ANSI.END}
 
+
+```
+Stack before:
+`[ x, y, width, height, color, &text.buffer ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}56 - GFX_SET_CLIP{ANSI.END}
+
+
+```
+Stack before:
+`[ x1, y1, x2, y2 ]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}57 - GFX_RESET_CLIP{ANSI.END}
 
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[]`
+```
+
 {ANSI.CYAN}57 - GFX_REFRESH{ANSI.END}
+
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[]`
+```
 
 {ANSI.BOLD}Device Syscalls{ANSI.END}
 
 {ANSI.CYAN}60 - DVC_GETMOUSEX{ANSI.END}
+
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[ mouse_x ]`
+```
+
 {ANSI.CYAN}61 - DVC_GETMOUSEY{ANSI.END}
+
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[ mouse_y ]`
+```
+
 {ANSI.CYAN}62 - DVC_GETMOUSEBTN{ANSI.END}
+
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[ mouse_btn ]`
+```
 
 {ANSI.CYAN}63 - DVC_POLL_KEYBOARD{ANSI.END}
 
-{ANSI.PURPLE}RETURNS{ANSI.END}
-    {ANSI.RED}integer{ANSI.END} event
-    {ANSI.RED}integer{ANSI.END} code
-    {ANSI.RED}integer{ANSI.END} modifier
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[ event, key_code, modifiers ]`
+```
 
 {ANSI.CYAN}64 - DVC_KEY_IS_DOWN{ANSI.END}
 
-{ANSI.PURPLE}RETURNS{ANSI.END}
-    {ANSI.RED}boolean{ANSI.END} key is down
+
+```
+Stack before:
+`[ key_code ]`
+
+Stack after:
+`[ is_key_down ]`
+```
 
 {ANSI.CYAN}65 - DVC_GET_MODIFIERS{ANSI.END}
 
-{ANSI.PURPLE}RETURNS{ANSI.END}
-    {ANSI.RED}integer{ANSI.END} modifier
+
+```
+Stack before:
+`[]`
+
+Stack after:
+`[ modifiers ]`
+```
 
 {ANSI.BOLD}Other Syscalls{ANSI.END}
 
 {ANSI.CYAN}80 - REQUEST{ANSI.END}
 Sends a request to a cloud backend using cloud variables and waits for the result.
 
-```xas
-PUSH backend_id
-PUSH destination_address
-SYS 80  ; sends request and stores result
+
+```
+Stack before:
+`[ backend_id, &dest_str.descriptor ]`
+
+Stack after:
+`[ &dest_str.descriptor ]`
 ```
 
 ==================================================
@@ -277,20 +559,9 @@ out << str
 ```
 
 ```xas
-LOAD &str  ; &str.descriptionVec[0]
+LOAD &str  ; &str.descriptor[0]
 LOADIND    ; &str[0]
 SYS 1      ; output syscall
-```
-
-{ANSI.BOLD}Output Character Array{ANSI.END}
-
-```xe
-out << char_array
-```
-
-```xas
-LOAD &char_array[0]
-SYS 1  ; output syscall
 ```
 
 {ANSI.BOLD}Output Character{ANSI.END}
@@ -311,13 +582,12 @@ out << 42
 ```
 
 ```xas
-PUSH &buffer
+PUSH 16
+SYS 21 ; allocate character buffer
+DUP
 PUSH 42
 SYS 5  ; inttostr syscall
-
-LOAD &buffer  ; buffer.descriptionVec[0]
-LOADIND
-SYS 1         ; output syscall
+SYS 1  ; output syscall
 ```
 
 {ANSI.BOLD}Output Float{ANSI.END}
@@ -327,12 +597,11 @@ out << 3.14
 ```
 
 ```xas
-PUSH &buffer
+PUSH 16
+SYS 21           ; allocate character buffer
+DUP
 PUSH 0x4048F5C3  ; 0x4048F5C3 -> 3.14
 SYS 6            ; floattostr syscall
-
-LOAD &buffer     ; buffer.descriptionVec[0]
-LOADIND
 SYS 1            ; output syscall
 ```
 
@@ -343,11 +612,11 @@ out << true
 ```
 
 ```xas
-PUSH &buffer
+PUSH 5
+SYS 21           ; allocate character buffer
+DUP
 PUSH 0xFFFFFFFF  ; true
 SYS 7            ; booltostr syscall
-
-LOAD &buffer     ; buffer[0]
 SYS 1            ; output syscall
 ```
 
@@ -358,11 +627,11 @@ out << ptr
 ```
 
 ```xas
-PUSH &buffer
+PUSH 10
+SYS 21        ; allocate character buffer
+DUP
 LOAD &ptr
 SYS 8         ; inttohex syscall
-
-LOAD &buffer  ; buffer[0]
 SYS 1         ; output syscall
 ```
 
@@ -377,20 +646,6 @@ in >> message
 ```
 
 ```xas
-LOAD &str
-SYS 2  ; input syscall
-```
-
-==================================================
-Pre-Initialization
-========
-
-Before the VM is booted up, the following defaults are loaded:
-```
-IM     - 0xffffffff
-FP     - 0x00000000
-OFFSET - 0x00000000
-
-IP     - 0x00000000
-HP     - 0x00002000
+SYS 2        ; input syscall
+STORE 0x0000 ; or whatever `message`'s address is
 ```
