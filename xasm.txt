@@ -109,7 +109,7 @@ Syscalls
 
 {ANSI.BOLD}I/O Syscalls{ANSI.END}
 
-{ANSI.CYAN}1 - OUTPUT_STR{ANSI.END}
+{ANSI.CYAN}1 - OUTPUT_CHARS{ANSI.END}
 Outputs the characters until a null-terminator is reached from the pointer to the character buffer on top of the stack.
 
 ```
@@ -202,7 +202,7 @@ Outputs the character on top of the stack.
 
 ```
 Stack before:
-`[ &char_value ]`
+`[ char_value ]`
 
 Stack after:
 `[]`
