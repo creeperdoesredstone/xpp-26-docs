@@ -1159,6 +1159,6 @@ Xe.math
 * `math::asin(x)`      : Returns the value of `asin(x)` (x is in degrees)
 * `math::acos(x)`      : Returns the value of `acos(x)` (x is in degrees)
 * `math::atan(x)`      : Returns the value of `atan(x)` (x is in degrees)
-* `math::lerp(t, a, b)`: Returns `a*t + (b-a)*(1-t)`
+* `math::lerp(t, a, b)`: Returns `a + (b-a)*(1-t)`
 * `math::sqrt(x)`      : Returns `sqrt(x)`
 * `math::pow(a, b)`    : Returns `a ** b`
