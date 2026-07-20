@@ -25,10 +25,10 @@ Xe is a programming language developed for {ANSI.CYAN}]8;;https://scratch.mit.e
 * {ANSI.GREEN}Stack-Based Execution{ANSI.END} - Efficient computation model
 * {ANSI.GREEN}Compiled Output{ANSI.END} - Fast, optimized code for the XVM
 
-{ANSI.BOLD}{ANSI.YELLOW}Downloading the CLI{ANSI.END}
+{ANSI.BOLD}{ANSI.YELLOW}Downloading the Xe Runtime{ANSI.END}
 
-The CLI will be used to run Xe and XAssembly programs.
-{ANSI.BOLD}Note: {ANSI.END}{ANSI.BLUE}The CLI is currently unavailable for download until OS Wars 26 starts.{ANSI.END}
+The Xe Runtime will be used to run Xe and XAssembly programs.
+{ANSI.BOLD}You can download the Xe Runtime {ANSI.CYAN}]8;;https://github.com/creeperdoesredstone/xe/tree/main/\here]8;;\{ANSI.END}.
 
 {ANSI.BOLD}{ANSI.YELLOW}Hello World{ANSI.END}
 
