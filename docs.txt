@@ -1039,7 +1039,6 @@ STREIND        ; store 42 at `heap_addr + 1`
 Classes
 ========
 
-Object-Oriented Programming in Xe extends the structural layout of structs by introducing encapsulation, methods, constructors, and inheritance.
 Under the hood, objects are represented similarly to structs, with fields mapped to offset values and methods translated into standard functions/procedures with an implicit pointer parameter named `this`.
 
 {ANSI.BOLD}Class Definition Syntax{ANSI.END}
@@ -1052,7 +1051,7 @@ class Player {
 
     # Member Method
     fn get_score() int {
-        return score  ; self.score
+        return score  ; this.score
     }
 }
 ```
