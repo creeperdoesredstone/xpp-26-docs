@@ -1052,7 +1052,7 @@ class Player {
 
     # Member Method
     fn get_score() int {
-        return this.score
+        return score  ; self.score
     }
 }
 ```
